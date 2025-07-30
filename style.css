@@ -1,3 +1,56 @@
+body {
+  margin: 0;
+  background: #222;
+  font-family: sans-serif;
+}
+
+#game-container {
+  position: relative;
+  width: 400px;
+  height: 600px;
+  margin: 0 auto;
+  background: #333;
+  overflow: hidden;
+}
+
+#nickname-form {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  z-index: 200;
+  display: flex;
+  gap: 10px;
+}
+
+#nickname-input {
+  padding: 5px;
+  font-size: 16px;
+}
+
+#startBtn {
+  padding: 5px 10px;
+  font-size: 16px;
+}
+
+#player {
+  position: absolute;
+  width: 30px;
+  height: 30px;
+  background: limegreen;
+  bottom: 100px;
+  left: 185px;
+  z-index: 10;
+}
+
+.obstacle {
+  position: absolute;
+  width: 40px;
+  height: 40px;
+  background: red;
+  bottom: 0;
+}
+
 #score {
   position: absolute;
   top: 10px;
@@ -22,9 +75,5 @@
   left: 50%;
   transform: translateX(-50%);
   color: white;
-  background: rgba(0,0,0,0.8);
-  padding: 20px;
-  border: 2px solid white;
-  text-align: center;
   z-index: 200;
 }
