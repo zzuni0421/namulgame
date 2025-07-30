@@ -58,3 +58,29 @@ body {
   margin-top: 20px;
   font-size: 14px;
 }
+
+#rankingButtons {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+.rankingBtn {
+  padding: 8px 16px;
+  border: none;
+  background-color: #5cb85c;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+.rankingBtn:hover {
+  background-color: #4cae4c;
+}
+
+#rankingBoard {
+  background-color: #f4f4f4;
+  padding: 12px;
+  border-radius: 8px;
+}
