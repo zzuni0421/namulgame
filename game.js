@@ -109,16 +109,32 @@ function spawnLeaf() {
 
 function showRanking(mode) {
   const path = (mode === "infinite") ? "rank_infinite" : `rank_${mode}`;
+  
+ // 보기 좋게 표시할 라벨 지정
+  let label = "";
+  switch (mode) {
+    case "10": label = "⏱ 10초 모드"; break;
+    case "20": label = "⏱ 20초 모드"; break;
+    case "30": label = "⏱ 30초 모드"; break;
+    case "60": label = "⏱ 1분 모드"; break;
+    case "infinite": label = "🌲 무한 모드"; break;
+    default: label = "랭킹";
+  }
+
   db.collection(path)
     .orderBy("score", "desc")
     .limit(5)
     .get()
     .then(snapshot => {
-      rankingBoard.innerHTML = `<h3>🏆 [${mode}] 랭킹</h3>`;
+      rankingBoard.innerHTML = `<h3>🏆 ${label} 랭킹</h3>`;
       snapshot.forEach(doc => {
         const data = doc.data();
         rankingBoard.innerHTML += `<div>${data.nickname} : ${data.score}</div>`;
       });
+    })
+    .catch(err => {
+      console.error("랭킹 불러오기 실패:", err);
+      rankingBoard.innerHTML = `<p>랭킹을 불러오는 중 오류가 발생했습니다.</p>`;
     });
 }
 
