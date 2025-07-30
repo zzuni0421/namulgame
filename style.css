@@ -1,7 +1,14 @@
 body {
   margin: 0;
-  background: #222;
   font-family: sans-serif;
+  background-color: #222;
+  color: white;
+}
+
+#ui {
+  margin: 20px;
+  display: flex;
+  gap: 10px;
 }
 
 #game-container {
@@ -9,64 +16,33 @@ body {
   width: 400px;
   height: 600px;
   margin: 0 auto;
-  background: #333;
+  background-color: #333;
   overflow: hidden;
-}
-
-#nickname-form {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  z-index: 200;
-  display: flex;
-  gap: 10px;
-}
-
-#nickname-input {
-  padding: 5px;
-  font-size: 16px;
-}
-
-#startBtn {
-  padding: 5px 10px;
-  font-size: 16px;
 }
 
 #player {
   position: absolute;
   width: 30px;
   height: 30px;
-  background: limegreen;
+  background-color: limegreen;
   bottom: 100px;
   left: 185px;
-  z-index: 10;
-}
-
-.obstacle {
-  position: absolute;
-  width: 40px;
-  height: 40px;
-  background: red;
-  bottom: 0;
 }
 
 #score {
   position: absolute;
   top: 10px;
   left: 10px;
-  color: white;
   font-size: 20px;
-  z-index: 100;
 }
 
 #endBtn {
   position: absolute;
   top: 10px;
   right: 10px;
-  z-index: 100;
-  padding: 5px 10px;
   font-size: 16px;
+  padding: 5px 10px;
+  z-index: 100;
 }
 
 #game-over {
@@ -75,5 +51,6 @@ body {
   left: 50%;
   transform: translateX(-50%);
   color: white;
-  z-index: 200;
+  text-align: center;
 }
+
