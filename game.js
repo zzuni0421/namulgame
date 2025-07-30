@@ -3,6 +3,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const startBtn = document.getElementById("startBtn");
   const endBtn = document.getElementById("endBtn");
   const nicknameInput = document.getElementById("nickname-input");
+  const usedNicknames = new Set(JSON.parse(localStorage.getItem("usedNicknames") || "[]"));
 
   const canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
