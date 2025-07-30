@@ -229,11 +229,11 @@ function playBackgroundMusic() {
     const osc = ctx.createOscillator();
     const gainNode = ctx.createGain();
 
-    osc.type = 'square'; // 8비트 느낌 나는 사각파
+    osc.type = 'square';
     osc.frequency.value = freq;
 
-    gainNode.gain.setValueAtTime(0.1, ctx.currentTime); // 볼륨 낮게 시작
-    gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration / 1000); // 점점 줄어듬
+    gainNode.gain.setValueAtTime(0.1, ctx.currentTime);
+    gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration / 1000);
 
     osc.connect(gainNode);
     gainNode.connect(ctx.destination);
@@ -243,9 +243,7 @@ function playBackgroundMusic() {
   }
 
   function playLoop() {
-    if (ctx.state === 'suspended') {
-      ctx.resume();
-    }
+    if (ctx.state === 'suspended') ctx.resume();
 
     playNote(notes[index], 300);
     index = (index + 1) % notes.length;
@@ -255,9 +253,7 @@ function playBackgroundMusic() {
 
   playLoop();
 
-  // 리턴해서 필요 시 중지 가능하게
   return () => ctx.close();
 }
 
-// 실행해서 배경음 재생 시작
 const stopBgm = playBackgroundMusic();
