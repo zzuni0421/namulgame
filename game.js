@@ -1,99 +1,112 @@
-const nicknameInput = document.getElementById("nickname-input");
-const startBtn = document.getElementById("startBtn");
-const endBtn = document.getElementById("endBtn");
-const gameContainer = document.getElementById("game-container");
-const player = document.getElementById("player");
-const scoreDisplay = document.getElementById("score");
-const gameOverDiv = document.getElementById("game-over");
-const finalScoreText = document.getElementById("final-score");
-const rankingList = document.getElementById("ranking-list");
+document.addEventListener("DOMContentLoaded", () => {
+  const ui = document.getElementById("ui");
+  const startBtn = document.getElementById("startBtn");
+  const endBtn = document.getElementById("endBtn");
+  const nicknameInput = document.getElementById("nickname-input");
 
-let nickname = "";
-let playerX = 185;
-let playerY = 100;
-let velocityY = 0;
-let gravity = 0.5;
-let isJumping = false;
-let score = 0;
-let gameRunning = false;
+  const canvas = document.getElementById("gameCanvas");
+  const ctx = canvas.getContext("2d");
 
-startBtn.addEventListener("click", () => {
-  nickname = nicknameInput.value.trim();
-  if (!nickname) {
-    alert("닉네임을 입력하세요!");
-    return;
+  let player = { x: 50, y: 300, size: 30, color: "lime", vy: 0 };
+  let gravity = 0.6;
+  let isJumping = false;
+
+  let obstacles = [];
+  let score = 0;
+  let nickname = "";
+  let isRunning = false;
+  let gameInterval;
+
+  function startGame() {
+    nickname = nicknameInput.value.trim() || "무명";
+    ui.style.display = "none";
+    isRunning = true;
+    score = 0;
+    player.y = 300;
+    player.vy = 0;
+    obstacles = [];
+
+    gameInterval = setInterval(update, 1000 / 60);
   }
-  startGame();
-});
 
-function startGame() {
-  document.getElementById("ui").style.display = "none";
-  gameContainer.style.display = "block";
-  gameRunning = true;
-  gameLoop();
-}
-
-endBtn.addEventListener("click", () => {
-  endGame();
-});
-
-document.addEventListener("keydown", (e) => {
-  if (!gameRunning) return;
-  if (e.key === "ArrowLeft") playerX -= 10;
-  if (e.key === "ArrowRight") playerX += 10;
-  if (e.key === " " && !isJumping) {
-    velocityY = -10;
-    isJumping = true;
+  function endGame() {
+    isRunning = false;
+    clearInterval(gameInterval);
+    alert(`${nickname}님의 점수는 ${score}점입니다!`);
+    ui.style.display = "block";
   }
-});
 
-function endGame() {
-  gameRunning = false;
-  gameOverDiv.style.display = "block";
-  finalScoreText.textContent = `최종 점수: ${score}`;
-  updateRanking(nickname, score);
-  showRanking();
-}
+  function update() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-function restartGame() {
-  location.reload();
-}
+    // 플레이어 중력 적용
+    player.vy += gravity;
+    player.y += player.vy;
 
-function updateRanking(name, newScore) {
-  let ranking = JSON.parse(localStorage.getItem("namul_ranking")) || [];
-  ranking.push({ name, score: newScore });
-  ranking.sort((a, b) => b.score - a.score);
-  ranking = ranking.slice(0, 5);
-  localStorage.setItem("namul_ranking", JSON.stringify(ranking));
-}
+    if (player.y > 300) {
+      player.y = 300;
+      player.vy = 0;
+      isJumping = false;
+    }
 
-function showRanking() {
-  const ranking = JSON.parse(localStorage.getItem("namul_ranking")) || [];
-  rankingList.innerHTML = "";
-  ranking.forEach((entry, index) => {
-    const li = document.createElement("li");
-    li.textContent = `${index + 1}. ${entry.name} - ${entry.score}`;
-    rankingList.appendChild(li);
+    // 장애물 생성
+    if (Math.random() < 0.02) {
+      obstacles.push({ x: canvas.width, y: 320, width: 20, height: 30 });
+    }
+
+    // 장애물 이동
+    for (let i = obstacles.length - 1; i >= 0; i--) {
+      obstacles[i].x -= 5;
+      if (obstacles[i].x + obstacles[i].width < 0) {
+        obstacles.splice(i, 1);
+        score++;
+      }
+    }
+
+    // 충돌 검사
+    for (let obs of obstacles) {
+      if (
+        player.x < obs.x + obs.width &&
+        player.x + player.size > obs.x &&
+        player.y + player.size > obs.y
+      ) {
+        endGame();
+        return;
+      }
+    }
+
+    // 그리기
+    drawPlayer();
+    drawObstacles();
+    drawScore();
+  }
+
+  function drawPlayer() {
+    ctx.fillStyle = player.color;
+    ctx.fillRect(player.x, player.y, player.size, player.size);
+  }
+
+  function drawObstacles() {
+    ctx.fillStyle = "red";
+    for (let obs of obstacles) {
+      ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+    }
+  }
+
+  function drawScore() {
+    ctx.fillStyle = "white";
+    ctx.font = "20px Arial";
+    ctx.fillText(`닉네임: ${nickname} | 점수: ${score}`, 10, 30);
+  }
+
+  document.addEventListener("keydown", (e) => {
+    if (e.code === "Space" && !isJumping && isRunning) {
+      player.vy = -12;
+      isJumping = true;
+    }
   });
-}
 
-function gameLoop() {
-  if (!gameRunning) return;
+  startBtn.addEventListener("click", startGame);
+  endBtn.addEventListener("click", endGame);
+});
 
-  velocityY += gravity;
-  playerY += velocityY;
-
-  if (playerY > 500) {
-    playerY = 500;
-    velocityY = 0;
-    isJumping = false;
-  }
-
-  player.style.left = `${playerX}px`;
-  player.style.bottom = `${playerY}px`;
-
-  score++;
-  scoreDisplay.textContent = `Score: ${score}`;
-
-  requestAnimationFrame(gameLoop);
-}
