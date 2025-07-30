@@ -2,29 +2,21 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>나물게임</title>
   <link rel="stylesheet" href="style.css" />
 </head>
 <body>
   <div id="ui">
-    <input type="text" id="nickname-input" placeholder="닉네임 입력"/>
-    <button id="startBtn">게임 시작</button>
-    <button id="endBtn">게임 종료</button>
+    <input type="text" id="nickname-input" placeholder="닉네임 입력" />
+    <button id="startBtn">🎮 게임 시작</button>
+    <button id="endBtn">❌ 게임 종료</button>
   </div>
 
-  <div id="game-container" style="display: none;">
-    <div id="player"></div>
-    <div id="score">Score: 0</div>
-    <div id="game-over" style="display: none;">
-      <h2>게임 오버!</h2>
-      <p id="final-score"></p>
-      <h3>🏆 랭킹</h3>
-      <ul id="ranking-list"></ul>
-      <button onclick="restartGame()">다시 하기</button>
-    </div>
-  </div>
+  <canvas id="gameCanvas" width="800" height="400" style="background-color: #333;"></canvas>
 
+  <!-- 게임 로직은 HTML 끝에! -->
   <script src="game.js"></script>
 </body>
 </html>
+
