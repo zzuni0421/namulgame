@@ -9,8 +9,16 @@
 <body>
   <div id="game-container">
     <div id="player"></div>
+    <div id="score">Score: 0</div>
+    <button id="endBtn">게임 종료</button>
+    <div id="game-over" style="display: none;">
+      <h2>게임 오버!</h2>
+      <p id="final-score"></p>
+      <h3>🏆 랭킹</h3>
+      <ul id="ranking-list"></ul>
+      <button onclick="restartGame()">다시 하기</button>
+    </div>
   </div>
-
-  <script src="game.js"></script>
 </body>
+
 </html>
