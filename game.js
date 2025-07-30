@@ -1,5 +1,4 @@
 firebase.initializeApp(firebaseConfig);
-const db = firebase.firestore();
 
 // 전역 변수
 let nickname = "";
