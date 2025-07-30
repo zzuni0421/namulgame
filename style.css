@@ -1,0 +1,60 @@
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  background: #eaf4ec;
+  text-align: center;
+  margin: 0;
+  padding: 0;
+}
+
+.container {
+  padding: 20px;
+}
+
+.nicknameBox, .modeBox {
+  margin: 10px 0;
+}
+
+#gameArea {
+  position: relative;
+  margin: 20px auto;
+  background-color: #c8e6c9;
+  width: 90%;
+  max-width: 400px;
+  height: 400px;
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.leaf {
+  width: 40px;
+  height: 40px;
+  background-color: green;
+  border-radius: 50%;
+  position: absolute;
+  cursor: pointer;
+  animation: pulse 1s infinite alternate;
+}
+
+@keyframes pulse {
+  from { transform: scale(1); }
+  to { transform: scale(1.2); }
+}
+
+.modeBtn {
+  margin: 5px;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 8px;
+  background: #4caf50;
+  color: white;
+  cursor: pointer;
+}
+
+.modeBtn:hover {
+  background: #388e3c;
+}
+
+#rankingBoard {
+  margin-top: 20px;
+  font-size: 14px;
+}
