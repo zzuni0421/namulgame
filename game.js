@@ -217,3 +217,47 @@ window.addEventListener("DOMContentLoaded", () => {
 gameArea.addEventListener("click", () => {
   console.log("점프!");
 });
+
+function playBackgroundMusic() {
+  const AudioContext = window.AudioContext || window.webkitAudioContext;
+  const ctx = new AudioContext();
+
+  const notes = [262, 294, 330, 349, 392, 440, 494]; // C D E F G A B (Hz)
+  let index = 0;
+
+  function playNote(freq, duration) {
+    const osc = ctx.createOscillator();
+    const gainNode = ctx.createGain();
+
+    osc.type = 'square'; // 8비트 느낌 나는 사각파
+    osc.frequency.value = freq;
+
+    gainNode.gain.setValueAtTime(0.1, ctx.currentTime); // 볼륨 낮게 시작
+    gainNode.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration / 1000); // 점점 줄어듬
+
+    osc.connect(gainNode);
+    gainNode.connect(ctx.destination);
+
+    osc.start();
+    osc.stop(ctx.currentTime + duration / 1000);
+  }
+
+  function playLoop() {
+    if (ctx.state === 'suspended') {
+      ctx.resume();
+    }
+
+    playNote(notes[index], 300);
+    index = (index + 1) % notes.length;
+
+    setTimeout(playLoop, 350);
+  }
+
+  playLoop();
+
+  // 리턴해서 필요 시 중지 가능하게
+  return () => ctx.close();
+}
+
+// 실행해서 배경음 재생 시작
+const stopBgm = playBackgroundMusic();
