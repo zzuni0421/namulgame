@@ -1,22 +1,35 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
   <title>나물게임</title>
-  <link rel="stylesheet" href="style.css" />
 </head>
 <body>
-  <div id="ui">
-    <input type="text" id="nickname-input" placeholder="닉네임 입력" />
-    <button id="startBtn">🎮 게임 시작</button>
-    <button id="endBtn">❌ 게임 종료</button>
+  <div id="nicknamePopup">
+    <input type="text" id="nicknameInput" placeholder="닉네임을 입력하세요" />
+    <button onclick="startGame()">게임 시작</button>
   </div>
 
-  <canvas id="gameCanvas" width="800" height="400" style="background-color: #333;"></canvas>
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"></script>
 
-  <!-- 게임 로직은 HTML 끝에! -->
+  <script>
+    // firebaseConfig
+    const firebaseConfig = {
+      apiKey: "AIzaSyBIrOc0np-DUSdv2Fb7T8RZudMBVlmiyEk",
+      authDomain: "namulgame-1f0b0.firebaseapp.com",
+      projectId: "namulgame-1f0b0",
+      storageBucket: "namulgame-1f0b0.firebasestorage.app",
+      messagingSenderId: "530134238906",
+      appId: "1:530134238906:web:286bef2d6144441ddee483",
+      measurementId: "G-WTWH1LG6SM"
+    };
+
+    const app = firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+  </script>
+
   <script src="game.js"></script>
 </body>
 </html>
-
