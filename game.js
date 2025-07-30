@@ -1,13 +1,3 @@
-const firebaseConfig = {
-  apiKey: "AIzaSyBIrOc0np-DUSdv2Fb7T8RZudMBVlmiyEk",
-  authDomain: "namulgame-1f0b0.firebaseapp.com",
-  projectId: "namulgame-1f0b0",
-  storageBucket: "namulgame-1f0b0.appspot.com",
-  messagingSenderId: "530134238906",
-  appId: "1:530134238906:web:286bef2d6144441ddee483",
-  measurementId: "G-WTWH1LG6SM"
-};
-
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
