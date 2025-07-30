@@ -16,6 +16,8 @@ document.addEventListener("DOMContentLoaded", () => {
   let nickname = "";
   let isRunning = false;
   let gameInterval;
+  
+const usedNicknames = new Set();
 
   if (usedNicknames.has(nicknameInput)) {
         alert("이미 사용 중인 닉네임입니다!");
