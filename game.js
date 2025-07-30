@@ -1,9 +1,11 @@
+// Firestore 설정
+const db = firebase.firestore();
+
 document.addEventListener("DOMContentLoaded", () => {
   const ui = document.getElementById("ui");
   const startBtn = document.getElementById("startBtn");
   const endBtn = document.getElementById("endBtn");
   const nicknameInput = document.getElementById("nickname-input");
-  const usedNicknames = new Set(JSON.parse(localStorage.getItem("usedNicknames") || "[]"));
 
   const canvas = document.getElementById("gameCanvas");
   const ctx = canvas.getContext("2d");
@@ -17,18 +19,38 @@ document.addEventListener("DOMContentLoaded", () => {
   let nickname = "";
   let isRunning = false;
   let gameInterval;
-  
-const usedNicknames = new Set();
 
-  if (usedNicknames.has(nicknameInput)) {
-        alert("이미 사용 중인 닉네임입니다!");
-        return;
+  // 닉네임 중복 확인
+  async function isNicknameTaken(nick) {
+    const snapshot = await db.collection("nicknameList").where("name", "==", nick).get();
+    return !snapshot.empty;
+  }
+
+  // 닉네임 저장
+  async function saveNickname(nick) {
+    await db.collection("nicknameList").add({
+      name: nick,
+      timestamp: Date.now()
+    });
+  }
+
+  async function startGame() {
+    nickname = nicknameInput.value.trim();
+
+    if (!nickname) {
+      alert("닉네임을 입력해주세요!");
+      return;
     }
 
-    usedNicknames.add(nicknameInput);
-  
-  function startGame() {
-    nickname = nicknameInput.value.trim() || "무명";
+    const taken = await isNicknameTaken(nickname);
+    if (taken) {
+      alert("이미 사용 중인 닉네임입니다!");
+      nicknameInput.focus();
+      return;
+    }
+
+    await saveNickname(nickname);
+
     ui.style.display = "none";
     isRunning = true;
     score = 0;
@@ -49,7 +71,6 @@ const usedNicknames = new Set();
   function update() {
     ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-    // 플레이어 중력 적용
     player.vy += gravity;
     player.y += player.vy;
 
@@ -59,12 +80,10 @@ const usedNicknames = new Set();
       isJumping = false;
     }
 
-    // 장애물 생성
     if (Math.random() < 0.02) {
       obstacles.push({ x: canvas.width, y: 320, width: 20, height: 30 });
     }
 
-    // 장애물 이동
     for (let i = obstacles.length - 1; i >= 0; i--) {
       obstacles[i].x -= 5;
       if (obstacles[i].x + obstacles[i].width < 0) {
@@ -73,7 +92,6 @@ const usedNicknames = new Set();
       }
     }
 
-    // 충돌 검사
     for (let obs of obstacles) {
       if (
         player.x < obs.x + obs.width &&
@@ -85,7 +103,6 @@ const usedNicknames = new Set();
       }
     }
 
-    // 그리기
     drawPlayer();
     drawObstacles();
     drawScore();
@@ -119,4 +136,3 @@ const usedNicknames = new Set();
   startBtn.addEventListener("click", startGame);
   endBtn.addEventListener("click", endGame);
 });
-
