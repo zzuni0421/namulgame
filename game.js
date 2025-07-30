@@ -82,6 +82,12 @@ function endGame(mode) {
   }
   showRanking(mode);
 }
+document.querySelectorAll(".rankingBtn").forEach(btn => {
+  btn.addEventListener("click", () => {
+    const timeMode = btn.dataset.time;
+    showRanking(timeMode);
+  });
+});
 
 function updateScore() {
   scoreDisplay.textContent = `점수: ${score}`;
