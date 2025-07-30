@@ -1,4 +1,3 @@
-// Firebase 초기화
 const firebaseConfig = {
   apiKey: "AIzaSyBIrOc0np-DUSdv2Fb7T8RZudMBVlmiyEk",
   authDomain: "namulgame-1f0b0.firebaseapp.com",
