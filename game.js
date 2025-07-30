@@ -25,24 +25,89 @@ const scoreDisplay = document.getElementById("scoreDisplay");
 const timerDisplay = document.getElementById("timerDisplay");
 const rankingBoard = document.getElementById("rankingBoard");
 
+// 배경음악 요소
+const bgm = document.getElementById("bgm");
+const bgmToggle = document.getElementById("bgmToggle");
+bgm.volume = 0.2; // 기본 볼륨
+
+bgmToggle.addEventListener("click", () => {
+  if (bgm.paused) {
+    bgm.play();
+    bgmToggle.textContent = "🔊 배경음 켜기/끄기";
+  } else {
+    bgm.pause();
+    bgmToggle.textContent = "🔇 배경음 켜기/끄기";
+  }
+});
+
+// 다국어 지원
+let currentLang = "ko";
+const langToggle = document.getElementById("langToggle");
+
+langToggle.addEventListener("click", () => {
+  currentLang = currentLang === "ko" ? "en" : "ko";
+  langToggle.textContent = `🌐 Language: ${currentLang === "ko" ? "한국어" : "English"}`;
+  updateLanguage();
+});
+
+const translations = {
+  ko: {
+    nicknamePrompt: "닉네임을 입력하세요!",
+    nicknameTaken: "이미 사용 중인 닉네임입니다!",
+    welcome: (name) => `어서 와, ${name} 🌿`,
+    timeLeft: (t) => `남은 시간: ${t}초`,
+    infinite: "무한 모드 진행 중...",
+    gameOver: (s) => `게임 종료! 점수: ${s}`,
+    score: (s) => `점수: ${s}`,
+    rankingError: "랭킹을 불러오는 중 오류가 발생했습니다.",
+  },
+  en: {
+    nicknamePrompt: "Please enter your nickname!",
+    nicknameTaken: "This nickname is already taken!",
+    welcome: (name) => `Welcome, ${name} 🌿`,
+    timeLeft: (t) => `Time left: ${t}s`,
+    infinite: "Endless mode in progress...",
+    gameOver: (s) => `Game over! Score: ${s}`,
+    score: (s) => `Score: ${s}`,
+    rankingError: "An error occurred while loading rankings.",
+  }
+};
+
+function t(key, ...args) {
+  const text = translations[currentLang][key];
+  return typeof text === "function" ? text(...args) : text;
+}
+
+function updateLanguage() {
+  if (nickname) {
+    nicknameDisplay.textContent = t("welcome", nickname);
+  }
+  scoreDisplay.textContent = t("score", score);
+  if (!isEndless) {
+    timerDisplay.textContent = t("timeLeft", gameTime);
+  } else {
+    timerDisplay.textContent = t("infinite");
+  }
+}
+
 submitBtn.addEventListener("click", async () => {
   const input = nicknameInput.value.trim();
-  if (!input) return alert("닉네임을 입력하세요!");
+  if (!input) return alert(t("nicknamePrompt"));
   const snapshot = await db.collection("nicknames").doc(input).get();
   if (snapshot.exists) {
-    alert("이미 사용 중인 닉네임입니다!");
+    alert(t("nicknameTaken"));
     return;
   }
   nickname = input;
   await db.collection("nicknames").doc(nickname).set({
     createdAt: firebase.firestore.FieldValue.serverTimestamp()
   });
-  nicknameDisplay.textContent = `어서 와, ${nickname} 🌿`;
+  nicknameDisplay.textContent = t("welcome", nickname);
 });
 
 document.querySelectorAll(".modeBtn").forEach(btn => {
   btn.addEventListener("click", () => {
-    if (!nickname) return alert("닉네임부터 저장하세요!");
+    if (!nickname) return alert(t("nicknamePrompt"));
     const mode = btn.dataset.time;
     startGame(mode);
   });
@@ -52,26 +117,28 @@ function startGame(mode) {
   gameArea.innerHTML = "";
   score = 0;
   isEndless = (mode === "infinite");
-  updateScore();
+  updateLanguage();
 
   if (!isEndless) {
     gameTime = parseInt(mode);
-    timerDisplay.textContent = `남은 시간: ${gameTime}초`;
+    timerDisplay.textContent = t("timeLeft", gameTime);
     timerInterval = setInterval(() => {
       gameTime--;
-      timerDisplay.textContent = `남은 시간: ${gameTime}초`;
+      timerDisplay.textContent = t("timeLeft", gameTime);
       if (gameTime <= 0) endGame(mode);
     }, 1000);
   } else {
-    timerDisplay.textContent = `무한 모드 진행 중...`;
+    timerDisplay.textContent = t("infinite");
   }
+
+  if (bgm.paused) bgm.play();
 
   spawnLeaf();
 }
 
 function endGame(mode) {
   clearInterval(timerInterval);
-  alert(`게임 종료! 점수: ${score}`);
+  alert(t("gameOver", score));
   if (nickname) {
     const path = isEndless ? "rank_infinite" : `rank_${mode}`;
     db.collection(path).add({
@@ -91,7 +158,7 @@ document.querySelectorAll(".rankingBtn").forEach(btn => {
 });
 
 function updateScore() {
-  scoreDisplay.textContent = `점수: ${score}`;
+  scoreDisplay.textContent = t("score", score);
 }
 
 function spawnLeaf() {
@@ -110,7 +177,7 @@ function spawnLeaf() {
 
 function showRanking(mode) {
   const path = (mode === "infinite") ? "rank_infinite" : `rank_${mode}`;
-
+  
   let label = "";
   switch (mode) {
     case "10": label = "⏱ 10초 모드"; break;
@@ -134,7 +201,7 @@ function showRanking(mode) {
     })
     .catch(err => {
       console.error("랭킹 불러오기 실패:", err);
-      rankingBoard.innerHTML = `<p>랭킹을 불러오는 중 오류가 발생했습니다.</p>`;
+      rankingBoard.innerHTML = `<p>${t("rankingError")}</p>`;
     });
 }
 
