@@ -17,6 +17,13 @@ document.addEventListener("DOMContentLoaded", () => {
   let isRunning = false;
   let gameInterval;
 
+  if (usedNicknames.has(nicknameInput)) {
+        alert("이미 사용 중인 닉네임입니다!");
+        return;
+    }
+
+    usedNicknames.add(nicknameInput);
+  
   function startGame() {
     nickname = nicknameInput.value.trim() || "무명";
     ui.style.display = "none";
