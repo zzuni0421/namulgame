@@ -122,6 +122,16 @@ function showRanking(mode) {
     });
 }
 
+window.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll(".rankingBtn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const timeMode = btn.dataset.time;
+      showRanking(timeMode);
+    });
+  });
+});
+
+
 // 모바일 터치 점프 구현 (아무 곳 터치 시)
 gameArea.addEventListener("click", () => {
   // 향후 점프 애니메이션 넣고 싶을 때 확장 가능!
