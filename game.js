@@ -82,6 +82,7 @@ function endGame(mode) {
   }
   showRanking(mode);
 }
+
 document.querySelectorAll(".rankingBtn").forEach(btn => {
   btn.addEventListener("click", () => {
     const timeMode = btn.dataset.time;
@@ -109,8 +110,7 @@ function spawnLeaf() {
 
 function showRanking(mode) {
   const path = (mode === "infinite") ? "rank_infinite" : `rank_${mode}`;
-  
- // 보기 좋게 표시할 라벨 지정
+
   let label = "";
   switch (mode) {
     case "10": label = "⏱ 10초 모드"; break;
@@ -147,9 +147,6 @@ window.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-
-// 모바일 터치 점프 구현 (아무 곳 터치 시)
 gameArea.addEventListener("click", () => {
-  // 향후 점프 애니메이션 넣고 싶을 때 확장 가능!
   console.log("점프!");
 });
