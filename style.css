@@ -1,28 +1,30 @@
-body {
-  margin: 0;
-  overflow: hidden;
-  background: linear-gradient(to top, #0f0c29, #302b63, #24243e);
-}
-
-#game-container {
-  width: 400px;
-  height: 600px;
-  margin: auto;
-  background-color: #222;
-  position: relative;
-  overflow: hidden;
-  border: 5px solid white;
-  box-shadow: 0 0 20px #0ff;
-}
-
-#player {
-  width: 30px;
-  height: 30px;
-  background-color: lime;
+#score {
   position: absolute;
-  bottom: 100px;
-  left: 185px;
-  border-radius: 50%;
-  z-index: 10;
+  top: 10px;
+  left: 10px;
+  color: white;
+  font-size: 20px;
+  z-index: 100;
 }
 
+#endBtn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  z-index: 100;
+  padding: 5px 10px;
+  font-size: 16px;
+}
+
+#game-over {
+  position: absolute;
+  top: 100px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: white;
+  background: rgba(0,0,0,0.8);
+  padding: 20px;
+  border: 2px solid white;
+  text-align: center;
+  z-index: 200;
+}
