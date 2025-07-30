@@ -1,138 +1,50 @@
-// Firestore 설정
-const db = firebase.firestore();
+document.getElementById("submitBtn").addEventListener("click", async () => {
+  const nicknameInput = document.getElementById("nicknameInput");
+  const nickname = nicknameInput.value.trim();
 
-document.addEventListener("DOMContentLoaded", () => {
-  const ui = document.getElementById("ui");
-  const startBtn = document.getElementById("startBtn");
-  const endBtn = document.getElementById("endBtn");
-  const nicknameInput = document.getElementById("nickname-input");
-
-  const canvas = document.getElementById("gameCanvas");
-  const ctx = canvas.getContext("2d");
-
-  let player = { x: 50, y: 300, size: 30, color: "lime", vy: 0 };
-  let gravity = 0.6;
-  let isJumping = false;
-
-  let obstacles = [];
-  let score = 0;
-  let nickname = "";
-  let isRunning = false;
-  let gameInterval;
-
-  // 닉네임 중복 확인
-  async function isNicknameTaken(nick) {
-    const snapshot = await db.collection("nicknameList").where("name", "==", nick).get();
-    return !snapshot.empty;
+  if (!nickname) {
+    alert("닉네임을 입력해주세요!");
+    return;
   }
 
-  // 닉네임 저장
-  async function saveNickname(nick) {
-    await db.collection("nicknameList").add({
-      name: nick,
-      timestamp: Date.now()
-    });
-  }
+  try {
+    // 🔍 중복 확인
+    const snapshot = await db.collection("nicknameList")
+      .where("nickname", "==", nickname)
+      .get();
 
-  async function startGame() {
-    nickname = nicknameInput.value.trim();
-
-    if (!nickname) {
-      alert("닉네임을 입력해주세요!");
+    if (!snapshot.empty) {
+      alert("이미 사용 중인 닉네임입니다. 다른 걸로 해주세요.");
       return;
     }
 
-    const taken = await isNicknameTaken(nickname);
-    if (taken) {
-      alert("이미 사용 중인 닉네임입니다!");
-      nicknameInput.focus();
-      return;
-    }
+    // ✅ 중복 아니면 저장
+    await db.collection("nicknameList").add({ nickname: nickname });
 
-    await saveNickname(nickname);
+    alert("닉네임이 성공적으로 등록되었습니다!");
+    nicknameInput.value = "";
 
-    ui.style.display = "none";
-    isRunning = true;
-    score = 0;
-    player.y = 300;
-    player.vy = 0;
-    obstacles = [];
+    // 🎮 여기에 게임 시작 로직 연결
+    startGame(nickname);
 
-    gameInterval = setInterval(update, 1000 / 60);
+  } catch (error) {
+    console.error("닉네임 처리 중 오류:", error);
+    alert("오류가 발생했습니다. 콘솔 확인!");
   }
-
-  function endGame() {
-    isRunning = false;
-    clearInterval(gameInterval);
-    alert(`${nickname}님의 점수는 ${score}점입니다!`);
-    ui.style.display = "block";
-  }
-
-  function update() {
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    player.vy += gravity;
-    player.y += player.vy;
-
-    if (player.y > 300) {
-      player.y = 300;
-      player.vy = 0;
-      isJumping = false;
-    }
-
-    if (Math.random() < 0.02) {
-      obstacles.push({ x: canvas.width, y: 320, width: 20, height: 30 });
-    }
-
-    for (let i = obstacles.length - 1; i >= 0; i--) {
-      obstacles[i].x -= 5;
-      if (obstacles[i].x + obstacles[i].width < 0) {
-        obstacles.splice(i, 1);
-        score++;
-      }
-    }
-
-    for (let obs of obstacles) {
-      if (
-        player.x < obs.x + obs.width &&
-        player.x + player.size > obs.x &&
-        player.y + player.size > obs.y
-      ) {
-        endGame();
-        return;
-      }
-    }
-
-    drawPlayer();
-    drawObstacles();
-    drawScore();
-  }
-
-  function drawPlayer() {
-    ctx.fillStyle = player.color;
-    ctx.fillRect(player.x, player.y, player.size, player.size);
-  }
-
-  function drawObstacles() {
-    ctx.fillStyle = "red";
-    for (let obs of obstacles) {
-      ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
-    }
-  }
-
-  function drawScore() {
-    ctx.fillStyle = "white";
-    ctx.font = "20px Arial";
-    ctx.fillText(`닉네임: ${nickname} | 점수: ${score}`, 10, 30);
-  }
-
-  document.addEventListener("keydown", (e) => {
-    if (e.code === "Space" && !isJumping && isRunning) {
-      player.vy = -12;
-      isJumping = true;
-    }
-  });
-
-  startBtn.addEventListener("click", startGame);
-  endBtn.addEventListener("click", endGame);
 });
+
+// 🎮 게임 시작 함수 - 원하는 게임 시작 로직 여기에
+function startGame(nickname) {
+  const body = document.body;
+  body.innerHTML = `
+    <h2>어서 와, ${nickname}!</h2>
+    <p>나물게임이 시작됩니다... 🍃</p>
+    <button onclick="play()">게임 시작!</button>
+  `;
+}
+
+// 🎮 실제 게임 플레이 함수 - 자유롭게 수정!
+function play() {
+  alert("게임이 실행 중입니다... (여기서 진짜 게임 시작!)");
+}
+
