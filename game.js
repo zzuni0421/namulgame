@@ -1,13 +1,12 @@
-const player = document.getElementById("player");
-const container = document.getElementById("game-container");
-const scoreDisplay = document.getElementById("score");
+const nicknameInput = document.getElementById("nickname-input");
+const startBtn = document.getElementById("startBtn");
 const endBtn = document.getElementById("endBtn");
+const gameContainer = document.getElementById("game-container");
+const player = document.getElementById("player");
+const scoreDisplay = document.getElementById("score");
 const gameOverDiv = document.getElementById("game-over");
 const finalScoreText = document.getElementById("final-score");
 const rankingList = document.getElementById("ranking-list");
-const nicknameForm = document.getElementById("nickname-form");
-const nicknameInput = document.getElementById("nickname-input");
-const startBtn = document.getElementById("startBtn");
 
 let nickname = "";
 let playerX = 185;
@@ -17,14 +16,25 @@ let gravity = 0.5;
 let isJumping = false;
 let score = 0;
 let gameRunning = false;
-let obstacles = [];
 
 startBtn.addEventListener("click", () => {
-  nickname = nicknameInput.value.trim() || "이름없음";
-  nicknameForm.style.display = "none";
+  nickname = nicknameInput.value.trim();
+  if (!nickname) {
+    alert("닉네임을 입력하세요!");
+    return;
+  }
+  startGame();
+});
+
+function startGame() {
+  document.getElementById("ui").style.display = "none";
+  gameContainer.style.display = "block";
   gameRunning = true;
-  requestAnimationFrame(gameLoop);
-  setInterval(spawnObstacle, 1500);
+  gameLoop();
+}
+
+endBtn.addEventListener("click", () => {
+  endGame();
 });
 
 document.addEventListener("keydown", (e) => {
@@ -36,29 +46,6 @@ document.addEventListener("keydown", (e) => {
     isJumping = true;
   }
 });
-
-endBtn.addEventListener("click", () => {
-  endGame();
-});
-
-function spawnObstacle() {
-  if (!gameRunning) return;
-  const obs = document.createElement("div");
-  obs.classList.add("obstacle");
-  obs.style.left = `${Math.floor(Math.random() * 360)}px`;
-  obs.style.bottom = "0px";
-  container.appendChild(obs);
-  obstacles.push(obs);
-}
-
-function checkCollision(rect1, rect2) {
-  return !(
-    rect1.right < rect2.left ||
-    rect1.left > rect2.right ||
-    rect1.bottom < rect2.top ||
-    rect1.top > rect2.bottom
-  );
-}
 
 function endGame() {
   gameRunning = false;
@@ -105,22 +92,8 @@ function gameLoop() {
   player.style.left = `${playerX}px`;
   player.style.bottom = `${playerY}px`;
 
-  obstacles.forEach((obs, index) => {
-    let bottom = parseInt(obs.style.bottom);
-    obs.style.bottom = `${bottom + 5}px`;
-    if (bottom > 600) {
-      obs.remove();
-      obstacles.splice(index, 1);
-      score++;
-      scoreDisplay.textContent = `Score: ${score}`;
-    }
-
-    const playerRect = player.getBoundingClientRect();
-    const obsRect = obs.getBoundingClientRect();
-    if (checkCollision(playerRect, obsRect)) {
-      endGame();
-    }
-  });
+  score++;
+  scoreDisplay.textContent = `Score: ${score}`;
 
   requestAnimationFrame(gameLoop);
 }
