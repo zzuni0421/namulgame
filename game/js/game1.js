@@ -97,4 +97,26 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("touchstart", jump);
 
   update();
+  // DOMContentLoaded 안에서 아래 코드 추가
+
+const backButton = document.createElement("button");
+backButton.id = "backButton";
+backButton.textContent = "↩️ 메인으로";
+backButton.style.display = "none"; // 처음엔 안 보이게
+gameArea.appendChild(backButton);
+
+backButton.addEventListener("click", () => {
+  window.location.href = "index.html";
+});
+
+function endGame() {
+  if (gameOver) return;
+  gameOver = true;
+
+  cancelAnimationFrame(animationFrameId);
+  clearInterval(obstacleIntervalId);
+
+  backButton.style.display = "block"; 
+}
+
 });
