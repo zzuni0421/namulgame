@@ -1,3 +1,10 @@
+document.addEventListener("DOMContentLoaded", () => {
+  const submitBtn = document.getElementById("submitBtn");
+  const nicknameSection = document.getElementById("nicknameSection");
+
+  submitBtn.onclick = async () => {
+    nicknameSection.style.display = "none";
+
 // Firebase 설정
 const firebaseConfig = {
   apiKey: "AIzaSyBIrOc0np-DUSdv2Fb7T8RZudMBVlmiyEk",
@@ -123,3 +130,5 @@ function showRanking(mode) {
     }
   });
 }
+  };
+});
