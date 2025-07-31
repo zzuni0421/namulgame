@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function createObstacle() {
     const obstacle = document.createElement("div");
     obstacle.classList.add("obstacle");
-    obstacle.style.left = "100vw";
+    obstacle.style.left = "150vw";
     gameArea.appendChild(obstacle);
 
     const moveInterval = setInterval(() => {
@@ -38,7 +38,7 @@ document.addEventListener("DOMContentLoaded", () => {
         clearInterval(moveInterval);
         obstacle.remove();
       } else {
-        obstacle.style.left = (left - 5) + "px";
+        obstacle.style.left = (left - 4) + "px";
 
         // 충돌 판정
         const obstacleLeft = obstacle.getBoundingClientRect().left;
