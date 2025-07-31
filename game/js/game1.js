@@ -9,6 +9,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let playerX = 50;
   let score = 0;
   let gameOver = false;
+  let scoreInterval;
 
   // 점수 표시
   const scoreDisplay = document.createElement("div");
@@ -58,6 +59,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function endGame() {
     if (gameOver) return;
     gameOver = true;
+    clearInterval(scoreInterval); // 점수 증가 중단
     alert("💀 게임 오버! 점수: " + score);
     location.reload();
   }
@@ -75,12 +77,16 @@ document.addEventListener("DOMContentLoaded", () => {
     player.style.bottom = position + "px";
     player.style.left = playerX + "px";
 
+    if (!gameOver) requestAnimationFrame(update);
+  }
+
+  // 점수 주기적으로 증가 (1초에 1점)
+  scoreInterval = setInterval(() => {
     if (!gameOver) {
       score++;
       scoreDisplay.textContent = "점수: " + score;
-      requestAnimationFrame(update);
     }
-  }
+  }, 1000);
 
   // 장애물 주기적으로 생성
   setInterval(() => {
