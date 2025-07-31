@@ -31,7 +31,7 @@ submitBtn.addEventListener("click", () => {
   const nick = nicknameInput.value.trim();
   if (nick) {
     currentNickname = nick;
-    nicknameDisplay.textContent = `가입된 닉네임: ${nick}`;
+    nicknameDisplay.textContent = `안녕, ${nick}`;
     document.getElementById("nicknameSection").style.display = "none";
   }
 });
