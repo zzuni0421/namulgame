@@ -8,131 +8,118 @@ const firebaseConfig = {
   appId: "1:530134238906:web:286bef2d6144441ddee483",
   measurementId: "G-WTWH1LG6SM"
 };
-
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
-// 요소 가져오기
+let nickname = "";
+let score = 0;
+let gameInterval;
+let timeLeft = 10;
+let currentMode = "10";
+
 const nicknameInput = document.getElementById("nicknameInput");
 const submitBtn = document.getElementById("submitBtn");
 const nicknameDisplay = document.getElementById("nicknameDisplay");
-const gameArea = document.getElementById("gameArea");
 const scoreDisplay = document.getElementById("scoreDisplay");
 const timerDisplay = document.getElementById("timerDisplay");
+const gameUI = document.getElementById("gameUI");
+const gameArea = document.getElementById("gameArea");
 const bgm = document.getElementById("bgm");
-const bgmToggle = document.getElementById("bgmToggle");
-const rankingBoard = document.getElementById("rankingBoard");
-let currentNickname = "";
 
-// 배경음 조절
-bgm.volume = 0.2;
-bgmToggle.addEventListener("click", () => {
-  bgm.muted = !bgm.muted;
+submitBtn.onclick = async () => {
+  const value = nicknameInput.value.trim();
+  if (!value) return alert("nickname의 값은 필수입니다.");
+
+  const snapshot = await db.collection("players").doc(value).get();
+  if (snapshot.exists) return alert("이미 사용 중인 닉네임입니다.");
+
+  nickname = value;
+  db.collection("players").doc(nickname).set({});
+
+  nicknameDisplay.textContent = `좋은 하루, ${nickname}`;
+  document.getElementById("nicknameSection").style.display = "none";
+  gameUI.style.display = "block";
+};
+
+document.querySelectorAll(".modeBtn").forEach(btn => {
+  btn.onclick = () => {
+    const mode = btn.dataset.time;
+    currentMode = mode;
+    startGame(mode);
+  };
 });
 
-// 닉네임 저장
-submitBtn.addEventListener("click", () => {
-  const nick = nicknameInput.value.trim();
-  if (nick) {
-    currentNickname = nick;
-    nicknameDisplay.textContent = `안녕, ${nick}`;
-    document.getElementById("nicknameSection").style.display = "none";
+document.querySelectorAll(".rankingBtn").forEach(btn => {
+  btn.onclick = () => showRanking(btn.dataset.time);
+});
+
+document.getElementById("bgmToggle").onclick = () => {
+  if (bgm.paused) {
+    bgm.play();
+  } else {
+    bgm.pause();
   }
-});
+};
 
-// 게임 모드 선택 버튼
-const modeButtons = document.querySelectorAll(".modeBtn");
-modeButtons.forEach(btn => {
-  btn.addEventListener("click", () => {
-    const timeMode = btn.getAttribute("data-time");
-    startGame(timeMode);
-  });
-});
-
-// 랭킹 보기 버튼
-const rankingButtons = document.querySelectorAll(".rankingBtn");
-rankingButtons.forEach(btn => {
-  btn.addEventListener("click", () => {
-    const time = btn.getAttribute("data-time");
-    showRanking(time);
-  });
-});
-
-// 게임 관련 변수
-let score = 0;
-let timer;
-let namulInterval;
+gameArea.onclick = () => {
+  if (!gameInterval) return;
+  score++;
+  scoreDisplay.textContent = `현재 ${nickname}님의 점수는 ${score}점입니다.`;
+  spawnNamul();
+};
 
 function startGame(mode) {
   score = 0;
-  scoreDisplay.textContent = "점수: 0";
-  timerDisplay.textContent = mode === "infinite" ? "무한" : `${mode}초`;
-  gameArea.innerHTML = "";
-
-  clearInterval(namulInterval);
-  namulInterval = setInterval(spawnNamul, 1000); // 매초 나물 생성
-
-  if (mode !== "infinite") {
-    let seconds = parseInt(mode);
-    timer = setInterval(() => {
-      seconds--;
-      timerDisplay.textContent = `${seconds}초`;
-      if (seconds <= 0) {
-        clearInterval(timer);
-        clearInterval(namulInterval);
-        endGame(mode);
+  scoreDisplay.textContent = `점수 : 0점점`;
+  timeLeft = mode === "infinite" ? Infinity : parseInt(mode);
+  timerDisplay.textContent = mode === "infinite" ? "∞" : `${timeLeft}초`;
+  gameInterval = setInterval(() => {
+    if (mode !== "infinite") {
+      timeLeft--;
+      timerDisplay.textContent = `${timeLeft}초 남았어요!`;
+      if (timeLeft <= 0) {
+        endGame();
       }
-    }, 1000);
-  }
-
-  document.addEventListener("click", jump);
+    }
+  }, 1000);
+  spawnNamul();
 }
 
 function spawnNamul() {
   const namul = document.createElement("div");
   namul.className = "namul";
-  namul.style.left = Math.random() * 90 + "%";
-  namul.style.top = (Math.random() * 60 + 20) + "%"; 
-
-  namul.addEventListener("click", () => {
-    score++;
-    scoreDisplay.textContent = `점수: ${score}`;
-    namul.remove();
-  });
-
+  namul.style.left = Math.random() * (gameArea.clientWidth - 50) + "px";
+  namul.style.top = Math.random() * (gameArea.clientHeight - 50) + "px";
+  gameArea.innerHTML = "";
   gameArea.appendChild(namul);
 }
 
-function endGame(mode) {
-  document.removeEventListener("click", jump);
-  clearInterval(namulInterval);
+function endGame() {
+  clearInterval(gameInterval);
+  gameInterval = null;
+  alert(`게임 종료! 점수: ${score}`);
   gameArea.innerHTML = "";
-  saveScore(mode);
-}
 
-function saveScore(mode) {
-  if (!currentNickname) return;
-  db.collection("rankings").add({
-    nickname: currentNickname,
-    score: score,
-    timeMode: mode,
-    timestamp: firebase.firestore.FieldValue.serverTimestamp()
+  const rankRef = db.collection("rankings").doc(currentMode);
+  rankRef.get().then(doc => {
+    let data = doc.exists ? doc.data() : {};
+    data[nickname] = Math.max(score, data[nickname] || 0);
+    rankRef.set(data);
   });
 }
 
 function showRanking(mode) {
-  db.collection("rankings")
-    .where("timeMode", "==", mode)
-    .orderBy("score", "desc")
-    .limit(10)
-    .get()
-    .then(snapshot => {
-      rankingBoard.innerHTML = `<h3>${mode === "infinite" ? "무한" : mode + "초"} 랭킹</h3>`;
-      snapshot.forEach(doc => {
-        const data = doc.data();
-        const entry = document.createElement("div");
-        entry.textContent = `${data.nickname}: ${data.score}`;
-        rankingBoard.appendChild(entry);
+  const board = document.getElementById("rankingBoard");
+  board.innerHTML = `<h3>${mode}초 랭킹</h3>`;
+  db.collection("rankings").doc(mode).get().then(doc => {
+    if (doc.exists) {
+      const data = doc.data();
+      const sorted = Object.entries(data).sort((a,b)=>b[1]-a[1]);
+      sorted.forEach(([name, score]) => {
+        board.innerHTML += `<div>${name}: ${score}</div>`;
       });
-    });
+    } else {
+      board.innerHTML += `<div>랭킹 없음</div>`;
+    }
+  });
 }
