@@ -92,7 +92,7 @@ function spawnNamul() {
   const namul = document.createElement("div");
   namul.className = "namul";
   namul.style.left = Math.random() * 90 + "%";
-  namul.style.top = "90%";
+  namul.style.top = (Math.random() * 60 + 20) + "%"; 
 
   namul.addEventListener("click", () => {
     score++;
@@ -101,13 +101,6 @@ function spawnNamul() {
   });
 
   gameArea.appendChild(namul);
-}
-
-function jump() {
-  gameArea.style.transform = "translateY(-20px)";
-  setTimeout(() => {
-    gameArea.style.transform = "translateY(0)";
-  }, 200);
 }
 
 function endGame(mode) {
