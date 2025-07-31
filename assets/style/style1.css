@@ -29,3 +29,20 @@ body {
   height: 100px;
   background-color: #4caf50;
 }
+
+#score {
+  position: absolute;
+  top: 20px;
+  left: 20px;
+  font-size: 1.5rem;
+  color: #333;
+  font-weight: bold;
+}
+
+.obstacle {
+  position: absolute;
+  bottom: 100px;
+  width: 40px;
+  height: 60px;
+  background-color: black;
+}
