@@ -1,98 +1,47 @@
 body {
-  font-family: 'Noto Sans KR', sans-serif;
-  background: #eaf4ec;
+  font-family: 'Arial', sans-serif;
   text-align: center;
-  margin: 0;
-  padding: 0;
+  background-color: #e7f5e6;
 }
 
-.container {
-  padding: 20px;
-}
-
-.nicknameBox, .modeBox {
-  margin: 10px 0;
+.nicknameBox {
+  margin-top: 50px;
 }
 
 #gameArea {
-  position: relative;
+  width: 90vw;
+  height: 50vh;
   margin: 20px auto;
   background-color: #c8e6c9;
-  width: 90%;
-  max-width: 400px;
-  height: 400px;
-  border-radius: 12px;
-  overflow: hidden;
+  position: relative;
+  border: 2px solid #4caf50;
+  border-radius: 10px;
 }
 
-.leaf {
+.namul {
   width: 40px;
   height: 40px;
-  background-color: green;
-  border-radius: 50%;
+  background-image: url('assets/namul.png');
+  background-size: cover;
   position: absolute;
   cursor: pointer;
-  animation: pulse 1s infinite alternate;
 }
 
-@keyframes pulse {
-  from { transform: scale(1); }
-  to { transform: scale(1.2); }
-}
-
-.modeBtn {
+button {
   margin: 5px;
-  padding: 8px 16px;
+  padding: 10px 20px;
+  font-size: 1rem;
+  background-color: #81c784;
   border: none;
-  border-radius: 8px;
-  background: #4caf50;
+  border-radius: 5px;
   color: white;
-  cursor: pointer;
+  transition: background-color 0.2s ease-in-out;
 }
 
-.modeBtn:hover {
-  background: #388e3c;
+button:hover {
+  background-color: #66bb6a;
 }
 
 #rankingBoard {
   margin-top: 20px;
-  font-size: 14px;
-}
-
-#rankingButtons {
-  display: flex;
-  justify-content: center;
-  gap: 10px;
-  margin-bottom: 10px;
-  flex-wrap: wrap;
-}
-
-.rankingBtn {
-  padding: 8px 16px;
-  border: none;
-  background-color: #5cb85c;
-  color: white;
-  border-radius: 6px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-.rankingBtn:hover {
-  background-color: #4cae4c;
-}
-
-#rankingBoard {
-  background-color: #f4f4f4;
-  padding: 12px;
-  border-radius: 8px;
-}
-
-.namul {
-  width: 50px;
-  height: 50px;
-  background-image: url("assets/namul.png"); /* 이미지 경로 맞춰! */
-  background-size: cover;
-  position: absolute;
-  transition: top 0.3s ease;
-  z-index: 10;
 }
