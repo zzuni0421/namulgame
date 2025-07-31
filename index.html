@@ -30,52 +30,53 @@
     <div id="gameArea" class="game-area"></div>
     <p id="scoreDisplay">점수: 0</p>
     <p id="timerDisplay"></p>
+
+    <div id="rankingButtons">
+      <button class="rankingBtn" data-time="10">10초 랭킹</button>
+      <button class="rankingBtn" data-time="20">20초 랭킹</button>
+      <button class="rankingBtn" data-time="30">30초 랭킹</button>
+      <button class="rankingBtn" data-time="60">1분 랭킹</button>
+      <button class="rankingBtn" data-time="infinite">무한 랭킹</button>
+    </div>
+
     <div id="rankingBoard"></div>
-  </div>
-  <div id="rankingButtons">
-  <button class="rankingBtn" data-time="10">10초 랭킹</button>
-  <button class="rankingBtn" data-time="20">20초 랭킹</button>
-  <button class="rankingBtn" data-time="30">30초 랭킹</button>
-  <button class="rankingBtn" data-time="60">1분 랭킹</button>
-  <button class="rankingBtn" data-time="infinite">무한 랭킹</button>
-</div>
-  <div id="rankingBoard"></div>
-  <div id="langSwitch">
-</div>
-<button id="langToggle">🌐 Language: 한국어</button>
+
+    <div id="langSwitch"></div>
+    <button id="langToggle">🌐 Language: 한국어</button>
 
     <audio id="bgm" loop autoplay>
+      <source src="assets/bgm.mp3" type="audio/mpeg" />
+      Your browser does not support the audio element.
+    </audio>
+    <button id="bgmToggle">🔊 배경음 켜기/끄기</button>
+
+    <!-- 모달 HTML -->
+    <div id="licenseModal" class="modal" style="display:none; position:fixed; top:30%; left:50%; transform:translateX(-50%);
+     background:#fff; border:1px solid #ccc; padding:20px; z-index:1000;">
+      <h3>저작권 정보</h3>
+      <p>Music: "Carefree" by Kevin MacLeod (incompetech.com)<br />
+         Licensed under Creative Commons: By Attribution 3.0 License<br />
+         http://creativecommons.org/licenses/by/3.0/</p>
+      <button id="closeModal">닫기</button>
+    </div>
+
+    <button id="licenseBtn">🎵 저작권 정보 보기</button>
+  </div>
+
+  <script>
+    const modal = document.getElementById("licenseModal");
+    const btn = document.getElementById("licenseBtn");
+    const closeBtn = document.getElementById("closeModal");
+
+    btn.addEventListener("click", () => {
+      modal.style.display = "block";
+    });
+
+    closeBtn.addEventListener("click", () => {
+      modal.style.display = "none";
+    });
   </script>
-  <source src="assets/bgm.mp3" type="audio/mpeg">
-  Your browser does not support the audio element.
-</audio>
-<button id="bgmToggle">🔊 배경음 켜기/끄기</button>
 
-  <!-- 모달 HTML -->
-<div id="licenseModal" class="modal" style="display:none; position:fixed; top:30%; left:50%; transform:translateX(-50%);
- background:#fff; border:1px solid #ccc; padding:20px; z-index:1000;">
-  <h3>저작권 정보</h3>
-  <p>Music: "Carefree" by Kevin MacLeod (incompetech.com)<br>
-     Licensed under Creative Commons: By Attribution 3.0 License<br>
-     http://creativecommons.org/licenses/by/3.0/</p>
-  <button id="closeModal">닫기</button>
-</div>
-
-<button id="licenseBtn">🎵 저작권 정보 보기</button>
-
-<script>
-const modal = document.getElementById("licenseModal");
-const btn = document.getElementById("licenseBtn");
-const closeBtn = document.getElementById("closeModal");
-
-btn.addEventListener("click", () => {
-  modal.style.display = "block";
-});
-
-closeBtn.addEventListener("click", () => {
-  modal.style.display = "none";
-});
-<script src="namulgame/game.js"></script>
-
+  <script src="namulgame/game.js" defer></script>
 </body>
 </html>
