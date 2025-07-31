@@ -1,15 +1,65 @@
 document.addEventListener("DOMContentLoaded", () => {
+  const gameArea = document.getElementById("gameArea");
   const player = document.getElementById("player");
+
   let isJumping = false;
   let velocity = 0;
   let gravity = 0.5;
-  let position = 100; // 바닥에서의 시작 높이
+  let position = 100;
+  let playerX = 50;
+  let score = 0;
+  let gameOver = false;
 
+  // 점수 표시
+  const scoreDisplay = document.createElement("div");
+  scoreDisplay.id = "score";
+  scoreDisplay.textContent = "점수: 0";
+  gameArea.appendChild(scoreDisplay);
+
+  // 점프 함수
   function jump() {
     if (!isJumping) {
       isJumping = true;
-      velocity = -12; // 위로 튀는 속도
+      velocity = -12;
     }
+  }
+
+  // 장애물 생성 함수
+  function createObstacle() {
+    const obstacle = document.createElement("div");
+    obstacle.classList.add("obstacle");
+    obstacle.style.left = "100vw";
+    gameArea.appendChild(obstacle);
+
+    const moveInterval = setInterval(() => {
+      let left = parseInt(obstacle.style.left);
+      if (left < -50) {
+        clearInterval(moveInterval);
+        obstacle.remove();
+      } else {
+        obstacle.style.left = (left - 5) + "px";
+
+        // 충돌 판정
+        const obstacleLeft = obstacle.getBoundingClientRect().left;
+        const playerRect = player.getBoundingClientRect();
+        const obstacleRect = obstacle.getBoundingClientRect();
+
+        if (
+          playerRect.right > obstacleLeft &&
+          playerRect.left < obstacleRect.right &&
+          playerRect.bottom > obstacleRect.top
+        ) {
+          endGame();
+        }
+      }
+    }, 20);
+  }
+
+  function endGame() {
+    if (gameOver) return;
+    gameOver = true;
+    alert("💀 게임 오버! 점수: " + score);
+    location.reload();
   }
 
   function update() {
@@ -23,8 +73,19 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     player.style.bottom = position + "px";
-    requestAnimationFrame(update);
+    player.style.left = playerX + "px";
+
+    if (!gameOver) {
+      score++;
+      scoreDisplay.textContent = "점수: " + score;
+      requestAnimationFrame(update);
+    }
   }
+
+  // 장애물 주기적으로 생성
+  setInterval(() => {
+    if (!gameOver) createObstacle();
+  }, 1500);
 
   document.addEventListener("click", jump);
   document.addEventListener("touchstart", jump);
