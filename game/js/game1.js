@@ -29,7 +29,7 @@ document.addEventListener("DOMContentLoaded", () => {
   function createObstacle() {
     const obstacle = document.createElement("div");
     obstacle.classList.add("obstacle");
-    obstacle.style.left = "150vw";
+    obstacle.style.left = "300vw";
     gameArea.appendChild(obstacle);
 
     const moveInterval = setInterval(() => {
