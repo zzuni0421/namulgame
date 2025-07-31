@@ -1,47 +1,56 @@
 body {
   font-family: 'Arial', sans-serif;
   text-align: center;
-  background-color: #e7f5e6;
+  background-color: #f4fff0;
+  margin: 0;
+  padding: 20px;
 }
 
 .nicknameBox {
-  margin-top: 50px;
+  margin-top: 100px;
 }
 
-#gameArea {
-  width: 90vw;
-  height: 50vh;
-  margin: 20px auto;
-  background-color: #c8e6c9;
-  position: relative;
-  border: 2px solid #4caf50;
-  border-radius: 10px;
-}
-
-.namul {
-  width: 40px;
-  height: 40px;
-  background-image: url('assets/namul.png');
-  background-size: cover;
-  position: absolute;
-  cursor: pointer;
+input, button, select {
+  padding: 10px;
+  margin: 5px;
+  font-size: 1rem;
+  border-radius: 8px;
+  border: 1px solid #aaa;
 }
 
 button {
-  margin: 5px;
-  padding: 10px 20px;
-  font-size: 1rem;
-  background-color: #81c784;
+  cursor: pointer;
+  background-color: #90ee90;
   border: none;
-  border-radius: 5px;
-  color: white;
-  transition: background-color 0.2s ease-in-out;
+  transition: background 0.3s;
 }
 
 button:hover {
-  background-color: #66bb6a;
+  background-color: #76d076;
 }
 
-#rankingBoard {
+.buttonGroup {
+  margin: 10px 0;
+}
+
+#gameArea {
+  width: 100%;
+  height: 300px;
+  background-color: #eaffea;
   margin-top: 20px;
+  position: relative;
+  overflow: hidden;
+}
+
+.namul {
+  width: 50px;
+  height: 50px;
+  background-image: url('assets/namul.png');
+  background-size: cover;
+  position: absolute;
+}
+
+footer {
+  margin-top: 20px;
+  color: #777;
 }
