@@ -140,5 +140,24 @@ document.addEventListener("DOMContentLoaded", () => {
   document.getElementById("langSelect").addEventListener("change", e => {
     const lang = e.target.value;
     applyLang(lang);
+    const backButton = document.createElement("button");
+backButton.id = "backButton";
+backButton.textContent = "↩️ 메인으로";
+backButton.style.display = "none"; // 처음엔 안 보이게
+gameArea.appendChild(backButton);
+
+backButton.addEventListener("click", () => {
+  window.location.href = "index.html";
+});
+
+function endGame() {
+  if (gameOver) return;
+  gameOver = true;
+
+  cancelAnimationFrame(animationFrameId);
+  clearInterval(obstacleIntervalId);
+
+  backButton.style.display = "block"; 
+}
   });
 });
