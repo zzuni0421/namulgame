@@ -86,3 +86,11 @@ body {
   padding: 12px;
   border-radius: 8px;
 }
+
+.namul {
+  width: 40px;
+  height: 40px;
+  background: url('assets/namul.png') no-repeat center/contain;
+  position: absolute;
+  cursor: pointer;
+}
