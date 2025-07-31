@@ -1,3 +1,4 @@
+// Firebase 설정
 const firebaseConfig = {
   apiKey: "AIzaSyBIrOc0np-DUSdv2Fb7T8RZudMBVlmiyEk",
   authDomain: "namulgame-1f0b0.firebaseapp.com",
@@ -11,6 +12,7 @@ const firebaseConfig = {
 firebase.initializeApp(firebaseConfig);
 const db = firebase.firestore();
 
+// 요소 가져오기
 const nicknameInput = document.getElementById("nicknameInput");
 const submitBtn = document.getElementById("submitBtn");
 const nicknameDisplay = document.getElementById("nicknameDisplay");
@@ -22,11 +24,13 @@ const bgmToggle = document.getElementById("bgmToggle");
 const rankingBoard = document.getElementById("rankingBoard");
 let currentNickname = "";
 
+// 배경음 조절
 bgm.volume = 0.2;
 bgmToggle.addEventListener("click", () => {
   bgm.muted = !bgm.muted;
 });
 
+// 닉네임 저장
 submitBtn.addEventListener("click", () => {
   const nick = nicknameInput.value.trim();
   if (nick) {
@@ -36,6 +40,7 @@ submitBtn.addEventListener("click", () => {
   }
 });
 
+// 게임 모드 선택 버튼
 const modeButtons = document.querySelectorAll(".modeBtn");
 modeButtons.forEach(btn => {
   btn.addEventListener("click", () => {
@@ -44,6 +49,7 @@ modeButtons.forEach(btn => {
   });
 });
 
+// 랭킹 보기 버튼
 const rankingButtons = document.querySelectorAll(".rankingBtn");
 rankingButtons.forEach(btn => {
   btn.addEventListener("click", () => {
@@ -52,13 +58,20 @@ rankingButtons.forEach(btn => {
   });
 });
 
+// 게임 관련 변수
 let score = 0;
 let timer;
+let namulInterval;
+
 function startGame(mode) {
   score = 0;
   scoreDisplay.textContent = "점수: 0";
   timerDisplay.textContent = mode === "infinite" ? "무한" : `${mode}초`;
   gameArea.innerHTML = "";
+
+  clearInterval(namulInterval);
+  namulInterval = setInterval(spawnNamul, 1000); // 매초 나물 생성
+
   if (mode !== "infinite") {
     let seconds = parseInt(mode);
     timer = setInterval(() => {
@@ -66,13 +79,13 @@ function startGame(mode) {
       timerDisplay.textContent = `${seconds}초`;
       if (seconds <= 0) {
         clearInterval(timer);
+        clearInterval(namulInterval);
         endGame(mode);
       }
     }, 1000);
   }
 
   document.addEventListener("click", jump);
-  spawnNamul();
 }
 
 function spawnNamul() {
@@ -80,13 +93,14 @@ function spawnNamul() {
   namul.className = "namul";
   namul.style.left = Math.random() * 90 + "%";
   namul.style.top = "90%";
-  gameArea.appendChild(namul);
+
   namul.addEventListener("click", () => {
     score++;
     scoreDisplay.textContent = `점수: ${score}`;
     namul.remove();
-    spawnNamul();
   });
+
+  gameArea.appendChild(namul);
 }
 
 function jump() {
@@ -98,6 +112,8 @@ function jump() {
 
 function endGame(mode) {
   document.removeEventListener("click", jump);
+  clearInterval(namulInterval);
+  gameArea.innerHTML = "";
   saveScore(mode);
 }
 
