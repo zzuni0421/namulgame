@@ -1,5 +1,4 @@
 document.addEventListener("DOMContentLoaded", () => {
-  // Firebase 설정
   const firebaseConfig = {
     apiKey: "AIzaSyBIrOc0np-DUSdv2Fb7T8RZudMBVlmiyEk",
     authDomain: "namulgame-1f0b0.firebaseapp.com",
@@ -12,25 +11,26 @@ document.addEventListener("DOMContentLoaded", () => {
   firebase.initializeApp(firebaseConfig);
   const db = firebase.firestore();
 
-  const nicknameInput = document.getElementById("nicknameInput");
-  const submitBtn = document.getElementById("submitBtn");
-  const nicknameSection = document.getElementById("nicknameSection");
-  const nicknameDisplay = document.getElementById("nicknameDisplay");
-  const gameUI = document.getElementById("gameUI");
-  const scoreDisplay = document.getElementById("scoreDisplay");
-  const timerDisplay = document.getElementById("timerDisplay");
-  const gameArea = document.getElementById("gameArea");
-  const bgm = document.getElementById("bgm");
-
   let nickname = "";
   let score = 0;
-  let gameInterval = null;
+  let gameInterval;
   let timeLeft = 10;
   let currentMode = "10";
 
+  const nicknameInput = document.getElementById("nicknameInput");
+  const nicknameDisplay = document.getElementById("nicknameDisplay");
+  const submitBtn = document.getElementById("submitBtn");
+  const scoreDisplay = document.getElementById("scoreDisplay");
+  const timerDisplay = document.getElementById("timerDisplay");
+  const gameUI = document.getElementById("gameUI");
+  const gameArea = document.getElementById("gameArea");
+  const bgm = document.getElementById("bgm");
+  const replayBtn = document.getElementById("replayBtn");
+
   submitBtn.onclick = async () => {
     const value = nicknameInput.value.trim();
-    if (!value) return alert("닉네임을 입력하세요.");
+    if (!value) return alert("nickname의 값은 필수입니다.");
+
     const snapshot = await db.collection("players").doc(value).get();
     if (snapshot.exists) return alert("이미 사용 중인 닉네임입니다.");
 
@@ -38,14 +38,15 @@ document.addEventListener("DOMContentLoaded", () => {
     await db.collection("players").doc(nickname).set({});
 
     nicknameDisplay.textContent = `좋은 하루, ${nickname}`;
-    nicknameSection.style.display = "none";
+    document.getElementById("nicknameSection").style.display = "none";
     gameUI.style.display = "block";
   };
 
   document.querySelectorAll(".modeBtn").forEach(btn => {
     btn.onclick = () => {
-      currentMode = btn.dataset.time;
-      startGame(currentMode);
+      const mode = btn.dataset.time;
+      currentMode = mode;
+      startGame(mode);
     };
   });
 
@@ -54,16 +55,23 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   document.getElementById("bgmToggle").onclick = () => {
-    if (bgm.paused) bgm.play();
-    else bgm.pause();
+    bgm.paused ? bgm.play() : bgm.pause();
+  };
+
+  replayBtn.onclick = () => {
+    startGame(currentMode);
+    replayBtn.style.display = "none";
   };
 
   gameArea.onclick = (e) => {
     if (!gameInterval) return;
-    if (!e.target.classList.contains("namul")) return;
-    score++;
-    scoreDisplay.textContent = `현재 ${nickname}님의 점수는 ${score}점입니다.`;
-    spawnNamul();
+
+    const isNamul = e.target.classList.contains("namul");
+    if (isNamul) {
+      score++;
+      scoreDisplay.textContent = `현재 ${nickname}님의 점수는 ${score}점입니다.`;
+      spawnNamul();
+    }
   };
 
   function startGame(mode) {
@@ -72,15 +80,19 @@ document.addEventListener("DOMContentLoaded", () => {
     scoreDisplay.textContent = `점수 : 0점`;
     timerDisplay.textContent = mode === "infinite" ? "∞" : `${timeLeft}초`;
     gameArea.innerHTML = "";
-    spawnNamul();
+    replayBtn.style.display = "none";
 
     gameInterval = setInterval(() => {
       if (mode !== "infinite") {
         timeLeft--;
         timerDisplay.textContent = `${timeLeft}초 남았어요!`;
-        if (timeLeft <= 0) endGame();
+        if (timeLeft <= 0) {
+          endGame();
+        }
       }
     }, 1000);
+
+    spawnNamul();
   }
 
   function spawnNamul() {
@@ -96,13 +108,15 @@ document.addEventListener("DOMContentLoaded", () => {
     clearInterval(gameInterval);
     gameInterval = null;
     alert(`게임 종료! 점수: ${score}`);
-    gameArea.innerHTML = "";
+    replayBtn.style.display = "inline-block";
 
     const rankRef = db.collection("rankings").doc(currentMode);
     rankRef.get().then(doc => {
       let data = doc.exists ? doc.data() : {};
-      data[nickname] = Math.max(score, data[nickname] || 0);
-      rankRef.set(data);
+      if (nickname) {
+        data[nickname] = Math.max(score, data[nickname] || 0);
+        rankRef.set(data);
+      }
     });
   }
 
@@ -111,7 +125,8 @@ document.addEventListener("DOMContentLoaded", () => {
     board.innerHTML = `<h3>${mode}초 랭킹</h3>`;
     db.collection("rankings").doc(mode).get().then(doc => {
       if (doc.exists) {
-        const sorted = Object.entries(doc.data()).sort((a, b) => b[1] - a[1]);
+        const data = doc.data();
+        const sorted = Object.entries(data).sort((a,b)=>b[1]-a[1]);
         sorted.forEach(([name, score]) => {
           board.innerHTML += `<div>${name}: ${score}</div>`;
         });
@@ -120,5 +135,10 @@ document.addEventListener("DOMContentLoaded", () => {
       }
     });
   }
-});
 
+  // 다국어 적용
+  document.getElementById("langSelect").addEventListener("change", e => {
+    const lang = e.target.value;
+    applyLang(lang);
+  });
+});
