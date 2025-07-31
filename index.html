@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>나물 줍기 게임</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css"/>
 </head>
 <body>
   <div id="nicknameSection" class="nicknameBox">
@@ -13,37 +13,41 @@
     <p id="nicknameDisplay"></p>
   </div>
 
-  <div id="gameUI" style="display: none;">
-    <div id="controls">
+  <div id="gameUI" style="display:none;">
+    <h2 id="timerDisplay"></h2>
+    <h3 id="scoreDisplay"></h3>
+    <div class="buttonGroup">
       <button class="modeBtn" data-time="10">10초</button>
       <button class="modeBtn" data-time="20">20초</button>
       <button class="modeBtn" data-time="30">30초</button>
       <button class="modeBtn" data-time="60">1분</button>
-      <button class="modeBtn" data-time="infinite">무한</button>
-      <button id="bgmToggle">🔊 음악</button>
+      <button class="modeBtn" data-time="infinite">무한모드</button>
     </div>
-
-    <div id="gameArea"></div>
-    <p id="scoreDisplay"></p>
-    <p id="timerDisplay"></p>
-
-    <div>
+    <div class="buttonGroup">
       <button class="rankingBtn" data-time="10">10초 랭킹</button>
       <button class="rankingBtn" data-time="20">20초 랭킹</button>
       <button class="rankingBtn" data-time="30">30초 랭킹</button>
       <button class="rankingBtn" data-time="60">1분 랭킹</button>
       <button class="rankingBtn" data-time="infinite">무한 랭킹</button>
     </div>
+    <button id="replayBtn" style="display:none;">다시하기</button>
+    <button id="bgmToggle">🔊 BGM</button>
   </div>
 
+  <div id="gameArea"></div>
   <div id="rankingBoard"></div>
+  <footer>
+    <p>&copy; cc 나물게임. All rights reserved.</p>
+    <select id="langSelect">
+      <option value="ko">한국어</option>
+      <option value="en">English</option>
+    </select>
+  </footer>
 
-  <audio id="bgm" loop>
-    <source src="assets/bgm.mp3" type="audio/mp3" />
-  </audio>
-
+  <audio id="bgm" loop src="assets/bgm.mp3"></audio>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script src="lang.js"></script>
   <script src="game.js" defer></script>
 </body>
 </html>
