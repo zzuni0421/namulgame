@@ -2,33 +2,37 @@ document.addEventListener("DOMContentLoaded", () => {
   const gameArea = document.getElementById("gameArea");
   const player = document.getElementById("player");
 
-  let isJumping = false;
   let velocity = 0;
-  let gravity = 0.6;
+  let gravity = 0.5;
+  let isJumping = false;
   let position = 100;
-  let playerX = 50;
-  let score = 0;
   let gameOver = false;
-  let scoreInterval;
-  let animationFrameId;
+  let score = 0;
 
+  // 점수
   const scoreDisplay = document.createElement("div");
   scoreDisplay.id = "score";
+  scoreDisplay.style.position = "absolute";
+  scoreDisplay.style.top = "20px";
+  scoreDisplay.style.left = "20px";
+  scoreDisplay.style.fontSize = "24px";
   scoreDisplay.textContent = "점수: 0";
   gameArea.appendChild(scoreDisplay);
 
   function jump() {
-    if (!isJumping && !gameOver) {
+    if (!isJumping) {
+      velocity = -10;
       isJumping = true;
-      velocity = -12;
     }
   }
 
   function createObstacle() {
     const obstacle = document.createElement("div");
     obstacle.classList.add("obstacle");
-    obstacle.style.left = "100vw";
+    obstacle.style.left = "100vw"; // 오른쪽 바깥에서 시작
     gameArea.appendChild(obstacle);
+
+    let obstaclePosition = window.innerWidth;
 
     const moveInterval = setInterval(() => {
       if (gameOver) {
@@ -37,37 +41,25 @@ document.addEventListener("DOMContentLoaded", () => {
         return;
       }
 
-      let currentLeft = parseInt(obstacle.style.left);
-      if (isNaN(currentLeft)) currentLeft = window.innerWidth;
-      currentLeft -= 5;
-      obstacle.style.left = currentLeft + "px";
+      obstaclePosition -= 5;
+      obstacle.style.left = obstaclePosition + "px";
 
-      const obstacleRect = obstacle.getBoundingClientRect();
       const playerRect = player.getBoundingClientRect();
+      const obstacleRect = obstacle.getBoundingClientRect();
 
       if (
         playerRect.right > obstacleRect.left &&
         playerRect.left < obstacleRect.right &&
-        playerRect.bottom > obstacleRect.top &&
-        playerRect.top < obstacleRect.bottom
+        playerRect.bottom > obstacleRect.top
       ) {
         endGame();
       }
 
-      if (currentLeft < -50) {
+      if (obstaclePosition < -50) {
         clearInterval(moveInterval);
         obstacle.remove();
       }
     }, 20);
-  }
-
-  function endGame() {
-    if (gameOver) return;
-    gameOver = true;
-    clearInterval(scoreInterval);
-    cancelAnimationFrame(animationFrameId);
-    backButton.style.display = "block";
-    alert("💀 게임 오버! 점수: " + score);
   }
 
   function update() {
@@ -81,37 +73,33 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 
     player.style.bottom = position + "px";
-    player.style.left = playerX + "px";
 
-    if (!gameOver) {
-      animationFrameId = requestAnimationFrame(update);
-    }
+    if (!gameOver) requestAnimationFrame(update);
   }
 
-  scoreInterval = setInterval(() => {
+  function endGame() {
+    if (gameOver) return;
+    gameOver = true;
+    alert("💀 게임 오버! 점수: " + score);
+    location.reload();
+  }
+
+  // 점수 증가
+  setInterval(() => {
     if (!gameOver) {
       score++;
       scoreDisplay.textContent = "점수: " + score;
     }
   }, 1000);
 
+  // 장애물 생성
   setInterval(() => {
     if (!gameOver) createObstacle();
-  }, 2000);
+  }, 1500);
 
+  // 입력
   document.addEventListener("click", jump);
   document.addEventListener("touchstart", jump);
 
   update();
-
-  const backButton = document.createElement("button");
-  backButton.id = "backButton";
-  backButton.textContent = "↩️ 메인으로";
-  backButton.style.display = "none";
-  gameArea.appendChild(backButton);
-
-  backButton.addEventListener("click", () => {
-    window.location.href = "index.html";
-  });
 });
-
