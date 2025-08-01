@@ -1,107 +1,77 @@
-document.addEventListener("DOMContentLoaded", () => {
-  const player = document.getElementById("player");
-  const ground = document.getElementById("ground");
-  const game = document.getElementById("game");
-  const scoreDisplay = document.getElementById("score");
+const player = document.getElementById("player");
+const obstacle = document.getElementById("obstacle");
+const game = document.getElementById("game");
 
-  let isJumping = false;
-  let gravity = 2;
-  let velocity = 0;
-  let isGameOver = false;
-  let score = 0;
-  let obstacleSpeed = 5;
-  let lastObstacleTime = 0;
-  let speedIncreaseInterval = 20000; // 20초마다 속도 증가
+let jumping = false;
+let velocity = 0;
+let gravity = 0.6;
+let jumpPower = -12;
+let isGameOver = false;
+let speed = 6;
+let speedUpInterval = 20000;
 
-  function jump() {
-    if (isJumping || isGameOver) return;
-    isJumping = true;
-    let jumpHeight = 0;
-    let jumpInterval = setInterval(() => {
-      if (jumpHeight >= 100) {
-        clearInterval(jumpInterval);
-        let fallInterval = setInterval(() => {
-          if (jumpHeight <= 0) {
-            clearInterval(fallInterval);
-            isJumping = false;
-          } else {
-            jumpHeight -= 5;
-            player.style.bottom = jumpHeight + "px";
-          }
-        }, 20);
-      } else {
-        jumpHeight += 5;
-        player.style.bottom = jumpHeight + "px";
-      }
-    }, 20);
+let obstacleX = window.innerWidth;
+
+function jump() {
+  if (!jumping) {
+    velocity = jumpPower;
+    jumping = true;
+  }
+}
+
+function update() {
+  if (isGameOver) return;
+
+  // 점프 물리
+  velocity += gravity;
+  let newTop = parseFloat(getComputedStyle(player).bottom) + velocity;
+  if (newTop <= 60) {
+    newTop = 60;
+    jumping = false;
+    velocity = 0;
+  }
+  player.style.bottom = `${newTop}px`;
+
+  // 장애물 이동
+  obstacleX -= speed;
+  if (obstacleX < -50) {
+    obstacleX = window.innerWidth + Math.random() * 200;
+  }
+  obstacle.style.left = `${obstacleX}px`;
+
+  // 충돌 판정
+  const playerRect = player.getBoundingClientRect();
+  const obstacleRect = obstacle.getBoundingClientRect();
+
+  if (
+    playerRect.right > obstacleRect.left &&
+    playerRect.left < obstacleRect.right &&
+    playerRect.bottom > obstacleRect.top
+  ) {
+    gameOver();
   }
 
-  function createObstacle() {
-    const obstacle = document.createElement("div");
-    obstacle.classList.add("obstacle");
-    game.appendChild(obstacle);
-    obstacle.style.left = "100vw";
+  requestAnimationFrame(update);
+}
 
-    let obstacleLeft = game.offsetWidth;
-    const moveObstacle = setInterval(() => {
-      if (isGameOver) {
-        clearInterval(moveObstacle);
-        return;
-      }
+function gameOver() {
+  isGameOver = true;
+  alert("Game Over!");
+  location.reload();
+}
 
-      obstacleLeft -= obstacleSpeed;
-      obstacle.style.left = obstacleLeft + "px";
-
-      // 충돌 판정
-      const playerRect = player.getBoundingClientRect();
-      const obstacleRect = obstacle.getBoundingClientRect();
-
-      if (
-        playerRect.left < obstacleRect.right &&
-        playerRect.right > obstacleRect.left &&
-        playerRect.bottom > obstacleRect.top
-      ) {
-        clearInterval(moveObstacle);
-        gameOver();
-      }
-
-      if (obstacleLeft <= -60) {
-        clearInterval(moveObstacle);
-        game.removeChild(obstacle);
-        score++;
-        scoreDisplay.innerText = `Score: ${score}`;
-      }
-    }, 20);
-  }
-
-  function gameOver() {
-    isGameOver = true;
-    alert("Game Over! Your score: " + score);
-    location.reload();
-  }
-
-  function startSpawningObstacles() {
-    setInterval(() => {
-      if (!isGameOver) createObstacle();
-    }, 1500); // 기본 장애물 생성 간격
-  }
-
-  function increaseSpeedOverTime() {
-    setInterval(() => {
-      if (!isGameOver) {
-        obstacleSpeed += 1;
-        console.log("속도 증가! 현재 속도:", obstacleSpeed);
-      }
-    }, speedIncreaseInterval);
-  }
-
-  // 시작
-  document.addEventListener("keydown", (e) => {
-    if (e.code === "Space") jump();
-  });
-
-  document.addEventListener("click", jump); // 모바일 대응
-
-  startSpawningObstacles();
-  increaseSpeedOverTime();
+// 점프 입력 (모바일 & 데스크탑 모두)
+document.addEventListener("keydown", (e) => {
+  if (e.code === "Space" || e.code === "ArrowUp") jump();
 });
+document.addEventListener("touchstart", jump);
+
+// 난이도 상승
+setInterval(() => {
+  speed += 1;
+  console.log(`속도 증가! 현재 속도: ${speed}`);
+}, speedUpInterval);
+
+// 시작
+obstacle.style.left = `${obstacleX}px`;
+update();
