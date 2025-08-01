@@ -1,75 +1,93 @@
-const character = document.getElementById('character');
-const obstacle = document.getElementById('obstacle');
-const scoreDisplay = document.getElementById('score');
-const gameOverDisplay = document.getElementById('game-over');
-const restartButton = document.getElementById('restart');
+document.addEventListener("DOMContentLoaded", () => {
+  const character = document.getElementById("character");
+  const obstacle = document.getElementById("obstacle");
+  const scoreDisplay = document.getElementById("score");
+  const gameOverScreen = document.getElementById("game-over");
+  const restartBtn = document.getElementById("restart");
 
-let isJumping = false;
-let gravity = 0.5;
-let velocity = 0;
-let position = 0;
-let score = 0;
-let obstacleSpeed = 5;
-let intervalId;
+  let characterY = 150;
+  let velocity = 0;
+  let gravity = 0.6;
+  let isJumping = false;
+  let score = 0;
+  let gameInterval;
+  let obstacleSpeed = 5;
 
-function jump() {
-  if (isJumping) return;
-  isJumping = true;
-  velocity = -25;
-}
-
-function startGame() {
-  position = 0;
-  velocity = 0;
-  score = 0;
-  obstacleSpeed = 5;
-  obstacle.style.right = '-50px';
-  obstacle.style.display = 'block';
-  character.style.bottom = '0px';
-  gameOverDisplay.style.display = 'none';
-  intervalId = setInterval(updateGame, 20);
-}
-
-function updateGame() {
-  velocity += gravity;
-  position += velocity;
-  if (position < 0) {
-    position = 0;
-    isJumping = false;
-  }
-  character.style.bottom = position + 'px';
-
-  let obstacleRight = parseInt(obstacle.style.right);
-  obstacleRight += obstacleSpeed;
-  if (obstacleRight > window.innerWidth + 50) {
-    obstacleRight = -50;
-    score++;
-    scoreDisplay.innerText = `점수: ${score}`;
-    if (score % 10 === 0) {
-      obstacleSpeed += 1;
+  function jump() {
+    if (!isJumping) {
+      velocity = -12;
+      isJumping = true;
     }
   }
-  obstacle.style.right = obstacleRight + 'px';
 
-  if (checkCollision()) {
-    clearInterval(intervalId);
-    gameOverDisplay.style.display = 'block';
-    obstacle.style.display = 'none';
+  function update() {
+    // 캐릭터 위치 갱신
+    velocity += gravity;
+    characterY += velocity;
+
+    // 바닥에 닿았을 때
+    if (characterY >= 150) {
+      characterY = 150;
+      velocity = 0;
+      isJumping = false;
+    }
+
+    character.style.top = characterY + "px";
+
+    // 장애물 이동
+    const obstacleLeft = parseInt(getComputedStyle(obstacle).left);
+    if (obstacleLeft <= -20) {
+      obstacle.style.left = "100vw";
+      score++;
+      scoreDisplay.textContent = "점수: " + score;
+    } else {
+      obstacle.style.left = obstacleLeft - obstacleSpeed + "px";
+    }
+
+    // 충돌 체크
+    const characterRect = character.getBoundingClientRect();
+    const obstacleRect = obstacle.getBoundingClientRect();
+
+    if (
+      characterRect.right > obstacleRect.left &&
+      characterRect.left < obstacleRect.right &&
+      characterRect.bottom > obstacleRect.top
+    ) {
+      endGame();
+    }
+
+    // 20초마다 속도 증가
+    if (score > 0 && score % 20 === 0) {
+      obstacleSpeed += 0.2;
+    }
   }
-}
 
-function checkCollision() {
-  const charRect = character.getBoundingClientRect();
-  const obsRect = obstacle.getBoundingClientRect();
-  return !(charRect.right < obsRect.left ||
-           charRect.left > obsRect.right ||
-           charRect.bottom < obsRect.top ||
-           charRect.top > obsRect.bottom);
-}
+  function startGame() {
+    obstacle.style.left = "100vw";
+    gameInterval = setInterval(update, 20);
+  }
 
-restartButton.addEventListener('click', startGame);
-window.addEventListener('click', jump);
+  function endGame() {
+    clearInterval(gameInterval);
+    gameOverScreen.style.display = "block";
+  }
 
-document.addEventListener('DOMContentLoaded', () => {
+  restartBtn.addEventListener("click", () => {
+    characterY = 150;
+    velocity = 0;
+    isJumping = false;
+    score = 0;
+    obstacleSpeed = 5;
+    scoreDisplay.textContent = "점수: 0";
+    gameOverScreen.style.display = "none";
+    startGame();
+  });
+
+  document.addEventListener("keydown", (e) => {
+    if (e.code === "Space" || e.code === "ArrowUp") jump();
+  });
+
+  document.addEventListener("click", jump);
+
   startGame();
 });
