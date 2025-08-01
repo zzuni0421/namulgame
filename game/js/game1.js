@@ -1,86 +1,75 @@
-const player = document.getElementById("player");
-const obstacle = document.getElementById("obstacle");
-const scoreDisplay = document.getElementById("score");
-const gameOverDiv = document.getElementById("game-over");
+const character = document.getElementById('character');
+const obstacle = document.getElementById('obstacle');
+const scoreDisplay = document.getElementById('score');
+const gameOverDisplay = document.getElementById('game-over');
+const restartButton = document.getElementById('restart');
 
-let gravity = 0.6;
 let isJumping = false;
+let gravity = 2;
 let velocity = 0;
 let position = 0;
-
-let obstacleX = window.innerWidth;
-let obstacleSpeed = 6;
 let score = 0;
-let gameRunning = true;
+let obstacleSpeed = 5;
+let intervalId;
 
-// 점프 기능
-document.body.addEventListener("click", () => {
-  if (!isJumping && gameRunning) {
-    velocity = -12;
-    isJumping = true;
-  }
-});
+function jump() {
+  if (isJumping) return;
+  isJumping = true;
+  velocity = -25;
+}
 
-function gameLoop() {
-  if (!gameRunning) return;
+function startGame() {
+  position = 0;
+  velocity = 0;
+  score = 0;
+  obstacleSpeed = 5;
+  obstacle.style.right = '-50px';
+  obstacle.style.display = 'block';
+  character.style.bottom = '0px';
+  gameOverDisplay.style.display = 'none';
+  intervalId = setInterval(updateGame, 20);
+}
 
-  // 중력 적용
+function updateGame() {
   velocity += gravity;
   position += velocity;
   if (position < 0) {
     position = 0;
-    velocity = 0;
     isJumping = false;
   }
+  character.style.bottom = position + 'px';
 
-  player.style.bottom = `${50 + position}px`;
-
-  // 장애물 이동
-  obstacleX -= obstacleSpeed;
-  if (obstacleX < -60) {
-    obstacleX = window.innerWidth;
+  let obstacleRight = parseInt(obstacle.style.right);
+  obstacleRight += obstacleSpeed;
+  if (obstacleRight > window.innerWidth + 50) {
+    obstacleRight = -50;
     score++;
-    scoreDisplay.textContent = `점수: ${score}`;
-
-    // 20점마다 속도 증가
-    if (score % 20 === 0) {
+    scoreDisplay.innerText = `점수: ${score}`;
+    if (score % 10 === 0) {
       obstacleSpeed += 1;
     }
   }
-  obstacle.style.left = `${obstacleX}px`;
+  obstacle.style.right = obstacleRight + 'px';
 
-  // 충돌 감지
-  const playerRect = player.getBoundingClientRect();
-  const obstacleRect = obstacle.getBoundingClientRect();
-  if (
-    playerRect.right > obstacleRect.left &&
-    playerRect.left < obstacleRect.right &&
-    playerRect.bottom > obstacleRect.top &&
-    playerRect.top < obstacleRect.bottom
-  ) {
-    endGame();
-    return;
+  if (checkCollision()) {
+    clearInterval(intervalId);
+    gameOverDisplay.style.display = 'block';
+    obstacle.style.display = 'none';
   }
-
-  requestAnimationFrame(gameLoop);
 }
 
-function endGame() {
-  gameRunning = false;
-  gameOverDiv.style.display = "block";
+function checkCollision() {
+  const charRect = character.getBoundingClientRect();
+  const obsRect = obstacle.getBoundingClientRect();
+  return !(charRect.right < obsRect.left ||
+           charRect.left > obsRect.right ||
+           charRect.bottom < obsRect.top ||
+           charRect.top > obsRect.bottom);
 }
 
-function restartGame() {
-  position = 0;
-  velocity = 0;
-  score = 0;
-  obstacleX = window.innerWidth;
-  obstacleSpeed = 6;
-  isJumping = false;
-  gameRunning = true;
-  gameOverDiv.style.display = "none";
-  scoreDisplay.textContent = "점수: 0";
-  requestAnimationFrame(gameLoop);
-}
+restartButton.addEventListener('click', startGame);
+window.addEventListener('click', jump);
 
-requestAnimationFrame(gameLoop);
+document.addEventListener('DOMContentLoaded', () => {
+  startGame();
+});
