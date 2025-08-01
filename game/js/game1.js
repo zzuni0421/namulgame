@@ -5,31 +5,37 @@ document.addEventListener("DOMContentLoaded", () => {
   const gameOverScreen = document.getElementById("game-over");
   const restartBtn = document.getElementById("restart");
 
-  let characterY = 150;
+  let characterY = 150; // 캐릭터의 수직 위치
   let velocity = 0;
-  let gravity = 0.6;
+  const gravity = 0.5;
   let isJumping = false;
   let score = 0;
   let gameInterval;
   let obstacleSpeed = 5;
+  const floor = 150;
 
   function jump() {
     if (!isJumping) {
-      velocity = -12;
+      velocity = -10;
       isJumping = true;
     }
   }
 
   function update() {
-    // 캐릭터 위치 갱신
     velocity += gravity;
     characterY += velocity;
 
     // 바닥에 닿았을 때
-    if (characterY >= 150) {
-      characterY = 150;
+    if (characterY >= floor) {
+      characterY = floor;
       velocity = 0;
       isJumping = false;
+    }
+
+    // 천장에 닿았을 때 튕기지 않도록
+    if (characterY < 0) {
+      characterY = 0;
+      velocity = 0;
     }
 
     character.style.top = characterY + "px";
@@ -47,7 +53,6 @@ document.addEventListener("DOMContentLoaded", () => {
     // 충돌 체크
     const characterRect = character.getBoundingClientRect();
     const obstacleRect = obstacle.getBoundingClientRect();
-
     if (
       characterRect.right > obstacleRect.left &&
       characterRect.left < obstacleRect.right &&
@@ -56,7 +61,7 @@ document.addEventListener("DOMContentLoaded", () => {
       endGame();
     }
 
-    // 20초마다 속도 증가
+    // 난이도 증가
     if (score > 0 && score % 20 === 0) {
       obstacleSpeed += 0.2;
     }
@@ -64,6 +69,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
   function startGame() {
     obstacle.style.left = "100vw";
+    characterY = floor;
+    velocity = 0;
     gameInterval = setInterval(update, 20);
   }
 
@@ -73,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
   }
 
   restartBtn.addEventListener("click", () => {
-    characterY = 150;
+    characterY = floor;
     velocity = 0;
     isJumping = false;
     score = 0;
