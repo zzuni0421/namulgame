@@ -1,59 +1,47 @@
+/* 기본 바디 설정 */
 body {
   margin: 0;
-  background-color: #f0f8ff;
-  font-family: 'Arial', sans-serif;
-}
-
-#game-container {
-  position: relative;
-  width: 100vw;
-  height: 100vh;
   overflow: hidden;
-  background: linear-gradient(to bottom, #aee1f9, #ffffff);
+  background: #f0f0f0;
+  font-family: Arial, sans-serif;
 }
 
-#character {
-  position: absolute;
-  bottom: 0;
-  left: 50px;
-  width: 50px;
-  height: 50px;
-  background-color: #4caf50;
-  border-radius: 50%;
-}
-
-#obstacle {
-  position: absolute;
-  bottom: 0;
-  right: -50px;
-  width: 50px;
-  height: 50px;
-  background-color: #f44336;
-  border-radius: 10px;
-}
-
-#score {
-  position: absolute;
-  top: 10px;
-  left: 10px;
+/* 점수 표시 위치 - 화면 아래쪽 */
+#scoreDisplay {
+  position: fixed;
+  bottom: 80px;      /* 아래에서 80px 위 */
+  left: 20px;
   font-size: 24px;
+  font-weight: bold;
   color: #333;
+  z-index: 1000;
 }
 
-#game-over {
-  position: absolute;
-  top: 40%;
-  width: 100%;
-  text-align: center;
-  display: none;
-}
-
-#restart {
+/* 다시하기 버튼 위치 - 점수 아래쪽 */
+#restartButton {
+  position: fixed;
+  bottom: 20px;      /* 아래에서 20px 위 */
+  left: 20px;
   padding: 10px 20px;
   font-size: 18px;
-  background-color: #4caf50;
-  color: white;
-  border: none;
-  border-radius: 10px;
+  display: none;
   cursor: pointer;
+  z-index: 1000;
+  background-color: #3498db;
+  border: none;
+  color: white;
+  border-radius: 5px;
+  transition: background-color 0.3s ease;
+}
+
+#restartButton:hover {
+  background-color: #2980b9;
+}
+
+/* 캔버스는 화면 꽉 채우고 배경 흰색 */
+#gameCanvas {
+  display: block;
+  background: white;
+  width: 100vw;
+  height: 100vh;
 }
