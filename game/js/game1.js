@@ -12,7 +12,15 @@ document.addEventListener("DOMContentLoaded", () => {
   let score = 0;
   let gameInterval;
   let obstacleSpeed = 5;
-  const floor = 150;
+  const floor = 50;
+  let floor = canvas.height - playerHeight;
+
+  window.onload = () => {
+  canvas.width = window.innerWidth;
+  canvas.height = window.innerHeight;
+  floor = canvas.height - playerHeight;
+  playerY = floor;
+};
 
   function jump() {
     if (!isJumping) {
