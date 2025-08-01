@@ -1,62 +1,30 @@
 body {
   margin: 0;
   overflow: hidden;
-  background: #cbeef3;
-  font-family: sans-serif;
 }
 
 #gameArea {
   position: relative;
   width: 100vw;
   height: 100vh;
-  background: #eaffd0;
+  background: linear-gradient(to top, #a0e9ff, #ffffff);
+  overflow: hidden;
 }
 
 #player {
   position: absolute;
-  bottom: 100px;
-  left: 50px;
   width: 50px;
   height: 50px;
-  background-color: #ff5050;
+  background-color: #ff6b6b;
+  left: 50px;
+  bottom: 100px;
   border-radius: 10px;
 }
 
 .obstacle {
   position: absolute;
+  width: 40px;
+  height: 40px;
+  background-color: #4b4b4b;
   bottom: 100px;
-  width: 50px;
-  height: 50px;
-  background-color: #5e5e5e;
-  right: -60px;
-  animation: moveLeft 3s linear forwards;
-}
-
-@keyframes moveLeft {
-  from {
-    right: -60px;
-  }
-  to {
-    right: 100vw;
-  }
-}
-
-#score {
-  position: absolute;
-  top: 10px;
-  left: 10px;
-  font-size: 20px;
-  font-weight: bold;
-}
-
-#backButton {
-  position: absolute;
-  top: 10px;
-  right: 10px;
-  padding: 10px 20px;
-  font-size: 16px;
-  background: #fff;
-  border: 2px solid #000;
-  border-radius: 50%;
-  display: none;
 }
