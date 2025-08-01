@@ -1,89 +1,86 @@
 const player = document.getElementById("player");
 const obstacle = document.getElementById("obstacle");
-const game = document.getElementById("game");
+const scoreDisplay = document.getElementById("score");
+const gameOverDiv = document.getElementById("game-over");
 
-let isGameOver = false;
+let gravity = 0.6;
 let isJumping = false;
+let velocity = 0;
+let position = 0;
 
-let velocityY = 0;           // 수직 속도
-const gravity = 0.8;         // 중력 (프레임당 깎이는 속도)
-const jumpPower = 16;        // 점프 시작 속도 (위로)
-const groundLevel = 60;      // 바닥에서의 bottom 기준
+let obstacleX = window.innerWidth;
+let obstacleSpeed = 6;
+let score = 0;
+let gameRunning = true;
 
-let speed = 6;               // 장애물 속도
-const speedUpInterval = 20000; // 20초마다 빨라짐
+// 점프 기능
+document.body.addEventListener("click", () => {
+  if (!isJumping && gameRunning) {
+    velocity = -12;
+    isJumping = true;
+  }
+});
 
-let obstacleX = window.innerWidth + 100; // 초기 장애물 위치
+function gameLoop() {
+  if (!gameRunning) return;
 
-function jump() {
-  if (isJumping || isGameOver) return;
-  isJumping = true;
-  velocityY = jumpPower;
-}
-
-function update() {
-  if (isGameOver) return;
-
-  // --- 플레이어 점프/중력 ---
-  velocityY -= gravity; // 중력은 속도를 줄임 (위쪽이 양수)
-  let currentBottom = parseFloat(getComputedStyle(player).bottom);
-  currentBottom += velocityY;
-
-  if (currentBottom <= groundLevel) {
-    currentBottom = groundLevel;
-    velocityY = 0;
+  // 중력 적용
+  velocity += gravity;
+  position += velocity;
+  if (position < 0) {
+    position = 0;
+    velocity = 0;
     isJumping = false;
   }
 
-  player.style.bottom = `${currentBottom}px`;
+  player.style.bottom = `${50 + position}px`;
 
-  // --- 장애물 이동 ---
-  obstacleX -= speed;
+  // 장애물 이동
+  obstacleX -= obstacleSpeed;
   if (obstacleX < -60) {
-    obstacleX = window.innerWidth + Math.random() * 300; // 재생성, 간격 약간 랜덤
+    obstacleX = window.innerWidth;
+    score++;
+    scoreDisplay.textContent = `점수: ${score}`;
+
+    // 20점마다 속도 증가
+    if (score % 20 === 0) {
+      obstacleSpeed += 1;
+    }
   }
   obstacle.style.left = `${obstacleX}px`;
 
-  // --- 충돌 판정 ---
+  // 충돌 감지
   const playerRect = player.getBoundingClientRect();
   const obstacleRect = obstacle.getBoundingClientRect();
-
   if (
     playerRect.right > obstacleRect.left &&
     playerRect.left < obstacleRect.right &&
     playerRect.bottom > obstacleRect.top &&
     playerRect.top < obstacleRect.bottom
   ) {
-    gameOver();
+    endGame();
     return;
   }
 
-  requestAnimationFrame(update);
+  requestAnimationFrame(gameLoop);
 }
 
-function gameOver() {
-  if (isGameOver) return;
-  isGameOver = true;
-  alert("Game Over!");
-  location.reload();
+function endGame() {
+  gameRunning = false;
+  gameOverDiv.style.display = "block";
 }
 
-// 입력 (스페이스, 클릭/터치)
-document.addEventListener("keydown", (e) => {
-  if (e.code === "Space" || e.code === "ArrowUp") jump();
-});
-document.addEventListener("click", jump);
-document.addEventListener("touchstart", jump);
+function restartGame() {
+  position = 0;
+  velocity = 0;
+  score = 0;
+  obstacleX = window.innerWidth;
+  obstacleSpeed = 6;
+  isJumping = false;
+  gameRunning = true;
+  gameOverDiv.style.display = "none";
+  scoreDisplay.textContent = "점수: 0";
+  requestAnimationFrame(gameLoop);
+}
 
-// 난이도 상승: 20초마다 장애물 속도 증가, 최대 제한 두면 과도한 속도 방지
-setInterval(() => {
-  if (!isGameOver && speed < 20) {
-    speed += 1;
-    console.log(`속도 증가: ${speed}`);
-  }
-}, speedUpInterval);
-
-// 초기 세팅
-player.style.bottom = `${groundLevel}px`;
-obstacle.style.left = `${obstacleX}px`;
-update();
+requestAnimationFrame(gameLoop);
