@@ -1,22 +1,14 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>점프 게임</title>
-  <link rel="stylesheet" href="../../assets/style/style1.css">
 </head>
 <body>
-  <div id="game-container">
-    <div id="character"></div>
-    <div id="obstacle"></div>
-    <div id="score">점수: 0</div>
-    <div id="game-over">
-      <h1>게임 오버!</h1>
-      <button id="restartButton">다시하기</button>
-    </div>
-  </div>
-  <canvas id="gameCanvas" width="800" height="400"></canvas>
-  <script src="../js/game1.js" defer></script>
+  <div id="scoreDisplay">점수: 0</div>
+  <button id="restartButton">다시하기</button>
+  <canvas id="gameCanvas"></canvas>
+  <script src="game1.js" defer></script>
 </body>
 </html>
