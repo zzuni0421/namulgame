@@ -1,7 +1,7 @@
 body {
   margin: 0;
-  padding: 0;
-  background-color: #cceeff;
+  overflow: hidden;
+  background: #cbeef3;
   font-family: sans-serif;
 }
 
@@ -9,62 +9,54 @@ body {
   position: relative;
   width: 100vw;
   height: 100vh;
-  overflow: hidden;
+  background: #eaffd0;
 }
 
 #player {
   position: absolute;
-  width: 50px;
-  height: 50px;
-  background-color: crimson;
   bottom: 100px;
   left: 50px;
+  width: 50px;
+  height: 50px;
+  background-color: #ff5050;
   border-radius: 10px;
-}
-
-#ground {
-  position: absolute;
-  bottom: 0;
-  width: 100%;
-  height: 100px;
-  background-color: #4caf50;
-}
-
-#score {
-  position: absolute;
-  top: 20px;
-  left: 20px;
-  font-size: 1.5rem;
-  color: #333;
-  font-weight: bold;
 }
 
 .obstacle {
   position: absolute;
   bottom: 100px;
-  width: 40px;
-  height: 60px;
-  background-color: black;
+  width: 50px;
+  height: 50px;
+  background-color: #5e5e5e;
+  right: -60px;
+  animation: moveLeft 3s linear forwards;
 }
+
+@keyframes moveLeft {
+  from {
+    right: -60px;
+  }
+  to {
+    right: 100vw;
+  }
+}
+
+#score {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
 #backButton {
   position: absolute;
-  top: 20px;
-  right: 20px;
-  padding: 15px;
-  border: none;
-  border-radius: 50%;
-  background-color: #ff6b6b;
-  color: white;
+  top: 10px;
+  right: 10px;
+  padding: 10px 20px;
   font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-  transition: transform 0.2s ease;
-  z-index: 999;
+  background: #fff;
+  border: 2px solid #000;
+  border-radius: 50%;
+  display: none;
 }
-
-#backButton:hover {
-  transform: scale(1.1);
-  background-color: #ff4d4d;
-}
-
