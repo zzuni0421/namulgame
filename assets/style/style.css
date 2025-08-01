@@ -45,9 +45,10 @@ button:hover {
 .namul {
   width: 50px;
   height: 50px;
-  background-image: url('assets/namul.png');
+  background-image: url('../namul.png');
   background-size: cover;
   position: absolute;
+  background: none
 }
 
 footer {
