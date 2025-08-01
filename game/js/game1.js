@@ -38,7 +38,9 @@ document.addEventListener("DOMContentLoaded", () => {
         clearInterval(moveInterval);
         obstacle.remove();
       } else {
-        obstacle.style.left = (left - 4) + "px";
+       obstacle.style.right = '0px'; // 오른쪽 끝에서 시작
+obstacle.style.left = 'unset'; // left 초기화
+
 
         // 충돌 판정
         const obstacleLeft = obstacle.getBoundingClientRect().left;
@@ -97,7 +99,6 @@ document.addEventListener("DOMContentLoaded", () => {
   document.addEventListener("touchstart", jump);
 
   update();
-  // DOMContentLoaded 안에서 아래 코드 추가
 
 const backButton = document.createElement("button");
 backButton.id = "backButton";
