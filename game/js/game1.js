@@ -5,7 +5,7 @@ const gameOverDisplay = document.getElementById('game-over');
 const restartButton = document.getElementById('restart');
 
 let isJumping = false;
-let gravity = 2;
+let gravity = 0.5;
 let velocity = 0;
 let position = 0;
 let score = 0;
