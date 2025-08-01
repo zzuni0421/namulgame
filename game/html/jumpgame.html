@@ -2,15 +2,19 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>점프 게임</title>
   <link rel="stylesheet" href="../../assets/style/style1.css" />
 </head>
 <body>
-  <div id="game">
+  <div id="game-container">
     <div id="player"></div>
     <div id="obstacle"></div>
-    <div id="ground"></div>
+    <div id="score">점수: 0</div>
+    <div id="game-over">
+      <p>게임 오버!</p>
+      <button onclick="restartGame()">다시하기</button>
+    </div>
   </div>
   <script src="../js/game1.js"></script>
 </body>
