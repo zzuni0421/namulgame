@@ -107,3 +107,17 @@ retryBtn.addEventListener("click", resetGame);
 
 // 게임 시작
 update();
+
+// DOMContentLoaded 내부
+const backBtn = document.createElement("button");
+backBtn.id = "backToMainBtn";
+backBtn.textContent = "↩️ 메인으로";
+backBtn.style.position = "fixed";
+backBtn.style.top = "10px";
+backBtn.style.left = "10px";
+backBtn.style.zIndex = "1000";
+document.body.appendChild(backBtn);
+
+backBtn.onclick = () => {
+  window.location.href = "index.html";
+};
