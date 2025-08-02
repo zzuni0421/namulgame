@@ -121,4 +121,4 @@ document.body.appendChild(backBtn);
 backBtn.onclick = () => {
   window.location.href = "index.html";
 };
-}
+)};
