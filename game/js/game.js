@@ -125,3 +125,7 @@ document.addEventListener("DOMContentLoaded", () => {
     replayBtn.style.display = "inline-block";
   }
 });
+
+document.getElementById("backToMainBtn").onclick = () => {
+  window.location.href = "../../index.html"; 
+};
