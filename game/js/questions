@@ -1,0 +1,58 @@
+const questions = [
+  {
+    question: "주말에 뭐할래?",
+    choices: [
+      { text: "액티비티하러 나감", type: "두릅형" },
+      { text: "넷플릭스+이불 속", type: "취나물형" }
+    ]
+  },
+  {
+    question: "회식 때 당신은?",
+    choices: [
+      { text: "리드하며 분위기 띄움", type: "두릅형" },
+      { text: "조용히 먹고 빠짐", type: "고사리형" }
+    ]
+  },
+  {
+    question: "친구가 고민 상담할 때",
+    choices: [
+      { text: "직설 조언해줌", type: "돌나물형" },
+      { text: "공감 먼저 해줌", type: "고사리형" }
+    ]
+  },
+  {
+    question: "여행 스타일은?",
+    choices: [
+      { text: "일정 빡빡한 알차게 여행", type: "두릅형" },
+      { text: "즉흥+감성 코스", type: "취나물형" }
+    ]
+  },
+  {
+    question: "기분 우울할 때",
+    choices: [
+      { text: "운동으로 풀기", type: "두릅형" },
+      { text: "맛있는 거 먹기", type: "돌나물형" }
+    ]
+  },
+  {
+    question: "좋아하는 사람 생기면?",
+    choices: [
+      { text: "먼저 연락함", type: "돌나물형" },
+      { text: "계속 눈치만 봄", type: "고사리형" }
+    ]
+  },
+  {
+    question: "내 방은 어떤 스타일?",
+    choices: [
+      { text: "깔끔하고 정돈됨", type: "두릅형" },
+      { text: "감성+장식 많음", type: "취나물형" }
+    ]
+  },
+  {
+    question: "이상형은?",
+    choices: [
+      { text: "똑똑하고 추진력 있는 사람", type: "두릅형" },
+      { text: "편안하고 유쾌한 사람", type: "돌나물형" }
+    ]
+  }
+];
