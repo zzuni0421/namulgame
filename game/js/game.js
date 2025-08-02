@@ -124,10 +124,7 @@ document.addEventListener("DOMContentLoaded", () => {
     alert(`게임 종료! ${nickname}님의 점수는 ${score}점입니다!`);
     replayBtn.style.display = "inline-block";
   }
-});
-
-// DOMContentLoaded 내부
-const backBtn = document.createElement("button");
+  const backBtn = document.createElement("button");
 backBtn.id = "backToMainBtn";
 backBtn.textContent = "↩️ 메인으로";
 backBtn.style.position = "fixed";
@@ -139,3 +136,5 @@ document.body.appendChild(backBtn);
 backBtn.onclick = () => {
   window.location.href = "../../index.html";
 };
+
+});
