@@ -1,47 +1,37 @@
-/* 기본 바디 설정 */
+/* assets/style/jumpstyle.css */
 body {
+  font-family: "Pretendard", sans-serif;
+  background: #f5f5f5;
   margin: 0;
-  overflow: hidden;
-  background: #f0f0f0;
-  font-family: Arial, sans-serif;
+  padding: 0;
+  text-align: center;
 }
 
-/* 점수 표시 위치 - 화면 아래쪽 */
+canvas {
+  background: #fff;
+  border: 2px solid #333;
+  margin-top: 20px;
+}
+
 #scoreDisplay {
-  position: fixed;
-  bottom: 80px;      /* 아래에서 80px 위 */
-  left: 20px;
-  font-size: 24px;
-  font-weight: bold;
-  color: #333;
-  z-index: 1000;
+  font-size: 1.5rem;
+  margin: 10px 0;
 }
 
-/* 다시하기 버튼 위치 - 점수 아래쪽 */
-#restartButton {
-  position: fixed;
-  bottom: 20px;      /* 아래에서 20px 위 */
-  left: 20px;
-  padding: 10px 20px;
-  font-size: 18px;
+.hidden {
   display: none;
-  cursor: pointer;
-  z-index: 1000;
-  background-color: #3498db;
-  border: none;
+}
+
+#gameOverScreen {
+  background: rgba(0, 0, 0, 0.7);
   color: white;
-  border-radius: 5px;
-  transition: background-color 0.3s ease;
+  padding: 20px;
+  margin-top: 10px;
+  border-radius: 12px;
 }
 
-#restartButton:hover {
-  background-color: #2980b9;
-}
-
-/* 캔버스는 화면 꽉 채우고 배경 흰색 */
-#gameCanvas {
-  display: block;
-  background: white;
-  width: 100vw;
-  height: 100vh;
+input, button {
+  padding: 10px;
+  margin: 5px;
+  font-size: 1rem;
 }
