@@ -1,21 +1,10 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const firebaseConfig = {
-    apiKey: "AIzaSyBIrOc0np-DUSdv2Fb7T8RZudMBVlmiyEk",
-    authDomain: "namulgame-1f0b0.firebaseapp.com",
-    projectId: "namulgame-1f0b0",
-    storageBucket: "namulgame-1f0b0.appspot.com",
-    messagingSenderId: "530134238906",
-    appId: "1:530134238906:web:286bef2d6144441ddee483",
-    measurementId: "G-WTWH1LG6SM"
-  };
-  firebase.initializeApp(firebaseConfig);
-  const db = firebase.firestore();
-
   let nickname = "";
   let score = 0;
-  let gameInterval;
+  let gameInterval = null;
   let timeLeft = 10;
   let currentMode = "10";
+  let gameOver = false;
 
   const nicknameInput = document.getElementById("nicknameInput");
   const nicknameDisplay = document.getElementById("nicknameDisplay");
@@ -27,31 +16,20 @@ document.addEventListener("DOMContentLoaded", () => {
   const bgm = document.getElementById("bgm");
   const replayBtn = document.getElementById("replayBtn");
 
-  submitBtn.onclick = async () => {
+  submitBtn.onclick = () => {
     const value = nicknameInput.value.trim();
-    if (!value) return alert("nickname의 값은 필수입니다.");
-
-    const snapshot = await db.collection("players").doc(value).get();
-    if (snapshot.exists) return alert("이미 사용 중인 닉네임입니다.");
-
+    if (!value) return alert("닉네임을 입력하세요.");
     nickname = value;
-    await db.collection("players").doc(nickname).set({});
-
-    nicknameDisplay.textContent = `좋은 하루, ${nickname}`;
+    nicknameDisplay.textContent = `안녕하세요, ${nickname}님!`;
     document.getElementById("nicknameSection").style.display = "none";
     gameUI.style.display = "block";
   };
 
   document.querySelectorAll(".modeBtn").forEach(btn => {
     btn.onclick = () => {
-      const mode = btn.dataset.time;
-      currentMode = mode;
-      startGame(mode);
+      currentMode = btn.dataset.time;
+      startGame(currentMode);
     };
-  });
-
-  document.querySelectorAll(".rankingBtn").forEach(btn => {
-    btn.onclick = () => showRanking(btn.dataset.time);
   });
 
   document.getElementById("bgmToggle").onclick = () => {
@@ -65,27 +43,27 @@ document.addEventListener("DOMContentLoaded", () => {
 
   gameArea.onclick = (e) => {
     if (!gameInterval) return;
-
-    const isNamul = e.target.classList.contains("namul");
-    if (isNamul) {
+    if (e.target.classList.contains("namul")) {
       score++;
-      scoreDisplay.textContent = `현재 ${nickname}님의 점수는 ${score}점입니다.`;
+      scoreDisplay.textContent = `${nickname}님의 점수: ${score}점`;
       spawnNamul();
     }
   };
 
   function startGame(mode) {
     score = 0;
+    gameOver = false;
     timeLeft = mode === "infinite" ? Infinity : parseInt(mode);
-    scoreDisplay.textContent = `점수 : 0점`;
-    timerDisplay.textContent = mode === "infinite" ? "∞" : `${timeLeft}초`;
+    scoreDisplay.textContent = `점수: 0점`;
+    timerDisplay.textContent = mode === "infinite" ? "∞" : `${timeLeft}초 남음`;
     gameArea.innerHTML = "";
     replayBtn.style.display = "none";
 
+    if (gameInterval) clearInterval(gameInterval);
     gameInterval = setInterval(() => {
       if (mode !== "infinite") {
         timeLeft--;
-        timerDisplay.textContent = `${timeLeft}초 남았어요!`;
+        timerDisplay.textContent = `${timeLeft}초 남음`;
         if (timeLeft <= 0) {
           endGame();
         }
@@ -107,57 +85,8 @@ document.addEventListener("DOMContentLoaded", () => {
   function endGame() {
     clearInterval(gameInterval);
     gameInterval = null;
+    gameOver = true;
     alert(`게임 종료! 점수: ${score}`);
     replayBtn.style.display = "inline-block";
-
-    const rankRef = db.collection("rankings").doc(currentMode);
-    rankRef.get().then(doc => {
-      let data = doc.exists ? doc.data() : {};
-      if (nickname) {
-        data[nickname] = Math.max(score, data[nickname] || 0);
-        rankRef.set(data);
-      }
-    });
   }
-
-  function showRanking(mode) {
-    const board = document.getElementById("rankingBoard");
-    board.innerHTML = `<h3>${mode}초 랭킹</h3>`;
-    db.collection("rankings").doc(mode).get().then(doc => {
-      if (doc.exists) {
-        const data = doc.data();
-        const sorted = Object.entries(data).sort((a,b)=>b[1]-a[1]);
-        sorted.forEach(([name, score]) => {
-          board.innerHTML += `<div>${name}: ${score}</div>`;
-        });
-      } else {
-        board.innerHTML += `<div>랭킹 없음</div>`;
-      }
-    });
-  }
-
-  // 다국어 적용
-  document.getElementById("langSelect").addEventListener("change", e => {
-    const lang = e.target.value;
-    applyLang(lang);
-    const backButton = document.createElement("button");
-backButton.id = "backButton";
-backButton.textContent = "↩️ 메인으로";
-backButton.style.display = "none"; // 처음엔 안 보이게
-gameArea.appendChild(backButton);
-
-backButton.addEventListener("click", () => {
-  window.location.href = "index.html";
-});
-
-function endGame() {
-  if (gameOver) return;
-  gameOver = true;
-
-  cancelAnimationFrame(animationFrameId);
-  clearInterval(obstacleIntervalId);
-
-  backButton.style.display = "block"; 
-}
-  });
 });
