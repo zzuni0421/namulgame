@@ -2,25 +2,24 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>점프 게임</title>
   <link rel="stylesheet" href="../../assets/style/style1.css" />
 </head>
 <body>
-  <div class="game-container">
-    <canvas id="gameCanvas" width="600" height="400"></canvas>
-    <div id="scoreDisplay">점수: 0</div>
-    <div id="gameOverScreen" class="hidden">
-      <h1>게임 오버!</h1>
-      <p id="finalScore"></p>
-      <input type="text" id="nicknameInput" placeholder="닉네임 입력"/>
-      <button id="submitScore">점수 제출</button>
-      <button id="retryBtn">다시하기</button>
-      <h2>🏆 랭킹</h2>
-      <ol id="rankingList"></ol>
-    </div>
+  <div id="intro">
+    <h1>🕹️ 점프해서 장애물 피하기 🏃‍♂️</h1>
+    <input id="nickname" type="text" placeholder="닉네임 입력" />
+    <button>게임 시작</button>
   </div>
 
-<script type="module" src="../js/game1.js"></script>
+  <div id="gameContainer">
+    <canvas id="gameCanvas" width="800" height="400"></canvas>
+    <p id="scoreDisplay">점수: 0</p>
+    <button id="restartButton">다시 하기</button>
+    <h3>🏆 랭킹 TOP 5</h3>
+    <ul id="rankingList"></ul>
+  </div>
+
+  <script type="module" src="../js/game1.js"></script>
 </body>
 </html>
