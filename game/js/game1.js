@@ -109,7 +109,7 @@ retryBtn.addEventListener("click", resetGame);
 // 게임 시작
 update();
 
-const backBtn = document.createElement("button");
+  const backBtn = document.createElement("button");
 backBtn.id = "backToMainBtn";
 backBtn.textContent = "↩️ 메인으로";
 backBtn.style.position = "fixed";
@@ -119,6 +119,6 @@ backBtn.style.zIndex = "1000";
 document.body.appendChild(backBtn);
 
 backBtn.onclick = () => {
-  window.location.href = "index.html";
+  window.location.href = "../../index.html";
 };
 });
