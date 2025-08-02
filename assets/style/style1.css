@@ -69,7 +69,7 @@ body {
   background-color: #0077cc;
 }
 
-#backToMainBtn {
+#backBtn {
   position: fixed;
   top: 10px;
   left: 10px;
@@ -83,7 +83,7 @@ body {
   cursor: pointer;
   transition: background-color 0.3s ease;
 }
-#backToMainBtn:hover {
+#backBtn:hover {
   background-color: rgba(0,0,0,0.85);
 }
 
