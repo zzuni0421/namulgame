@@ -1,65 +1,49 @@
-/* style1.css */
 body {
   font-family: 'Pretendard', sans-serif;
-  text-align: center;
   background: #f0f8ff;
+  text-align: center;
   margin: 0;
-  padding: 0;
+  padding: 20px;
 }
-
-#intro {
-  margin-top: 50px;
-}
-
-input {
-  padding: 10px;
-  font-size: 16px;
-  margin: 10px;
-  border-radius: 10px;
-  border: 1px solid #ccc;
-}
-
 button {
   padding: 10px 20px;
-  font-size: 16px;
-  background: #4caf50;
-  color: white;
   border: none;
   border-radius: 20px;
+  background-color: #4caf50;
+  color: white;
   cursor: pointer;
-  transition: background 0.2s ease;
+  margin: 5px;
+  font-size: 16px;
 }
-
 button:hover {
-  background: #45a049;
+  background-color: #45a049;
 }
-
-#gameContainer {
-  margin-top: 30px;
-}
-
-canvas {
+#gameCanvas {
   border: 2px solid #000;
-  background: #fff;
+  background: white;
+  margin-top: 20px;
 }
-
-#scoreDisplay {
-  font-size: 24px;
-  margin: 15px 0;
-  font-weight: bold;
-}
-
 #rankingList {
   list-style: none;
   padding: 0;
   max-width: 400px;
-  margin: 0 auto;
+  margin: 10px auto;
+  text-align: left;
 }
-
 #rankingList li {
-  background: #ffffffdd;
-  margin: 5px;
-  padding: 8px;
+  background: #ffffffcc;
+  margin: 6px 0;
+  padding: 8px 15px;
   border-radius: 10px;
-  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  box-shadow: 1px 1px 3px #aaa;
+}
+#userInfo {
+  margin-top: 10px;
+  font-weight: bold;
+}
+#logoutBtn {
+  background-color: #e74c3c;
+}
+#logoutBtn:hover {
+  background-color: #c0392b;
 }
