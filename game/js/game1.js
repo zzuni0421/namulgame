@@ -1,4 +1,4 @@
-import { db, collection, addDoc, getDocs, query, orderBy, limit } from "./firebaseConfig.js";
+import { db, collection, addDoc, getDocs, query, orderBy, limit } from "./firebase-config.js";
 
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
