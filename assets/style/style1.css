@@ -1,49 +1,70 @@
 body {
-  font-family: 'Pretendard', sans-serif;
-  background: #f0f8ff;
+  background: #282c34;
+  color: white;
+  font-family: 'Arial', sans-serif;
   text-align: center;
   margin: 0;
-  padding: 20px;
+  padding: 0;
+  user-select: none;
 }
-button {
-  padding: 10px 20px;
+
+.game-container {
+  max-width: 600px;
+  margin: 40px auto;
+  position: relative;
+}
+
+#gameCanvas {
+  background: #111;
+  display: block;
+  margin: 0 auto;
+  border-radius: 8px;
+  box-shadow: 0 0 10px #00aaff;
+}
+
+#scoreDisplay {
+  font-size: 24px;
+  margin-top: 12px;
+}
+
+#gameOverScreen {
+  position: absolute;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.8);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  border-radius: 8px;
+}
+
+#gameOverScreen.hidden {
+  display: none;
+}
+
+#gameOverScreen h1 {
+  font-size: 48px;
+  margin-bottom: 20px;
+  color: #ff4444;
+}
+
+#finalScore {
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+#retryBtn {
+  padding: 10px 25px;
+  font-size: 18px;
   border: none;
-  border-radius: 20px;
-  background-color: #4caf50;
+  border-radius: 5px;
+  background-color: #00aaff;
   color: white;
   cursor: pointer;
-  margin: 5px;
-  font-size: 16px;
+  transition: background-color 0.2s;
 }
-button:hover {
-  background-color: #45a049;
-}
-#gameCanvas {
-  border: 2px solid #000;
-  background: white;
-  margin-top: 20px;
-}
-#rankingList {
-  list-style: none;
-  padding: 0;
-  max-width: 400px;
-  margin: 10px auto;
-  text-align: left;
-}
-#rankingList li {
-  background: #ffffffcc;
-  margin: 6px 0;
-  padding: 8px 15px;
-  border-radius: 10px;
-  box-shadow: 1px 1px 3px #aaa;
-}
-#userInfo {
-  margin-top: 10px;
-  font-weight: bold;
-}
-#logoutBtn {
-  background-color: #e74c3c;
-}
-#logoutBtn:hover {
-  background-color: #c0392b;
+
+#retryBtn:hover {
+  background-color: #0077cc;
 }
