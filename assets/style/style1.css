@@ -1,105 +1,65 @@
-/* 기본 리셋 */
-* {
+/* style1.css */
+body {
+  font-family: 'Pretendard', sans-serif;
+  text-align: center;
+  background: #f0f8ff;
   margin: 0;
   padding: 0;
-  box-sizing: border-box;
 }
 
-body {
-  background: #f0f4f8;
-  font-family: 'Noto Sans KR', sans-serif;
-  color: #333;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+#intro {
+  margin-top: 50px;
 }
 
-.game-container {
-  background: #ffffff;
-  border: 3px solid #007acc;
-  border-radius: 12px;
-  padding: 20px;
-  width: 640px;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.1);
-  text-align: center;
+input {
+  padding: 10px;
+  font-size: 16px;
+  margin: 10px;
+  border-radius: 10px;
+  border: 1px solid #ccc;
 }
 
-#gameCanvas {
-  background: #d0e7ff;
-  display: block;
-  margin: 0 auto 15px;
-  border-radius: 8px;
-  box-shadow: inset 0 0 10px #90c3ff;
+button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background: #4caf50;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+button:hover {
+  background: #45a049;
+}
+
+#gameContainer {
+  margin-top: 30px;
+}
+
+canvas {
+  border: 2px solid #000;
+  background: #fff;
 }
 
 #scoreDisplay {
   font-size: 24px;
-  font-weight: 700;
-  color: #007acc;
-  margin-bottom: 10px;
-}
-
-.hidden {
-  display: none;
-}
-
-#gameOverScreen {
-  margin-top: 20px;
-}
-
-#gameOverScreen h1 {
-  font-size: 36px;
-  color: #ff4d4d;
-  margin-bottom: 10px;
-}
-
-#finalScore {
-  font-size: 28px;
-  margin-bottom: 15px;
-}
-
-#nicknameInput {
-  padding: 8px 12px;
-  font-size: 16px;
-  width: 60%;
-  max-width: 250px;
-  border: 2px solid #007acc;
-  border-radius: 6px;
-  margin-bottom: 10px;
-  outline: none;
-  transition: border-color 0.3s ease;
-}
-
-#nicknameInput:focus {
-  border-color: #004a99;
-}
-
-button {
-  background-color: #007acc;
-  color: white;
-  border: none;
-  padding: 10px 18px;
-  font-size: 16px;
-  border-radius: 6px;
-  margin: 5px 8px;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
-}
-
-button:hover {
-  background-color: #005a99;
+  margin: 15px 0;
+  font-weight: bold;
 }
 
 #rankingList {
-  text-align: left;
-  max-width: 300px;
-  margin: 20px auto 0;
-  font-size: 18px;
-  color: #444;
+  list-style: none;
+  padding: 0;
+  max-width: 400px;
+  margin: 0 auto;
 }
 
 #rankingList li {
-  padding: 6px 8px;
-  border-bottom: 1px solid #ccc;
+  background: #ffffffdd;
+  margin: 5px;
+  padding: 8px;
+  border-radius: 10px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
