@@ -1,5 +1,3 @@
-// ../js/game.js
-
 document.addEventListener("DOMContentLoaded", () => {
   // DOM 요소들 잡기
   const nicknameSection = document.getElementById("nicknameSection");
