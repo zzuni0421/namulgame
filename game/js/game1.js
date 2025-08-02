@@ -115,9 +115,29 @@ backBtn.style.position = "fixed";
 backBtn.style.top = "10px";
 backBtn.style.left = "10px";
 backBtn.style.zIndex = "1000";
-backBtn.onclick = () => {
-  window.location.href = "../../index.html"; // index 위치가 /namulgame/index.html이면 이 경로 OK
+
+// 예쁜 스타일
+backBtn.style.padding = "8px 14px";
+backBtn.style.fontSize = "16px";
+backBtn.style.borderRadius = "999px";
+backBtn.style.border = "none";
+backBtn.style.backgroundColor = "#4CAF50";
+backBtn.style.color = "white";
+backBtn.style.boxShadow = "0 2px 6px rgba(0,0,0,0.2)";
+backBtn.style.cursor = "pointer";
+backBtn.style.transition = "transform 0.2s";
+
+backBtn.onmouseover = () => {
+  backBtn.style.transform = "scale(1.05)";
 };
-document.body.appendChild(backBtn); // 이게 핵심!
+backBtn.onmouseleave = () => {
+  backBtn.style.transform = "scale(1)";
+};
+
+backBtn.onclick = () => {
+  window.location.href = "../../index.html";
+};
+document.body.appendChild(backBtn);
+
 
 });
