@@ -1,3 +1,4 @@
+document.addEventListener("DOMContentLoaded", () => {
 const canvas = document.getElementById("gameCanvas");
 const ctx = canvas.getContext("2d");
 const scoreDisplay = document.getElementById("scoreDisplay");
@@ -108,7 +109,6 @@ retryBtn.addEventListener("click", resetGame);
 // 게임 시작
 update();
 
-// DOMContentLoaded 내부
 const backBtn = document.createElement("button");
 backBtn.id = "backToMainBtn";
 backBtn.textContent = "↩️ 메인으로";
@@ -121,3 +121,4 @@ document.body.appendChild(backBtn);
 backBtn.onclick = () => {
   window.location.href = "index.html";
 };
+}
