@@ -110,7 +110,14 @@ retryBtn.addEventListener("click", resetGame);
 update();
 
   const backBtn = document.createElement("button");
+backBtn.textContent = "↩️ 메인으로";
+backBtn.style.position = "fixed";
+backBtn.style.top = "10px";
+backBtn.style.left = "10px";
+backBtn.style.zIndex = "1000";
 backBtn.onclick = () => {
-  window.location.href = "../../index.html";
+  window.location.href = "../../index.html"; // index 위치가 /namulgame/index.html이면 이 경로 OK
 };
+document.body.appendChild(backBtn); // 이게 핵심!
+
 });
