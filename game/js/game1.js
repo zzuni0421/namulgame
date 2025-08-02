@@ -1,4 +1,3 @@
-// scripts/jumpgame.js
 import { db, collection, addDoc, getDocs, query, orderBy, limit } from "./firebaseConfig.js";
 
 const canvas = document.getElementById("gameCanvas");
@@ -13,10 +12,10 @@ const rankingList = document.getElementById("rankingList");
 
 let score = 0;
 let gameOver = false;
-let gravity = 0.6;
-let jumpPower = -10;
-let player = { x: 50, y: 300, width: 30, height: 30, dy: 0 };
-let obstacle = { x: 600, y: 350, width: 20, height: 50, speed: 4 };
+const gravity = 0.6;
+const jumpPower = -10;
+const player = { x: 50, y: canvas.height - 30, width: 30, height: 30, dy: 0 };
+const obstacle = { x: canvas.width, y: canvas.height - 50, width: 20, height: 50, speed: 4 };
 
 function drawPlayer() {
   ctx.fillStyle = "#007acc";
@@ -47,6 +46,7 @@ function update() {
     scoreDisplay.innerText = `점수: ${score}`;
   }
 
+  // 충돌 체크
   if (
     player.x < obstacle.x + obstacle.width &&
     player.x + player.width > obstacle.x &&
@@ -70,7 +70,7 @@ function endGame() {
 
 function resetGame() {
   score = 0;
-  player.y = 300;
+  player.y = canvas.height - player.height;
   player.dy = 0;
   obstacle.x = canvas.width;
   gameOver = false;
@@ -80,7 +80,7 @@ function resetGame() {
 }
 
 function jump() {
-  if (!gameOver && player.y + player.height >= canvas.height) {
+  if (!gameOver && player.y + player.height >= canvas.height - 1) {
     player.dy = jumpPower;
   }
 }
@@ -103,7 +103,7 @@ submitBtn.addEventListener("click", async () => {
     await addDoc(collection(db, "jump_scores"), {
       nickname: nickname,
       score: score,
-      timestamp: Date.now()
+      timestamp: Date.now(),
     });
     alert("점수가 저장되었습니다!");
     showRanking();
@@ -125,4 +125,6 @@ async function showRanking() {
   });
 }
 
+// 시작 시 랭킹 불러오기
+showRanking();
 update();
