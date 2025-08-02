@@ -4,19 +4,26 @@
   <meta charset="UTF-8" />
   <title>점프 게임</title>
   <link rel="stylesheet" href="../../assets/style/style1.css" />
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js"></script>
 </head>
 <body>
-  <div id="intro">
-    <h1>🕹️ 점프해서 장애물 피하기 🏃‍♂️</h1>
-    <input id="nickname" type="text" placeholder="닉네임 입력" />
-    <button>게임 시작</button>
+  <div id="loginSection">
+    <input id="nicknameInput" type="text" placeholder="닉네임 입력 (필수)" />
+    <button id="startGameBtn">게임 시작</button>
+    <hr />
+    <button id="googleLoginBtn">구글 로그인 (선택)</button>
+    <button id="logoutBtn" style="display:none;">로그아웃</button>
+    <p id="userInfo"></p>
   </div>
 
-  <div id="gameContainer">
+  <div id="gameSection" style="display:none;">
+    <h1>점프해서 장애물 피하기</h1>
     <canvas id="gameCanvas" width="800" height="400"></canvas>
     <p id="scoreDisplay">점수: 0</p>
-    <button id="restartButton">다시 하기</button>
-    <h3>🏆 랭킹 TOP 5</h3>
+    <button id="restartBtn" style="display:none;">다시하기</button>
+    <h2>🏆 랭킹 TOP 5</h2>
     <ul id="rankingList"></ul>
   </div>
 
