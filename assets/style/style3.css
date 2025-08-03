@@ -1,116 +1,62 @@
-* {
-  margin: 0; padding: 0; box-sizing: border-box;
-  font-family: 'Noto Sans KR', sans-serif;
-  user-select: none;
-}
-
 body {
-  background: linear-gradient(135deg, #a8e063, #56ab2f);
-  color: #2c3e50;
-  min-height: 100vh;
+  font-family: 'Noto Sans KR', sans-serif;
+  background: #f0f8e0;
+  margin: 0; padding: 0;
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+header {
   padding: 20px;
+  font-size: 1.5rem;
+  font-weight: bold;
 }
-
-header h1 {
-  font-size: 2rem;
-  margin-bottom: 20px;
-  text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+#score {
+  margin: 10px;
+  font-size: 1.2rem;
 }
-
-main {
-  width: 100%;
-  max-width: 900px;
-  background: rgba(255,255,255,0.9);
-  border-radius: 12px;
-  padding: 20px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
-}
-
-#plants-container {
+#plants {
   display: flex;
-  gap: 15px;
-  justify-content: center;
   flex-wrap: wrap;
-  margin-bottom: 30px;
+  justify-content: center;
+  gap: 16px;
+  margin: 20px;
 }
-
-.plant-card {
-  background: #f0fff0;
+.plant {
   border: 2px solid #8bc34a;
-  border-radius: 10px;
-  width: 140px;
-  padding: 15px;
+  border-radius: 8px;
+  background: #ffffff;
+  padding: 10px;
+  width: 180px;
   text-align: center;
-  box-shadow: 0 4px 10px rgba(139,195,74,0.3);
+}
+#buyBtn {
+  background: #4caf50;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 20px;
   cursor: pointer;
-  transition: transform 0.2s ease;
+  font-size: 1rem;
 }
-
-.plant-card:hover {
-  transform: scale(1.05);
+#shopPopup {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: white;
+  padding: 20px;
+  border: 2px solid #4caf50;
+  border-radius: 10px;
+  display: none;
+  z-index: 999;
 }
-
-.plant-name {
-  font-weight: 700;
-  margin-bottom: 8px;
-  font-size: 1.1rem;
-}
-
-.plant-level {
-  margin-bottom: 6px;
-  font-size: 0.9rem;
-  color: #4caf50;
-}
-
-.plant-progress {
-  background: #c8e6c9;
-  border-radius: 5px;
-  height: 14px;
-  overflow: hidden;
+#shopPopup h2 {
   margin-bottom: 10px;
 }
-
-.plant-progress-bar {
-  height: 100%;
-  background: #4caf50;
-  width: 0%;
-  transition: width 0.3s ease;
-  border-radius: 5px;
+.shop-item {
+  margin: 10px 0;
 }
-
-#upgrade-panel {
-  border-top: 2px solid #8bc34a;
-  padding-top: 15px;
-  margin-bottom: 20px;
-  text-align: center;
-}
-
-#upgrade-btn {
-  background: #4caf50;
-  border: none;
-  color: white;
-  font-weight: 700;
-  font-size: 1rem;
-  padding: 10px 20px;
-  border-radius: 25px;
-  cursor: pointer;
-  transition: background 0.3s ease;
-}
-
-#upgrade-btn:disabled {
-  background: #a5d6a7;
-  cursor: not-allowed;
-}
-
-#upgrade-btn:hover:not(:disabled) {
-  background: #388e3c;
-}
-
-#score-display {
-  font-size: 1.2rem;
-  font-weight: 700;
-  text-align: center;
+.shop-item button {
+  margin-left: 10px;
 }
