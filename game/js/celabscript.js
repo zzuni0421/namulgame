@@ -1,8 +1,21 @@
 const results = {
-  INTJ: { cool: "현빈", funny: "이경규", kind: "이수근", romantic: "이정재" },
-  ENFP: { cool: "제니", funny: "유재석", kind: "수지", romantic: "뷔" },
+  const results = {
+  ISTJ: { cool: "정해인", funny: "정형돈", kind: "강호동", romantic: "이준기" },
   ISFJ: { cool: "송중기", funny: "박보영", kind: "아이유", romantic: "박서준" },
-  // 필요한 만큼 추가 가능
+  INFJ: { cool: "이도현", funny: "이수근", kind: "박하선", romantic: "공유" },
+  INTJ: { cool: "현빈", funny: "이경규", kind: "이수근", romantic: "이정재" },
+  ISTP: { cool: "차은우", funny: "하하", kind: "이광수", romantic: "이민호" },
+  ISFP: { cool: "박서함", funny: "강호동", kind: "서현", romantic: "지민" },
+  INFP: { cool: "이승기", funny: "신동엽", kind: "김고은", romantic: "서강준" },
+  INTP: { cool: "김선호", funny: "유병재", kind: "오연서", romantic: "이현우" },
+  ESTP: { cool: "김우빈", funny: "장도연", kind: "김종국", romantic: "강다니엘" },
+  ESFP: { cool: "이홍기", funny: "이국주", kind: "김세정", romantic: "지수" },
+  ENFP: { cool: "제니", funny: "유재석", kind: "수지", romantic: "뷔" },
+  ENTP: { cool: "차승원", funny: "김구라", kind: "하니", romantic: "지코" },
+  ESTJ: { cool: "이병헌", funny: "이경영", kind: "정유미", romantic: "박해진" },
+  ESFJ: { cool: "유승호", funny: "박명수", kind: "장나라", romantic: "김영광" },
+  ENFJ: { cool: "도경수", funny: "김숙", kind: "정은지", romantic: "박보검" },
+  ENTJ: { cool: "조인성", funny: "문세윤", kind: "김혜윤", romantic: "이제훈" },
 };
 
 document.getElementById('submitBtn').addEventListener('click', () => {
