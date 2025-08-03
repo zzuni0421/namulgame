@@ -1,0 +1,126 @@
+/* 전체 기본 스타일 */
+body {
+  font-family: 'Apple SD Gothic Neo', 'Malgun Gothic', sans-serif;
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 0 20px;
+  background: #fafafa;
+  color: #333;
+  line-height: 1.6;
+}
+
+/* 제목 */
+h1 {
+  text-align: center;
+  margin-bottom: 30px;
+  color: #2a7ae2;
+  font-weight: 700;
+  font-size: 2.2rem;
+}
+
+/* 질문 텍스트 */
+#question-text {
+  font-size: 1.4rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* 선택 버튼들 */
+#choices {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  align-items: center;
+  margin-bottom: 40px;
+}
+
+#choices button {
+  width: 100%;
+  max-width: 300px;
+  padding: 12px 0;
+  font-size: 1.1rem;
+  background-color: #2a7ae2;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#choices button:hover {
+  background-color: #1a5ec8;
+}
+
+/* 시작 버튼 */
+#startBtn {
+  display: block;
+  margin: 0 auto 40px;
+  padding: 15px 35px;
+  font-size: 1.3rem;
+  font-weight: 700;
+  background-color: #2a7ae2;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#startBtn:hover {
+  background-color: #1a5ec8;
+}
+
+/* 결과 페이지 */
+#result-title {
+  text-align: center;
+  font-size: 2rem;
+  color: #2a7ae2;
+  margin-bottom: 20px;
+  font-weight: 700;
+}
+
+#result-description {
+  font-size: 1.2rem;
+  line-height: 1.5;
+  text-align: center;
+  max-width: 480px;
+  margin: 0 auto 40px;
+  color: #555;
+}
+
+/* 다시 하기 버튼 */
+#backBtn {
+  display: block;
+  margin: 0 auto;
+  padding: 12px 30px;
+  font-size: 1.1rem;
+  background-color: #2a7ae2;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+#backBtn:hover {
+  background-color: #1a5ec8;
+}
+
+/* 반응형: 모바일 */
+@media (max-width: 480px) {
+  body {
+    margin: 20px 15px;
+    padding: 0 10px;
+  }
+
+  #choices button {
+    max-width: 100%;
+    font-size: 1rem;
+  }
+
+  #startBtn, #backBtn {
+    width: 100%;
+    font-size: 1.1rem;
+  }
+}
