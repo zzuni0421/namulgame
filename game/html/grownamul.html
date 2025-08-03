@@ -1,31 +1,23 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>나물 키우기 방치형 게임</title>
-<link rel="stylesheet" href="../../assets/style/style.css" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>나물 키우기 방치형 게임</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
+  <header>🌿 나물 키우기 방치형 게임</header>
+  <div id="score">점수: 0</div>
+  <button id="buyBtn">나물 구매하기</button>
+  <div id="plants"></div>
 
-<header>
-  <h1>🌱 나물 키우기 방치형 게임</h1>
-</header>
-
-<main>
-  <div id="plants-container">
-    <!-- 나물 카드들 여기 들어감 -->
+  <div id="shopPopup">
+    <h2>새 나물 구매</h2>
+    <div id="shopItems"></div>
+    <button onclick="closeShop()">닫기</button>
   </div>
 
-  <div id="upgrade-panel">
-    <h2>업그레이드</h2>
-    <div id="upgrade-info">업그레이드 단계: <span id="upgrade-level">1</span>/10</div>
-    <button id="upgrade-btn">업그레이드 하기 (비용: <span id="upgrade-cost">100</span> 점수)</button>
-  </div>
-
-  <div id="score-display">점수: <span id="score">0</span></div>
-</main>
-
-<script src="../js/game2.js" defer></script>
+  <script src="../js/game3.js"></script>
 </body>
 </html>
