@@ -1,0 +1,116 @@
+* {
+  margin: 0; padding: 0; box-sizing: border-box;
+  font-family: 'Noto Sans KR', sans-serif;
+  user-select: none;
+}
+
+body {
+  background: linear-gradient(135deg, #a8e063, #56ab2f);
+  color: #2c3e50;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 20px;
+}
+
+header h1 {
+  font-size: 2rem;
+  margin-bottom: 20px;
+  text-shadow: 1px 1px 3px rgba(0,0,0,0.2);
+}
+
+main {
+  width: 100%;
+  max-width: 900px;
+  background: rgba(255,255,255,0.9);
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
+}
+
+#plants-container {
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-bottom: 30px;
+}
+
+.plant-card {
+  background: #f0fff0;
+  border: 2px solid #8bc34a;
+  border-radius: 10px;
+  width: 140px;
+  padding: 15px;
+  text-align: center;
+  box-shadow: 0 4px 10px rgba(139,195,74,0.3);
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.plant-card:hover {
+  transform: scale(1.05);
+}
+
+.plant-name {
+  font-weight: 700;
+  margin-bottom: 8px;
+  font-size: 1.1rem;
+}
+
+.plant-level {
+  margin-bottom: 6px;
+  font-size: 0.9rem;
+  color: #4caf50;
+}
+
+.plant-progress {
+  background: #c8e6c9;
+  border-radius: 5px;
+  height: 14px;
+  overflow: hidden;
+  margin-bottom: 10px;
+}
+
+.plant-progress-bar {
+  height: 100%;
+  background: #4caf50;
+  width: 0%;
+  transition: width 0.3s ease;
+  border-radius: 5px;
+}
+
+#upgrade-panel {
+  border-top: 2px solid #8bc34a;
+  padding-top: 15px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+#upgrade-btn {
+  background: #4caf50;
+  border: none;
+  color: white;
+  font-weight: 700;
+  font-size: 1rem;
+  padding: 10px 20px;
+  border-radius: 25px;
+  cursor: pointer;
+  transition: background 0.3s ease;
+}
+
+#upgrade-btn:disabled {
+  background: #a5d6a7;
+  cursor: not-allowed;
+}
+
+#upgrade-btn:hover:not(:disabled) {
+  background: #388e3c;
+}
+
+#score-display {
+  font-size: 1.2rem;
+  font-weight: 700;
+  text-align: center;
+}
