@@ -1,5 +1,4 @@
 const results = {
-  const results = {
   ISTJ: { cool: "정해인", funny: "정형돈", kind: "강호동", romantic: "이준기" },
   ISFJ: { cool: "송중기", funny: "박보영", kind: "아이유", romantic: "박서준" },
   INFJ: { cool: "이도현", funny: "이수근", kind: "박하선", romantic: "공유" },
