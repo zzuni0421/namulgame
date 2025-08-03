@@ -1,5 +1,5 @@
 const results = {
-  INTJ: { cool: "정우성", funny: "이경규", kind: "이수근", romantic: "이정재" },
+  INTJ: { cool: "현빈", funny: "이경규", kind: "이수근", romantic: "이정재" },
   ENFP: { cool: "제니", funny: "유재석", kind: "수지", romantic: "뷔" },
   ISFJ: { cool: "송중기", funny: "박보영", kind: "아이유", romantic: "박서준" },
   // 필요한 만큼 추가 가능
