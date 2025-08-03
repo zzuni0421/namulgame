@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>나물 키우기 방치형 게임</title>
+<link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+<header>
+  <h1>🌱 나물 키우기 방치형 게임</h1>
+</header>
+
+<main>
+  <div id="plants-container">
+    <!-- 나물 카드들 여기 들어감 -->
+  </div>
+
+  <div id="upgrade-panel">
+    <h2>업그레이드</h2>
+    <div id="upgrade-info">업그레이드 단계: <span id="upgrade-level">1</span>/10</div>
+    <button id="upgrade-btn">업그레이드 하기 (비용: <span id="upgrade-cost">100</span> 점수)</button>
+  </div>
+
+  <div id="score-display">점수: <span id="score">0</span></div>
+</main>
+
+<script src="game.js" defer></script>
+</body>
+</html>
