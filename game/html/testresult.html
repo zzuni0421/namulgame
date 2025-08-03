@@ -23,10 +23,11 @@
       return descriptions[type] || "당신은 미지의 나물형입니다!";
     }
 
-    document.addEventListener("DOMContentLoaded", () => {
-      const params = new URLSearchParams(window.location.search);
-      const type = params.get("type");
-
+document.addEventListener("DOMContentLoaded", () => {
+    const params = new URLSearchParams(window.location.search);
+    const rawType = params.get("type");
+    const type = decodeURIComponent(rawType);
+  
       if (type) {
         document.getElementById("result-title").textContent = `${type} 나물형`;
         document.getElementById("result-description").textContent = getDescriptionFor(type);
