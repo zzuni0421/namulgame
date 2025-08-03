@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>나물 유형 테스트 결과</title>
+  <style>
+    body {
+      font-family: 'Pretendard', sans-serif;
+      background-color: #f6f6f6;
+      padding: 2rem;
+      text-align: center;
+    }
+    .result-box {
+      background-color: #ffffff;
+      padding: 2rem;
+      border-radius: 16px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+      max-width: 500px;
+      margin: 2rem auto;
+    }
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    p {
+      font-size: 1.2rem;
+      margin-bottom: 1.5rem;
+    }
+    button {
+      background-color: #8dc63f;
+      color: #fff;
+      border: none;
+      padding: 0.8rem 1.2rem;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: background-color 0.3s;
+    }
+    button:hover {
+      background-color: #76b32b;
+    }
+  </style>
+</head>
+<body>
+  <div class="result-box">
+    <h1 id="resultText">나물 결과 로딩 중...</h1>
+    <p id="resultDesc"></p>
+    <button id="copyLinkBtn">🔗 결과 링크 복사</button>
+  </div>
+
+  <script>
+    const params = new URLSearchParams(window.location.search);
+    const type = params.get("type");
+
+    const resultText = document.getElementById("resultText");
+    const resultDesc = document.getElementById("resultDesc");
+
+    switch(type) {
+      case "두릅형":
+        resultText.textContent = "🔥 당신은 열정적인 두릅형!";
+        resultDesc.textContent = "리더십 있고 추진력 넘치는 스타일이에요.";
+        break;
+      case "고사리형":
+        resultText.textContent = "🍃 당신은 신중한 고사리형!";
+        resultDesc.textContent = "혼자만의 시간과 감정을 소중히 여기는 타입이에요.";
+        break;
+      case "취나물형":
+        resultText.textContent = "🌸 당신은 감성적인 취나물형!";
+        resultDesc.textContent = "따뜻하고 여유로운 분위기를 즐기는 사람이에요.";
+        break;
+      case "돌나물형":
+        resultText.textContent = "🪨 당신은 현실적인 돌나물형!";
+        resultDesc.textContent = "직설적이고 실용적인 성향을 지녔어요.";
+        break;
+      default:
+        resultText.textContent = "🤷‍♀️ 나물 유형을 알 수 없어요.";
+        resultDesc.textContent = "결과 페이지에 문제가 있을 수 있어요.";
+    }
+
+    document.getElementById("copyLinkBtn").addEventListener("click", () => {
+      const currentUrl = window.location.href;
+      navigator.clipboard.writeText(currentUrl)
+        .then(() => {
+          alert("📋 링크가 복사됐어요! 친구에게 공유해보세요!");
+        })
+        .catch((err) => {
+          alert("링크 복사에 실패했어요. 다시 시도해주세요!");
+          console.error(err);
+        });
+    });
+  </script>
+</body>
+</html>
