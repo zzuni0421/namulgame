@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>나랑 닮은 연예인은?</title>
+  <link rel="stylesheet" href="../../assets/style/style4.css"/>
+</head>
+<body>
+  <div class="container">
+    <h1>나랑 닮은 연예인은?</h1>
+    
+    <div class="question-section" id="questionSection">
+      <label for="mbti">MBTI를 선택하세요:</label>
+      <select id="mbti">
+        <option value="">선택</option>
+        <option>INTJ</option><option>INTP</option><option>ENTJ</option><option>ENTP</option>
+        <option>INFJ</option><option>INFP</option><option>ENFJ</option><option>ENFP</option>
+        <option>ISTJ</option><option>ISFJ</option><option>ESTJ</option><option>ESFJ</option>
+        <option>ISTP</option><option>ISFP</option><option>ESTP</option><option>ESFP</option>
+      </select>
+
+      <label for="taste">당신의 취향은?</label>
+      <select id="taste">
+        <option value="">선택</option>
+        <option value="cool">시크하고 쿨한</option>
+        <option value="funny">웃긴 사람</option>
+        <option value="kind">따뜻한 사람</option>
+        <option value="romantic">로맨틱한 사람</option>
+      </select>
+
+      <button id="submitBtn">결과 보기</button>
+    </div>
+
+    <div class="result-section" id="resultSection" style="display: none;">
+      <h2 id="resultTitle"></h2>
+      <img id="celebImage" src="" alt="연예인 사진"/>
+      <p id="resultDescription"></p>
+
+      <div class="share-buttons">
+        <button onclick="copyToClipboard()">🔗 링크 복사</button>
+        <a id="twitterBtn" href="#" target="_blank">X에 공유</a>
+        <a id="facebookBtn" href="#" target="_blank">페북에 공유</a>
+        <a id="threadsBtn" href="#" target="_blank">스레드에 공유</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="../js/script.js" defer></script>
+</body>
+</html>
