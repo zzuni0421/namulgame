@@ -1,146 +1,94 @@
-// 나물 종류와 기본 성장 속도 설정
 const plantsData = [
-  { id: 1, name: '두릅', baseSpeed: 0.3 },
-  { id: 2, name: '고사리', baseSpeed: 0.2 },
-  { id: 3, name: '냉이', baseSpeed: 0.4 },
-  { id: 4, name: '씀바귀', baseSpeed: 0.25 },
-  { id: 5, name: '취나물', baseSpeed: 0.35 },
+  { name: '냉이', cost: 0, income: 1, interval: 1000 },
+  { name: '씀바귀', cost: 100, income: 2, interval: 1000 },
+  { name: '두릅', cost: 300, income: 4, interval: 1000 },
+  { name: '고사리', cost: 800, income: 8, interval: 1000 },
+  { name: '취나물', cost: 1500, income: 15, interval: 1000 },
 ];
 
-// 게임 상태
+let unlockedPlants = [];
 let score = 0;
-let upgradeLevel = 1;
-const maxUpgrade = 10;
+let scoreEl = document.getElementById('score');
+const plantsContainer = document.getElementById('plants');
+const shopPopup = document.getElementById('shopPopup');
+const shopItems = document.getElementById('shopItems');
 
-// 업그레이드 비용 공식 (초기 100, 이후마다 2배씩 증가)
-function getUpgradeCost(level) {
-  return 100 * (2 ** (level - 1));
+function updateScore(amount) {
+  score += amount;
+  scoreEl.textContent = `점수: ${score}`;
 }
 
-// 각 나물의 현재 성장 상태 관리용 객체
-const plantsState = plantsData.map(plant => ({
-  ...plant,
-  progress: 0,
-  level: 1,
-}));
+function unlockPlant(index) {
+  const data = plantsData[index];
+  const plant = {
+    ...data,
+    level: 1,
+    intervalId: setInterval(() => {
+      updateScore(plant.income * plant.level);
+    }, data.interval)
+  };
+  unlockedPlants.push(plant);
+  renderPlants();
+}
 
-// DOM 요소
-const plantsContainer = document.getElementById('plants-container');
-const scoreDisplay = document.getElementById('score');
-const upgradeBtn = document.getElementById('upgrade-btn');
-const upgradeLevelDisplay = document.getElementById('upgrade-level');
-const upgradeCostDisplay = document.getElementById('upgrade-cost');
-
-// 나물 카드 생성 및 DOM 삽입
-function createPlantCard(plant) {
-  const card = document.createElement('div');
-  card.className = 'plant-card';
-  card.dataset.id = plant.id;
-
-  const nameEl = document.createElement('div');
-  nameEl.className = 'plant-name';
-  nameEl.textContent = plant.name;
-
-  const levelEl = document.createElement('div');
-  levelEl.className = 'plant-level';
-  levelEl.textContent = `성장 단계: ${plant.level}`;
-
-  const progressBarBg = document.createElement('div');
-  progressBarBg.className = 'plant-progress';
-
-  const progressBar = document.createElement('div');
-  progressBar.className = 'plant-progress-bar';
-  progressBar.style.width = `${plant.progress}%`;
-
-  progressBarBg.appendChild(progressBar);
-  card.appendChild(nameEl);
-  card.appendChild(levelEl);
-  card.appendChild(progressBarBg);
-
-  // 클릭 시 점수 획득 (성장 단계 * 10 점수)
-  card.addEventListener('click', () => {
-    const gained = plant.level * 10;
-    score += gained;
-    updateScore();
-    // 클릭할 때마다 성장 단계 조금 상승 (유저 액션 보상)
-    plant.progress += 5;
-    if (plant.progress >= 100) {
-      plant.progress = 0;
-      plant.level++;
-      levelEl.textContent = `성장 단계: ${plant.level}`;
-    }
-    updateProgressBar(progressBar, plant.progress);
-    updateUpgradeButton();
+function renderPlants() {
+  plantsContainer.innerHTML = '';
+  unlockedPlants.forEach((plant, i) => {
+    const div = document.createElement('div');
+    div.className = 'plant';
+    div.innerHTML = `
+      <div><strong>${plant.name}</strong></div>
+      <div>수익: +${plant.income * plant.level}점/초</div>
+      <div>레벨: ${plant.level}</div>
+      <button onclick="upgradePlant(${i})">업그레이드 (비용: ${plant.level * 100})</button>
+    `;
+    plantsContainer.appendChild(div);
   });
-
-  return { card, progressBar, levelEl };
 }
 
-// 점수 UI 업데이트
-function updateScore() {
-  scoreDisplay.textContent = score.toLocaleString();
-}
-
-// 프로그레스바 UI 업데이트
-function updateProgressBar(bar, progress) {
-  bar.style.width = `${Math.min(progress, 100)}%`;
-}
-
-// 업그레이드 버튼 활성화/비활성화 관리
-function updateUpgradeButton() {
-  const cost = getUpgradeCost(upgradeLevel);
-  upgradeCostDisplay.textContent = cost.toLocaleString();
-  upgradeLevelDisplay.textContent = upgradeLevel;
-  upgradeBtn.disabled = score < cost || upgradeLevel >= maxUpgrade;
-}
-
-// 업그레이드 처리
-upgradeBtn.addEventListener('click', () => {
-  const cost = getUpgradeCost(upgradeLevel);
-  if (score >= cost && upgradeLevel < maxUpgrade) {
+function upgradePlant(i) {
+  const plant = unlockedPlants[i];
+  const cost = plant.level * 100;
+  if (score >= cost) {
     score -= cost;
-    upgradeLevel++;
-    updateScore();
-    updateUpgradeButton();
+    plant.level++;
+    renderPlants();
+    updateScore(0);
   }
-});
-
-// 성장 루프: 나물 성장 진행 (업그레이드 레벨에 따라 속도 상승)
-function growthLoop() {
-  plantsState.forEach(plant => {
-    const speed = plant.baseSpeed * upgradeLevel;
-    plant.progress += speed;
-    if (plant.progress >= 100) {
-      plant.progress = 0;
-      plant.level++;
-      const plantCard = plantsCardsMap.get(plant.id);
-      if (plantCard) {
-        plantCard.levelEl.textContent = `성장 단계: ${plant.level}`;
-      }
-    }
-  });
-  // UI 반영
-  plantsState.forEach(plant => {
-    const plantCard = plantsCardsMap.get(plant.id);
-    if (plantCard) {
-      updateProgressBar(plantCard.progressBar, plant.progress);
-    }
-  });
-  requestAnimationFrame(growthLoop);
 }
 
-// 초기 세팅
-const plantsCardsMap = new Map();
-
-function init() {
-  plantsState.forEach(plant => {
-    const { card, progressBar, levelEl } = createPlantCard(plant);
-    plantsContainer.appendChild(card);
-    plantsCardsMap.set(plant.id, { card, progressBar, levelEl });
+function openShop() {
+  shopItems.innerHTML = '';
+  plantsData.forEach((plant, i) => {
+    if (!unlockedPlants.find(p => p.name === plant.name) &&
+        (i === 0 || unlockedPlants.find(p => p.name === plantsData[i - 1].name))) {
+      const div = document.createElement('div');
+      div.className = 'shop-item';
+      div.innerHTML = `
+        ${plant.name} (비용: ${plant.cost})
+        <button ${score < plant.cost ? 'disabled' : ''} onclick="buyPlant(${i})">구매</button>
+      `;
+      shopItems.appendChild(div);
+    }
   });
-  updateScore();
-  updateUpgradeButton();
-  growthLoop();
+  shopPopup.style.display = 'block';
 }
 
-window.addEventListener('DOMContentLoaded', init);
+function buyPlant(i) {
+  const plant = plantsData[i];
+  if (score >= plant.cost) {
+    score -= plant.cost;
+    unlockPlant(i);
+    updateScore(0);
+    openShop(); // 새로고침
+  }
+}
+
+function closeShop() {
+  shopPopup.style.display = 'none';
+}
+
+document.getElementById('buyBtn').addEventListener('click', openShop);
+
+// 기본 냉이 unlock
+unlockPlant(0);
