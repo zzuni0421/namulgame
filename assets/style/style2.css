@@ -144,3 +144,23 @@ h1 {
     font-size: 1.3rem;
   }
 }
+
+#backToLobbyBtn {
+  position: fixed;
+  top: 12px;
+  left: 12px;
+  background-color: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 8px 14px;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 3px 7px rgba(59,130,246,0.6);
+  transition: background-color 0.3s ease;
+  z-index: 9999;
+}
+
+#backToLobbyBtn:hover {
+  background-color: #2563eb;
+}
