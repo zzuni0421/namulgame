@@ -2,107 +2,127 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>당신의 나물 유형은?</title>
-  <style>
-    body { font-family: 'Pretendard', sans-serif; padding: 20px; max-width: 600px; margin: auto; background: #f5fff2; color: #333; }
-    h1, h2 { text-align: center; }
-    .question-box { margin-top: 30px; }
-    button { 
-      display: block; 
-      width: 100%; 
-      margin: 10px 0; 
-      padding: 15px; 
-      font-size: 1.1em; 
-      border: none; 
-      background-color: #d3e7ca; 
-      cursor: pointer; 
-      border-radius: 12px;
-      transition: background-color 0.2s;
-    }
-    button:hover {
-      background-color: #bfe0b1;
-    }
-    .result { margin-top: 40px; padding: 20px; background: #fff8dc; border-radius: 12px; }
-  </style>
+  <link rel="stylesheet" href="assets/style/style.css" />
 </head>
 <body>
-  <h1>당신의 나물 유형은?</h1>
-  <div id="quiz"></div>
+  <h1>당신의 나물 유형 테스트</h1>
+  
+  <div id="question-container">
+    <div id="question-text"></div>
+    <div id="choices"></div>
+  </div>
+
+  <button id="startBtn">테스트 시작</button>
+
   <script>
     const questions = [
-      { question: "주말에 뭐할래?", choices: [
+      {
+        question: "주말에 뭐할래?",
+        choices: [
           { text: "액티비티하러 나감", type: "두릅형" },
           { text: "넷플릭스+이불 속", type: "취나물형" }
-        ]},
-      { question: "회식 때 당신은?", choices: [
+        ]
+      },
+      {
+        question: "회식 때 당신은?",
+        choices: [
           { text: "리드하며 분위기 띄움", type: "두릅형" },
           { text: "조용히 먹고 빠짐", type: "고사리형" }
-        ]},
-      { question: "친구가 고민 상담할 때", choices: [
+        ]
+      },
+      {
+        question: "친구가 고민 상담할 때",
+        choices: [
           { text: "직설 조언해줌", type: "돌나물형" },
           { text: "공감 먼저 해줌", type: "고사리형" }
-        ]},
-      { question: "여행 스타일은?", choices: [
+        ]
+      },
+      {
+        question: "여행 스타일은?",
+        choices: [
           { text: "일정 빡빡한 알차게 여행", type: "두릅형" },
           { text: "즉흥+감성 코스", type: "취나물형" }
-        ]},
-      { question: "기분 우울할 때", choices: [
+        ]
+      },
+      {
+        question: "기분 우울할 때",
+        choices: [
           { text: "운동으로 풀기", type: "두릅형" },
           { text: "맛있는 거 먹기", type: "돌나물형" }
-        ]},
-      { question: "좋아하는 사람 생기면?", choices: [
+        ]
+      },
+      {
+        question: "좋아하는 사람 생기면?",
+        choices: [
           { text: "먼저 연락함", type: "돌나물형" },
           { text: "계속 눈치만 봄", type: "고사리형" }
-        ]},
-      { question: "내 방은 어떤 스타일?", choices: [
+        ]
+      },
+      {
+        question: "내 방은 어떤 스타일?",
+        choices: [
           { text: "깔끔하고 정돈됨", type: "두릅형" },
           { text: "감성+장식 많음", type: "취나물형" }
-        ]},
-      { question: "이상형은?", choices: [
+        ]
+      },
+      {
+        question: "이상형은?",
+        choices: [
           { text: "똑똑하고 추진력 있는 사람", type: "두릅형" },
           { text: "편안하고 유쾌한 사람", type: "돌나물형" }
-        ]}
+        ]
+      }
     ];
 
-    let currentQuestion = 0;
-    const typeCount = {};
-    const quizContainer = document.getElementById("quiz");
+    const startBtn = document.getElementById("startBtn");
+    const questionContainer = document.getElementById("question-container");
+    const questionText = document.getElementById("question-text");
+    const choicesDiv = document.getElementById("choices");
+
+    let currentIndex = 0;
+    let answers = [];
+
+    startBtn.onclick = () => {
+      startBtn.style.display = "none";
+      questionContainer.style.display = "block";
+      showQuestion();
+    };
 
     function showQuestion() {
-      const q = questions[currentQuestion];
-      quizContainer.innerHTML = `
-        <div class="question-box">
-          <h2>Q${currentQuestion + 1}. ${q.question}</h2>
-          ${q.choices.map((choice, idx) =>
-            `<button onclick="selectAnswer('${choice.type}')">${choice.text}</button>`
-          ).join("")}
-        </div>
-      `;
+      const q = questions[currentIndex];
+      questionText.textContent = q.question;
+      choicesDiv.innerHTML = "";
+
+      q.choices.forEach(choice => {
+        const btn = document.createElement("button");
+        btn.textContent = choice.text;
+        btn.onclick = () => {
+          answers.push(choice.type);
+          currentIndex++;
+          if (currentIndex < questions.length) {
+            showQuestion();
+          } else {
+            // 결과 페이지로 이동 (가장 많이 선택된 타입 넘김)
+            const resultType = getMostFrequentType(answers);
+            window.location.href = `result.html?type=${encodeURIComponent(resultType)}`;
+          }
+        };
+        choicesDiv.appendChild(btn);
+      });
     }
 
-    function selectAnswer(type) {
-      typeCount[type] = (typeCount[type] || 0) + 1;
-      currentQuestion++;
-      if (currentQuestion < questions.length) {
-        showQuestion();
-      } else {
-        showResult();
-      }
+    function getMostFrequentType(arr) {
+      const countMap = {};
+      arr.forEach(t => {
+        countMap[t] = (countMap[t] || 0) + 1;
+      });
+      return Object.entries(countMap).sort((a,b) => b[1] - a[1])[0][0];
     }
 
-    function showResult() {
-      const topType = Object.entries(typeCount).sort((a, b) => b[1] - a[1])[0][0];
-      quizContainer.innerHTML = `
-        <div class="result">
-          <h2>당신은 <strong>${topType}</strong>!</h2>
-          <p>삶의 방식이 ${topType}처럼 뚜렷하고 매력적이에요.</p>
-          <button onclick="location.reload()">다시 해보기</button>
-        </div>
-      `;
-    }
-
-    showQuestion();
+    // 시작 전에는 질문 숨김
+    questionContainer.style.display = "none";
   </script>
 </body>
 </html>
