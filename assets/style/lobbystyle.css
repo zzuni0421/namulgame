@@ -1,8 +1,8 @@
 body {
-  margin: 0;
-  padding: 0;
-  font-family: "Pretendard", sans-serif;
-  background: linear-gradient(135deg, #e0f7fa, #fce4ec);
+  font-family: '맑은 고딕', sans-serif;
+  background: #f7f9fc;
+  color: #222;
+  margin: 0; padding: 0;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -10,37 +10,98 @@ body {
 }
 
 .lobby-container {
+  background: white;
+  padding: 30px 40px;
+  border-radius: 16px;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.12);
   text-align: center;
-  padding: 40px;
-  border-radius: 20px;
-  background-color: #ffffffcc;
-  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+  width: 350px;
 }
 
-.lobby-container h1 {
-  font-size: 2.5rem;
-  margin-bottom: 30px;
-  color: #333;
+h1 {
+  margin-bottom: 24px;
+  color: #007acc;
 }
 
-.button-wrapper {
+.genre-buttons {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 16px;
 }
 
-button {
-  font-size: 1.5rem;
-  padding: 15px 30px;
+.genre-btn {
+  padding: 14px 0;
+  font-size: 1.15rem;
   border: none;
-  border-radius: 15px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  background-color: #64b5f6;
+  border-radius: 10px;
+  background-color: #007acc;
   color: white;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  user-select: none;
 }
 
-button:hover {
-  background-color: #42a5f5;
-  transform: scale(1.05);
+.genre-btn:hover {
+  background-color: #005f99;
+}
+
+/* 모달 스타일 */
+.modal {
+  position: fixed;
+  top: 0; left: 0; right: 0; bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+}
+
+.modal-content {
+  background: white;
+  width: 90%;
+  max-width: 400px;
+  border-radius: 14px;
+  padding: 24px 28px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
+  position: relative;
+  text-align: center;
+}
+
+.close-btn {
+  position: absolute;
+  top: 14px;
+  right: 20px;
+  border: none;
+  background: none;
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #444;
+}
+
+#modalTitle {
+  margin-bottom: 20px;
+  color: #005a9c;
+  font-weight: 600;
+}
+
+#gameList {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+#gameList button {
+  padding: 12px 0;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  background-color: #007acc;
+  color: white;
+  cursor: pointer;
+  user-select: none;
+  transition: background-color 0.25s;
+}
+
+#gameList button:hover {
+  background-color: #005f99;
 }
