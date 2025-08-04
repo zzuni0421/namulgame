@@ -39,7 +39,6 @@ document.getElementById('submitBtn').addEventListener('click', () => {
   const shareURL = encodeURIComponent(window.location.href + `?mbti=${mbti}&taste=${taste}`);
   document.getElementById('twitterBtn').href = `https://twitter.com/intent/tweet?text=${resultTitle}&url=${shareURL}`;
   document.getElementById('facebookBtn').href = `https://www.facebook.com/sharer/sharer.php?u=${shareURL}`;
-  document.getElementById('threadsBtn').href = `https://www.threads.net/share?text=${resultTitle}&url=${shareURL}`;
 });
 
 function copyToClipboard() {
