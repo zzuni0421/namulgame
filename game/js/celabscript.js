@@ -50,3 +50,7 @@ function copyToClipboard() {
   document.body.removeChild(temp);
   alert("링크가 복사되었습니다!");
 }
+
+document.getElementById("goLobbyBtn").addEventListener("click", () => {
+  window.location.href = "index.html"; // 혹은 메인 주소
+});
