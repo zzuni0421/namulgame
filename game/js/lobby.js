@@ -1,52 +1,46 @@
-const genres = {
-  game: [
-    { name: "🕹️ 점프 게임", link: "game/html/jumpgame.html" },
-    { name: "🌿 나물 줍기 게임", link: "game/html/namulcatch.html" },
-    { name: "🪴 나물 키우기 방치형", link: "game/html/grownamul.html" },
-  ],
-  test: [
-    { name: "🍀 나물 유형 테스트", link: "game/html/namultest.html" },
-    { name: "🎭 내가 연예인이라면?", link: "game/html/likecelab.html" },
-  ],
-  simulation: [
-    { name: "🎬 인터뷰 시뮬레이터", link: "game/html/interview.html" },
-  ],
+const gameData = {
+  simulation: {
+    title: "시뮬레이션",
+    games: [
+      { name: "🌱 나물 키우기 방치형", url: "game/html/grownamul.html" },
+      { name: "🎤 인터뷰 시뮬레이터", url: "game/html/interview.html" },
+    ]
+  },
+  test: {
+    title: "테스트",
+    games: [
+      { name: "🍀 나물 유형 테스트", url: "game/html/namultest.html" },
+      { name: "✨ 내가 연예인이라면?", url: "game/html/likecelab.html" },
+    ]
+  },
+  game: {
+    title: "게임",
+    games: [
+      { name: "🕹️ 점프 게임", url: "game/html/jumpgame.html" },
+      { name: "🌿 나물 줍기 게임", url: "game/html/namulcatch.html" },
+    ]
+  }
 };
 
-const modal = document.getElementById("genreModal");
-const modalTitle = document.getElementById("modalTitle");
-const gameList = document.getElementById("gameList");
-const closeModalBtn = document.getElementById("closeModal");
+function openModal(genre) {
+  const modal = document.getElementById("genreModal");
+  const title = document.getElementById("modalTitle");
+  const list = document.getElementById("gameList");
 
-document.querySelectorAll(".genre-btn").forEach(btn => {
-  btn.addEventListener("click", () => {
-    const genreKey = btn.dataset.genre;
-    modalTitle.textContent = `${btn.textContent} 게임 목록`;
-    gameList.innerHTML = "";
-    genres[genreKey].forEach(game => {
-      const gameBtn = document.createElement("button");
-      gameBtn.textContent = game.name;
-      gameBtn.onclick = () => {
-        window.location.href = game.link;
-      };
-      gameList.appendChild(gameBtn);
-    });
-    modal.style.display = "flex";
+  const { title: genreTitle, games } = gameData[genre];
+  title.textContent = genreTitle;
+  list.innerHTML = "";
+
+  games.forEach(game => {
+    const btn = document.createElement("button");
+    btn.textContent = game.name;
+    btn.onclick = () => window.location.href = game.url;
+    list.appendChild(btn);
   });
-});
 
-closeModalBtn.addEventListener("click", () => {
-  modal.style.display = "none";
-});
+  modal.classList.add("show");
+}
 
-modal.addEventListener("click", e => {
-  if (e.target === modal) {
-    modal.style.display = "none";
-  }
-});
-
-document.addEventListener("keydown", e => {
-  if (e.key === "Escape" && modal.style.display === "flex") {
-    modal.style.display = "none";
-  }
-});
+function closeModal(e) {
+  document.getElementById("genreModal").classList.remove("show");
+}
