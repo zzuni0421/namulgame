@@ -92,3 +92,7 @@ document.getElementById('buyBtn').addEventListener('click', openShop);
 
 // 기본 냉이 unlock
 unlockPlant(0);
+
+document.getElementById("goLobbyBtn").addEventListener("click", () => {
+  window.location.href = "../../index.html";
+});
