@@ -1,15 +1,15 @@
 const genres = {
   game: [
-    { name: "🕹️ 점프 게임", link: "../html/jumpgame.html" },
-    { name: "🌿 나물 줍기 게임", link: "../html/namulcatch.html" },
-    { name: "🪴 나물 키우기 방치형", link: "../html/grownamul.html" },
+    { name: "🕹️ 점프 게임", link: "game/html/jumpgame.html" },
+    { name: "🌿 나물 줍기 게임", link: "game/html/namulcatch.html" },
+    { name: "🪴 나물 키우기 방치형", link: "game/html/grownamul.html" },
   ],
   test: [
-    { name: "🍀 나물 유형 테스트", link: "../html/namultest.html" },
-    { name: "🎭 내가 연예인이라면?", link: "../html/likecelab.html" },
+    { name: "🍀 나물 유형 테스트", link: "game/html/namultest.html" },
+    { name: "🎭 내가 연예인이라면?", link: "game/html/likecelab.html" },
   ],
   simulation: [
-    { name: "🎬 인터뷰 시뮬레이터", link: "../html/interview.html" },
+    { name: "🎬 인터뷰 시뮬레이터", link: "game/html/interview.html" },
   ],
 };
 
