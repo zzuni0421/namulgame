@@ -1,107 +1,97 @@
 body {
-  font-family: '맑은 고딕', sans-serif;
-  background: #f7f9fc;
-  color: #222;
-  margin: 0; padding: 0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+  margin: 0;
+  font-family: 'Pretendard', sans-serif;
+  background-color: #f6f6f6;
+  color: #333;
 }
 
 .lobby-container {
-  background: white;
-  padding: 30px 40px;
-  border-radius: 16px;
-  box-shadow: 0 10px 25px rgba(0,0,0,0.12);
   text-align: center;
-  width: 350px;
+  padding: 50px 20px;
 }
 
 h1 {
-  margin-bottom: 24px;
-  color: #007acc;
+  font-size: 2.5em;
+  margin-bottom: 10px;
 }
 
-.genre-buttons {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
+.sub {
+  font-size: 1.1em;
+  color: #666;
+  margin-bottom: 30px;
 }
 
-.genre-btn {
-  padding: 14px 0;
-  font-size: 1.15rem;
+.genre-buttons button {
+  margin: 10px;
+  padding: 15px 25px;
   border: none;
-  border-radius: 10px;
-  background-color: #007acc;
+  border-radius: 12px;
+  background-color: #82c91e;
   color: white;
+  font-size: 1.1em;
   cursor: pointer;
   transition: background-color 0.3s;
-  user-select: none;
 }
 
-.genre-btn:hover {
-  background-color: #005f99;
+.genre-buttons button:hover {
+  background-color: #74b816;
 }
 
-/* 모달 스타일 */
 .modal {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
+  background: rgba(0, 0, 0, 0.4);
+  display: none;
   align-items: center;
-  z-index: 1000;
+  justify-content: center;
+  z-index: 10;
+}
+
+.modal.show {
+  display: flex;
+  animation: fadeIn 0.3s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; } to { opacity: 1; }
 }
 
 .modal-content {
   background: white;
+  padding: 30px;
+  border-radius: 16px;
+  max-width: 500px;
   width: 90%;
-  max-width: 400px;
-  border-radius: 14px;
-  padding: 24px 28px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-  position: relative;
   text-align: center;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
 }
 
-.close-btn {
-  position: absolute;
-  top: 14px;
-  right: 20px;
-  border: none;
-  background: none;
-  font-size: 1.5rem;
-  cursor: pointer;
-  color: #444;
-}
-
-#modalTitle {
-  margin-bottom: 20px;
-  color: #005a9c;
-  font-weight: 600;
-}
-
-#gameList {
+.game-list {
+  margin-top: 20px;
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
 
-#gameList button {
-  padding: 12px 0;
-  font-size: 1rem;
+.game-list button {
+  background-color: #e0f7fa;
   border: none;
-  border-radius: 8px;
-  background-color: #007acc;
-  color: white;
+  padding: 12px;
+  border-radius: 10px;
   cursor: pointer;
-  user-select: none;
-  transition: background-color 0.25s;
+  font-size: 1em;
+  transition: background-color 0.2s;
 }
 
-#gameList button:hover {
-  background-color: #005f99;
+.game-list button:hover {
+  background-color: #b2ebf2;
+}
+
+.close-btn {
+  margin-top: 20px;
+  background-color: #eee;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 10px;
+  cursor: pointer;
 }
