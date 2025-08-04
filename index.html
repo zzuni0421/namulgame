@@ -3,21 +3,28 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>나물게임</title>
+  <title>나물게임 로비</title>
   <link rel="stylesheet" href="assets/style/lobbystyle.css" />
 </head>
 <body>
   <div class="lobby-container">
     <h1>🎮 나물게임 선택</h1>
-    <div class="button-wrapper">
-      <button onclick="location.href='game/html/jumpgame.html'">🕹️ 점프 게임</button>
-      <button onclick="location.href='game/html/namulcatch.html'">🌿 나물 줍기 게임</button>
-      <button onclick="location.href='game/html/namultest.html'">🍀 나물 유형 테스트</button>
-      <button onclick="location.href='game/html/grownamul.html'">나물 키우기 방치형</button>
-      <button onclick="location.href='game/html/likecelab.html'">내가 연예인이라면?</button>
-      <button onclick="location.href='game/html/interview.html'">인터뷰 시뮬레이터</button>
+
+    <div class="genre-buttons">
+      <button class="genre-btn" data-genre="game">게임 🎮</button>
+      <button class="genre-btn" data-genre="test">테스트 📝</button>
+      <button class="genre-btn" data-genre="simulation">시뮬레이션 🎬</button>
     </div>
   </div>
+
+  <div class="modal" id="genreModal" style="display:none;">
+    <div class="modal-content">
+      <button class="close-btn" id="closeModal">✖</button>
+      <h2 id="modalTitle"></h2>
+      <div id="gameList"></div>
+    </div>
+  </div>
+
+  <script src="game/js/lobby.js"></script>
 </body>
 </html>
-
