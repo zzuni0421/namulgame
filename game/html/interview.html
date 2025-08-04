@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>면접 시뮬레이터</title>
+<link rel="stylesheet" href="../../assets/style/style5.css" />
+</head>
+<body>
+
+<h1>면접 시뮬레이터</h1>
+
+<div id="interview-container">
+  <div class="question" id="question"></div>
+  <ul class="choices" id="choices"></ul>
+  <div class="feedback" id="feedback"></div>
+  <button class="next-btn" id="nextBtn">다음 질문</button>
+</div>
+
+<script>
+const interviewData = [
+  {
+    question: "자기소개 부탁드립니다.",
+    choices: [
+      { text: "안녕하세요, 저는 항상 팀 목표 달성에 집중하는 사람입니다.", feedback: "좋아요, 목표 지향적이라니 인상적입니다!" },
+      { text: "저는 문제 해결 능력이 뛰어나고 항상 배우려는 자세를 가지고 있습니다.", feedback: "문제 해결! 바로 우리 팀에 필요한 인재네요." },
+      { text: "저는 유머 감각과 긍정적인 에너지로 팀 분위기를 살리는 걸 좋아합니다.", feedback: "유머 감각! 우리 팀 회식 때 당신이 분위기 메이커겠군요ㅋㅋ" }
+    ]
+  },
+  {
+    question: "직장에서 갑자기 큰 문제가 생겼을 때 어떻게 하시나요?",
+    choices: [
+      { text: "먼저 상황을 정확히 파악하고, 팀원들과 소통하며 해결책을 모색합니다.", feedback: "소통 중요하죠! 팀워크가 잘 맞겠어요." },
+      { text: "즉각적으로 행동에 나서서 문제를 신속히 해결하는 편입니다.", feedback: "즉각적인 대응, 리더십이 느껴집니다." },
+      { text: "침착하게 우선순위를 정하고, 필요한 지원을 요청합니다.", feedback: "지원 요청까지! 조직 내 역할 이해도가 높네요." }
+    ]
+  },
+  {
+    question: "팀원이 반대할 때 어떻게 설득하시겠습니까?",
+    choices: [
+      { text: "상대 입장을 먼저 듣고 공감한 뒤, 제 의견을 조심스레 제시합니다.", feedback: "공감 능력 훌륭해요, 좋은 리더감입니다." },
+      { text: "논리적으로 근거를 들어 설득합니다.", feedback: "논리적 설득! 설득력 최고네요." },
+      { text: "유머를 섞어 분위기를 부드럽게 한 후 의견을 말합니다.", feedback: "유머 센스까지 겸비, 팀 분위기 메이커 인정!" }
+    ]
+  },
+  {
+    question: "갈등 상황이 온다면 어떻게 해결하실 것 인가요?",
+    choices: [
+      { text: "직접 대화로 문제를 풀었고, 타협점을 찾겠습니다.", feedback: "대화가 답이죠, 인간미 느껴집니다." },
+      { text: "중재자 역할을 하여 양측 의견을 조율하겠습니다.", feedback: "중재 능력! 팀 내에서 꼭 필요한 사람입니다." },
+      { text: "문제가 된 사안에 대해 객관적인 데이터를 제시하겠습니다.", feedback: "데이터 중심, 프로페셔널하네요." }
+    ]
+  },
+  {
+    question: "5년 후 자신의 모습은?",
+    choices: [
+      { text: "팀을 이끄는 리더가 되어 있을 겁니다.", feedback: "리더십 강점, 기대됩니다!" },
+      { text: "전문가로 깊이 있는 기술을 쌓고 있을 거예요.", feedback: "전문성 굿, 기술이 생명이지요." },
+      { text: "유연하게 여러 역할을 넘나드는 만능 플레이어가 될 겁니다.", feedback: "적응력 최고! 다재다능한 인재네요." }
+    ]
+  }
+];
+
+let currentQuestionIndex = 0;
+
+const questionEl = document.getElementById("question");
+const choicesEl = document.getElementById("choices");
+const feedbackEl = document.getElementById("feedback");
+const nextBtn = document.getElementById("nextBtn");
+
+function loadQuestion() {
+  feedbackEl.textContent = "";
+  nextBtn.style.display = "none";
+  const currentData = interviewData[currentQuestionIndex];
+  questionEl.textContent = currentData.question;
+  choicesEl.innerHTML = "";
+  
+  currentData.choices.forEach((choice, index) => {
+    const li = document.createElement("li");
+    const btn = document.createElement("button");
+    btn.className = "choice-btn";
+    btn.textContent = choice.text;
+    btn.addEventListener("click", () => selectChoice(index));
+    li.appendChild(btn);
+    choicesEl.appendChild(li);
+  });
+}
+
+function selectChoice(choiceIndex) {
+  const currentData = interviewData[currentQuestionIndex];
+  const chosen = currentData.choices[choiceIndex];
+  
+  feedbackEl.textContent = chosen.feedback;
+  nextBtn.style.display = "inline-block";
+
+  [...choicesEl.children].forEach(li => {
+    li.firstChild.disabled = true;
+  });
+}
+
+nextBtn.addEventListener("click", () => {
+  currentQuestionIndex++;
+  if(currentQuestionIndex < interviewData.length){
+    loadQuestion();
+  } else {
+    showResult();
+  }
+});
+
+function showResult() {
+  questionEl.textContent = "면접 시뮬레이션 완료!";
+  choicesEl.innerHTML = "";
+  feedbackEl.innerHTML = `<p class="result">수고하셨습니다! 면접 연습 잘 하셨네요.</p>`;
+  nextBtn.style.display = "none";
+}
+
+loadQuestion();
+
+</script>
+
+</body>
+</html>
