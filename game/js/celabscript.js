@@ -52,5 +52,5 @@ function copyToClipboard() {
 }
 
 document.getElementById("goLobbyBtn").addEventListener("click", () => {
-  window.location.href = "index.html"; // 혹은 메인 주소
+  window.location.href = "../../index.html"; 
 });
