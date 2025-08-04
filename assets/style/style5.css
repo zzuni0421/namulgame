@@ -1,0 +1,66 @@
+body {
+  font-family: '맑은 고딕', sans-serif;
+  background: #f0f4f8;
+  color: #333;
+  max-width: 600px;
+  margin: 40px auto;
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 6px 12px rgba(0,0,0,0.1);
+}
+h1 {
+  text-align: center;
+  margin-bottom: 24px;
+  color: #0052cc;
+}
+.question {
+  font-size: 1.2rem;
+  margin-bottom: 16px;
+}
+.choices {
+  list-style: none;
+  padding: 0;
+}
+.choices li {
+  margin: 10px 0;
+}
+button.choice-btn {
+  width: 100%;
+  padding: 12px 16px;
+  font-size: 1rem;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  background-color: #0052cc;
+  color: white;
+  transition: background-color 0.3s;
+}
+button.choice-btn:hover {
+  background-color: #003d99;
+}
+.feedback {
+  margin-top: 20px;
+  font-style: italic;
+  color: #007700;
+  min-height: 48px;
+}
+.next-btn {
+  margin-top: 30px;
+  padding: 12px 24px;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 8px;
+  background-color: #00aaff;
+  color: white;
+  cursor: pointer;
+  display: none;
+}
+.next-btn:hover {
+  background-color: #0077cc;
+}
+.result {
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: bold;
+  color: #004d00;
+}
