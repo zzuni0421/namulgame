@@ -8,20 +8,20 @@
 </head>
 <body>
   <div class="lobby-container">
-    <h1>🎮 나물게임 선택</h1>
-
+    <h1>🎮 나물게임 월드에 온 걸 환영해!</h1>
+    <p class="sub">장르를 골라서 원하는 게임을 시작해보세요!</p>
     <div class="genre-buttons">
-      <button class="genre-btn" data-genre="game">게임 🎮</button>
-      <button class="genre-btn" data-genre="test">테스트 📝</button>
-      <button class="genre-btn" data-genre="simulation">시뮬레이션 🎬</button>
+      <button onclick="openModal('simulation')">🧪 시뮬레이션</button>
+      <button onclick="openModal('test')">🧠 테스트</button>
+      <button onclick="openModal('game')">🎮 게임</button>
     </div>
   </div>
 
-  <div class="modal" id="genreModal" style="display:none;">
-    <div class="modal-content">
-      <button class="close-btn" id="closeModal">✖</button>
-      <h2 id="modalTitle"></h2>
-      <div id="gameList"></div>
+  <div class="modal" id="genreModal" onclick="closeModal(event)">
+    <div class="modal-content" onclick="event.stopPropagation()">
+      <h2 id="modalTitle">장르</h2>
+      <div id="gameList" class="game-list"></div>
+      <button class="close-btn" onclick="closeModal()">닫기</button>
     </div>
   </div>
 
