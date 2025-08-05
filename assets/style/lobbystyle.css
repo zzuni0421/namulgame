@@ -95,3 +95,27 @@ h1 {
   border-radius: 10px;
   cursor: pointer;
 }
+
+.yt-btn {
+  display: inline-block;
+  padding: 12px 20px;
+  margin-top: 20px;
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: white;
+  background: #ff0000;
+  border: none;
+  border-radius: 30px;
+  text-decoration: none;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  transition: transform 0.2s ease, background 0.3s ease;
+}
+
+.yt-btn:hover {
+  background: #cc0000;
+  transform: scale(1.05);
+}
+
+.yt-btn:active {
+  transform: scale(0.95);
+}
