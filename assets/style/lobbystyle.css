@@ -119,3 +119,20 @@ h1 {
 .yt-btn:active {
   transform: scale(0.95);
 }
+
+#event-banner {
+  background-color: #ffeb3b;
+  color: #333;
+  text-align: center;
+  padding: 10px;
+  font-weight: bold;
+  font-size: 1.2rem;
+}
+#event-banner a {
+  text-decoration: none;
+  color: #d32f2f;
+  font-weight: bold;
+}
+#event-banner a:hover {
+  text-decoration: underline;
+}
