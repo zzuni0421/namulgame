@@ -1,78 +1,69 @@
-body {
-  font-family: 'Arial', sans-serif;
-  text-align: center;
-  background-color: #f4fff0;
-  margin: 0;
-  padding: 20px;
+:root {
+  --bg: #0f1220;
+  --panel: #161a2b;
+  --text: #e8ecff;
+  --accent: #6ee7ff;
+  --good: #77ff8b;
+  --warn: #ffc857;
 }
 
-.nicknameBox {
-  margin-top: 100px;
+* { box-sizing: border-box; }
+html, body {
+  margin: 0; padding: 0; height: 100%;
+  font-family: system-ui, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", Arial, sans-serif;
+  color: var(--text); background: var(--bg);
+}
+
+.panel {
+  display:flex; gap:.5rem; justify-content:center; align-items:center; padding:1rem;
+  background: linear-gradient(180deg, #151a2c, #111426);
+  border-bottom: 1px solid #232949;
 }
 
 input, button, select {
-  padding: 10px;
-  margin: 5px;
-  font-size: 1rem;
-  border-radius: 8px;
-  border: 1px solid #aaa;
+  background: #222845; color: var(--text); border: 1px solid #2f365b;
+  padding: .6rem .9rem; border-radius: .8rem; font-size: 14px;
 }
+button:hover { border-color: var(--accent); cursor: pointer; }
 
-button {
-  cursor: pointer;
-  background-color: #90ee90;
-  border: none;
-  transition: background 0.3s;
-}
+.hud { display:flex; gap:1rem; align-items:baseline; justify-content:center; }
+#timerDisplay { margin:0; font-weight:700; letter-spacing:.5px; }
+#scoreDisplay { margin:0; color: var(--good); }
 
-button:hover {
-  background-color: #76d076;
-}
-
-.buttonGroup {
-  margin: 10px 0;
-}
-
-#gameArea {
-  width: 100%;
-  height: 300px;
-  background-color: #eaffea;
-  margin-top: 20px;
-  position: relative;
-  overflow: hidden;
-}
-
-.namul {
-  width: 50px;
-  height: 50px;
-  background-image: url('../namul.png');
-  background-size: cover;
-  position: absolute;
-}
+.buttonGroup { display:flex; gap:.5rem; flex-wrap: wrap; justify-content:center; margin-top:.25rem; }
+.buttonRow { display:flex; gap:.5rem; justify-content:center; margin-top:.5rem; }
 
 footer {
-  margin-top: 20px;
-  color: #777;
+  margin: .5rem auto 1rem; display:flex; gap:.75rem; align-items:center; justify-content:center;
+  color:#b9c1ff66; font-size: 12px;
 }
 
-#backButton {
+/* 게임 영역 */
+#gameArea {
+  position: relative;
+  width: min(92vw, 720px);
+  height: min(120vw, 440px);
+  margin: 1rem auto;
+  background: radial-gradient(120% 120% at 50% 0%, #1b2140 0%, #0f1220 70%);
+  border: 2px solid #2a3158; border-radius: 16px; overflow: hidden;
+  touch-action: none; /* 모바일 터치 클릭 정확도 */
+}
+
+/* 나물 (game.js에서 .namul로 생성) */
+.namul {
   position: absolute;
-  top: 20px;
-  right: 20px;
-  padding: 15px;
-  border: none;
-  border-radius: 50%;
-  background-color: #ff6b6b;
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
+  width: 50px; height: 50px;
+  border-radius: 14px;
+  background: radial-gradient(circle at 35% 35%, #98e68e 0%, #3ab25f 60%, #2a7a3b 100%);
+  border: 2px solid #286e39;
+  box-shadow: 0 4px 12px rgba(0,0,0,.35);
   cursor: pointer;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-  transition: transform 0.2s ease;
-  z-index: 999;
+  transition: transform .08s ease, filter .08s ease;
 }
+.namul:active { transform: scale(.92); filter: brightness(1.05); }
 
-#backButton:hover {
-  transform: scale(1.1);
-  background-color: #ff4d4d;
+/* 레어 나물 */
+.namul.rare {
+  background: radial-gradient(circle at 35% 35%, #ffe66d 0%, #f6c90e 60%, #c59a05 100%);
+  border-color: #c59a05;
 }
