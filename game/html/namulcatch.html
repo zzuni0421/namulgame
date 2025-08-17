@@ -7,12 +7,19 @@
   <link rel="stylesheet" href="../../assets/style/style.css"/>
 </head>
 <body>
-  <div id="nicknameSection">
-  <input type="text" id="nicknameInput" placeholder="닉네임 입력" />
-    <button id="submitBtn">시작하기</button></div>
-  <div id="gameUI" style="display:none;">
-    <h2 id="timerDisplay"></h2>
-    <h3 id="scoreDisplay"></h3>
+  <!-- 닉네임 입력 -->
+  <div id="nicknameSection" class="panel">
+    <input type="text" id="nicknameInput" placeholder="닉네임 입력" />
+    <button id="submitBtn">시작하기</button>
+  </div>
+
+  <!-- 게임 UI -->
+  <div id="gameUI" class="panel" style="display:none;">
+    <div class="hud">
+      <h2 id="timerDisplay">시간: 0초</h2>
+      <h3 id="scoreDisplay">점수: 0점</h3>
+    </div>
+
     <div class="buttonGroup">
       <button class="modeBtn" data-time="10">10초</button>
       <button class="modeBtn" data-time="20">20초</button>
@@ -20,11 +27,17 @@
       <button class="modeBtn" data-time="60">1분</button>
       <button class="modeBtn" data-time="infinite">무한모드</button>
     </div>
-    <button id="replayBtn" style="display:none;">다시하기</button>
-    <button id="bgmToggle">🔊 BGM</button>
+
+    <div class="buttonRow">
+      <button id="replayBtn" style="display:none;">다시하기</button>
+      <button id="bgmToggle">🔊 BGM</button>
+    </div>
   </div>
 
-  <div id="gameArea"></div>
+  <!-- 게임 영역 -->
+  <div id="gameArea" aria-label="game-area"></div>
+
+  <!-- 풋터 & 언어 -->
   <footer>
     <p>&copy; cc 나물게임. All rights reserved.</p>
     <select id="langSelect">
@@ -34,8 +47,8 @@
   </footer>
 
   <audio id="bgm" loop src="../../assets/bgm.mp3"></audio>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+  <!-- 스크립트들 -->
   <script src="../../lang/lang.js"></script>
   <script src="../js/game.js" defer></script>
 </body>
