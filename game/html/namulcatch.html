@@ -1,45 +1,31 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>나물 줍기 게임</title>
-  <link rel="stylesheet" href="../../assets/style/style.css"/>
+  <link rel="stylesheet" href="../../assets/style/style.css">
 </head>
 <body>
-  <div id="nicknameSection">
-    <input type="text" id="nicknameInput" placeholder="닉네임 입력" />
-    <button id="submitBtn">시작하기</button>
-  </div>
-
-  <div id="gameUI" style="display:none;">
-    <h2 id="timerDisplay"></h2>
-    <h3 id="scoreDisplay"></h3>
-    <div class="buttonGroup">
-      <button class="modeBtn" data-time="10">10초</button>
-      <button class="modeBtn" data-time="20">20초</button>
-      <button class="modeBtn" data-time="30">30초</button>
-      <button class="modeBtn" data-time="60">1분</button>
-      <button class="modeBtn" data-time="infinite">무한모드</button>
+  <div class="game-container">
+    <h1>🌱 나물 줍기</h1>
+    <div>
+      <select id="lang-select">
+        <option value="ko">한국어</option>
+        <option value="en">English</option>
+        <option value="ja">日本語</option>
+        <option value="zh">中文</option>
+      </select>
     </div>
-    <button id="replayBtn" style="display:none;">다시하기</button>
-    <button id="bgmToggle">🔊 BGM</button>
+    <div class="scoreboard">
+      점수: <span id="score">0</span> | 시간: <span id="timer">30</span>s
+    </div>
+    <div id="game-area"></div>
+    <button id="restart-btn">다시 시작</button>
+    <label><input type="checkbox" id="infinite-mode"> 무한 모드</label>
   </div>
 
-  <div id="gameArea"></div>
-
-  <footer>
-    <p>&copy; cc 나물게임. All rights reserved.</p>
-    <select id="langSelect">
-      <option value="ko">한국어</option>
-      <option value="en">English</option>
-      <option value="zh">中文</option>
-      <option value="ja">日本語</option>
-    </select>
-  </footer>
-
-  <audio id="bgm" loop src="../../assets/bgm.mp3"></audio>
   <script src="../../lang/lang.js"></script>
-  <script src="../js/game.js" defer></script>
+  <script src="../js/game.js"></script>
 </body>
 </html>
