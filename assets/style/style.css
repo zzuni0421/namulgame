@@ -1,69 +1,51 @@
-:root {
-  --bg: #0f1220;
-  --panel: #161a2b;
-  --text: #e8ecff;
-  --accent: #6ee7ff;
-  --good: #77ff8b;
-  --warn: #ffc857;
+body {
+  margin: 0;
+  font-family: 'Arial', sans-serif;
+  background-color: #fefefe;
+  color: #333;
+  text-align: center;
 }
 
-* { box-sizing: border-box; }
-html, body {
-  margin: 0; padding: 0; height: 100%;
-  font-family: system-ui, -apple-system, "Apple SD Gothic Neo", "Noto Sans KR", Arial, sans-serif;
-  color: var(--text); background: var(--bg);
-}
-
-.panel {
-  display:flex; gap:.5rem; justify-content:center; align-items:center; padding:1rem;
-  background: linear-gradient(180deg, #151a2c, #111426);
-  border-bottom: 1px solid #232949;
+#nicknameSection, #gameUI {
+  margin-top: 30px;
 }
 
 input, button, select {
-  background: #222845; color: var(--text); border: 1px solid #2f365b;
-  padding: .6rem .9rem; border-radius: .8rem; font-size: 14px;
-}
-button:hover { border-color: var(--accent); cursor: pointer; }
-
-.hud { display:flex; gap:1rem; align-items:baseline; justify-content:center; }
-#timerDisplay { margin:0; font-weight:700; letter-spacing:.5px; }
-#scoreDisplay { margin:0; color: var(--good); }
-
-.buttonGroup { display:flex; gap:.5rem; flex-wrap: wrap; justify-content:center; margin-top:.25rem; }
-.buttonRow { display:flex; gap:.5rem; justify-content:center; margin-top:.5rem; }
-
-footer {
-  margin: .5rem auto 1rem; display:flex; gap:.75rem; align-items:center; justify-content:center;
-  color:#b9c1ff66; font-size: 12px;
+  padding: 10px 15px;
+  margin: 5px;
+  font-size: 16px;
+  border: 2px solid #ddd;
+  border-radius: 8px;
+  background: #fff;
+  cursor: pointer;
 }
 
-/* 게임 영역 */
+button:hover, select:hover {
+  background: #f0f0f0;
+}
+
 #gameArea {
   position: relative;
-  width: min(92vw, 720px);
-  height: min(120vw, 440px);
-  margin: 1rem auto;
-  background: radial-gradient(120% 120% at 50% 0%, #1b2140 0%, #0f1220 70%);
-  border: 2px solid #2a3158; border-radius: 16px; overflow: hidden;
-  touch-action: none; /* 모바일 터치 클릭 정확도 */
+  margin: 20px auto;
+  width: 80%;
+  height: 400px;
+  border: 3px solid #ddd;
+  border-radius: 12px;
+  background: #ffffff;
+  overflow: hidden;
 }
 
-/* 나물 (game.js에서 .namul로 생성) */
 .namul {
+  width: 50px;
+  height: 50px;
+  background: url("../../assets/namul.png") no-repeat center/contain;
   position: absolute;
-  width: 50px; height: 50px;
-  border-radius: 14px;
-  background: radial-gradient(circle at 35% 35%, #98e68e 0%, #3ab25f 60%, #2a7a3b 100%);
-  border: 2px solid #286e39;
-  box-shadow: 0 4px 12px rgba(0,0,0,.35);
   cursor: pointer;
-  transition: transform .08s ease, filter .08s ease;
 }
-.namul:active { transform: scale(.92); filter: brightness(1.05); }
 
-/* 레어 나물 */
-.namul.rare {
-  background: radial-gradient(circle at 35% 35%, #ffe66d 0%, #f6c90e 60%, #c59a05 100%);
-  border-color: #c59a05;
+footer {
+  margin-top: 30px;
+  padding: 10px;
+  font-size: 14px;
+  color: #666;
 }
