@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>나물 줍기 게임</title>
-  <link rel="stylesheet" href="../../assets/style/style.css"/>
+  <link rel="stylesheet" href="../../assets/sytle/style.css"/>
 </head>
 <body>
   <!-- 메인 메뉴 -->
@@ -20,34 +20,28 @@
       </select>
     </div>
 
+    <h2>시간 선택</h2>
     <div class="row">
       <button class="time-btn" data-time="30">30s</button>
       <button class="time-btn" data-time="60">60s</button>
       <button class="time-btn" data-time="90">90s</button>
+      <button class="time-btn" data-time="infinite">∞ 무한</button>
     </div>
 
-    <button id="start-btn">게임 시작</button>
+    <button id="back-index-btn">돌아가기</button>
   </div>
 
   <!-- 게임 화면 -->
   <div id="game-container" style="display:none;">
     <div class="scoreboard">
-      <span id="score-label">점수:</span> <span id="score">0</span> |
-      <span id="time-label">시간:</span> <span id="timer">30</span>s
+      <span id="score-label">점수:</span> <span id="score">0</span>
+      <span id="time-box"> | 시간: <span id="time">0</span>s</span>
     </div>
 
     <div id="game-area"></div>
 
     <div class="row">
       <button id="restart-btn">다시 시작</button>
-    </div>
-
-    <label class="row">
-      <input type="checkbox" id="infinite-mode"/>
-      <span id="infinite-label">무한 모드</span>
-    </label>
-
-    <div class="row">
       <button id="back-btn">메인으로</button>
     </div>
   </div>
