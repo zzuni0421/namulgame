@@ -1,12 +1,11 @@
-const gameArea = document.getElementById('game-area');
+const mainMenu = document.getElementById('main-menu');
+const gameContainer = document.getElementById('game-container');
+const startBtn = document.getElementById('start-btn');
 const scoreEl = document.getElementById('score');
 const timerEl = document.getElementById('timer');
 const restartBtn = document.getElementById('restart-btn');
 const infiniteModeCheckbox = document.getElementById('infinite-mode');
 const langSelect = document.getElementById('lang-select');
-const infiniteLabel = document.getElementById('infinite-label');
-const scoreLabel = document.getElementById('score-label');
-const timeLabel = document.getElementById('time-label');
 const timeButtons = document.querySelectorAll('.time-btn');
 
 let score = 0;
@@ -19,12 +18,17 @@ let gameRunning = false;
 // 언어 선택
 langSelect.addEventListener('change', () => setLang(langSelect.value));
 
-// 시간 버튼 선택
-timeButtons.forEach(btn => {
-  btn.addEventListener('click', () => {
-    time = parseInt(btn.dataset.time);
-    timerEl.textContent = time;
-  });
+// 시간 버튼
+timeButtons.forEach(btn => btn.addEventListener('click', () => {
+  time = parseInt(btn.dataset.time);
+  timerEl.textContent = time;
+}));
+
+// 메인 메뉴 -> 게임 화면
+startBtn.addEventListener('click', () => {
+  mainMenu.style.display = 'none';
+  gameContainer.style.display = 'block';
+  startGame();
 });
 
 // 점수 갱신
@@ -32,28 +36,27 @@ function updateScore() {
   scoreEl.textContent = score;
 }
 
-// 나물 생성 (중복 위치 방지)
+// 나물 생성
 function spawnNamul() {
   if (!gameRunning) return;
   if (namuls.length >= maxNamuls) return;
 
-  let x, y;
-  let tries = 0;
+  let x, y, tries = 0;
   do {
-    x = Math.random() * (gameArea.clientWidth - 60);
-    y = Math.random() * (gameArea.clientHeight - 60);
+    x = Math.random() * (gameContainer.clientWidth - 60);
+    y = Math.random() * (gameContainer.clientHeight - 60);
     tries++;
   } while (namuls.some(n => Math.abs(n.x - x) < 60 && Math.abs(n.y - y) < 60) && tries < 10);
 
   const namul = document.createElement('img');
-  namul.src = 'assets/namul.png';
+  namul.src = '../../assets/namul.png';
   namul.className = 'namul';
   namul.style.left = x + 'px';
   namul.style.top = y + 'px';
   namul.x = x;
   namul.y = y;
 
-  gameArea.appendChild(namul);
+  gameContainer.querySelector('#game-area').appendChild(namul);
   namuls.push(namul);
 
   namul.addEventListener('click', () => {
@@ -88,6 +91,8 @@ function endGame() {
   gameRunning = false;
   clearInterval(timerInterval);
   alert(`${LANG[currentLang].score}: ${score} 🎉`);
+  gameContainer.style.display = 'none';
+  mainMenu.style.display = 'block';
 }
 
 // 게임 시작
@@ -114,6 +119,5 @@ function startGame() {
 // 다시 시작 버튼
 restartBtn.addEventListener('click', startGame);
 
-// 초기화
-startGame();
+// 초기 언어 세팅
 setLang(currentLang);
