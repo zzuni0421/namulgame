@@ -1,19 +1,17 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>나물 줍기 게임</title>
-  <link rel="stylesheet" href="../../assets/style/style.css">
+  <link rel="stylesheet" href="../../assets/style/style.css"/>
 </head>
 <body>
-  <!-- 메인 메뉴 화면 -->
+  <!-- 메인 메뉴 -->
   <div id="main-menu">
     <h1>🌱 나물 줍기</h1>
-    <button id="start-btn">게임 시작</button>
 
-    <!-- 언어 선택 -->
-    <div>
+    <div class="row">
       <select id="lang-select">
         <option value="ko">한국어</option>
         <option value="en">English</option>
@@ -22,23 +20,36 @@
       </select>
     </div>
 
-    <!-- 시간 선택 -->
-    <div>
+    <div class="row">
       <button class="time-btn" data-time="30">30s</button>
       <button class="time-btn" data-time="60">60s</button>
       <button class="time-btn" data-time="90">90s</button>
     </div>
+
+    <button id="start-btn">게임 시작</button>
   </div>
 
   <!-- 게임 화면 -->
   <div id="game-container" style="display:none;">
     <div class="scoreboard">
-      <span id="score-label">점수:</span> <span id="score">0</span> | 
+      <span id="score-label">점수:</span> <span id="score">0</span> |
       <span id="time-label">시간:</span> <span id="timer">30</span>s
     </div>
+
     <div id="game-area"></div>
-    <button id="restart-btn">다시 시작</button>
-    <label><input type="checkbox" id="infinite-mode"> <span id="infinite-label">무한 모드</span></label>
+
+    <div class="row">
+      <button id="restart-btn">다시 시작</button>
+    </div>
+
+    <label class="row">
+      <input type="checkbox" id="infinite-mode"/>
+      <span id="infinite-label">무한 모드</span>
+    </label>
+
+    <div class="row">
+      <button id="back-btn">메인으로</button>
+    </div>
   </div>
 
   <script src="../../lang/lang.js"></script>
