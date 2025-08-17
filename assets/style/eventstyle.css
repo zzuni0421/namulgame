@@ -45,3 +45,26 @@ footer {
   bottom: 0;
   width: 100%;
 }
+
+#event-buttons {
+  text-align: center;
+  margin: 20px 0;
+}
+
+#event-buttons button {
+  background-color: #ffeb3b;
+  border: 2px solid #d32f2f;
+  color: #d32f2f;
+  font-weight: bold;
+  padding: 10px 20px;
+  margin: 0 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+#event-buttons button:hover {
+  background-color: #d32f2f;
+  color: #fff;
+}
