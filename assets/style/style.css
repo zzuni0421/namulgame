@@ -126,3 +126,34 @@ button:active {
 #back-index-btn:hover {
   background: #2e7031;
 }
+
+#namul-event-banner {
+  background: linear-gradient(90deg, #a8e063, #56ab2f); /* 산뜻한 초록 그라데이션 */
+  color: #fff;
+  text-align: center;
+  padding: 15px;
+  font-weight: bold;
+  font-size: 1.2rem;
+  border-radius: 12px;
+  margin: 10px auto;
+  width: 90%;
+  max-width: 600px;
+  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+  animation: glow 2s infinite alternate;
+}
+
+#namul-event-banner a {
+  text-decoration: none;
+  color: #ffeb3b;
+  font-weight: bold;
+  margin-left: 10px;
+}
+
+#namul-event-banner a:hover {
+  text-decoration: underline;
+}
+
+@keyframes glow {
+  from { box-shadow: 0 0 10px rgba(86,171,47,0.5); }
+  to { box-shadow: 0 0 20px rgba(168,224,99,0.9); }
+}
