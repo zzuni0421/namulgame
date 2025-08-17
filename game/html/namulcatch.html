@@ -7,9 +7,11 @@
   <link rel="stylesheet" href="../../assets/style/style.css">
 </head>
 <body>
-  <div class="game-container">
+  <!-- 메인 메뉴 화면 -->
+  <div id="main-menu">
     <h1>🌱 나물 줍기</h1>
-    
+    <button id="start-btn">게임 시작</button>
+
     <!-- 언어 선택 -->
     <div>
       <select id="lang-select">
@@ -26,12 +28,14 @@
       <button class="time-btn" data-time="60">60s</button>
       <button class="time-btn" data-time="90">90s</button>
     </div>
+  </div>
 
+  <!-- 게임 화면 -->
+  <div id="game-container" style="display:none;">
     <div class="scoreboard">
       <span id="score-label">점수:</span> <span id="score">0</span> | 
       <span id="time-label">시간:</span> <span id="timer">30</span>s
     </div>
-
     <div id="game-area"></div>
     <button id="restart-btn">다시 시작</button>
     <label><input type="checkbox" id="infinite-mode"> <span id="infinite-label">무한 모드</span></label>
