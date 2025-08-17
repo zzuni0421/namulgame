@@ -9,6 +9,8 @@
 <body>
   <div class="game-container">
     <h1>🌱 나물 줍기</h1>
+    
+    <!-- 언어 선택 -->
     <div>
       <select id="lang-select">
         <option value="ko">한국어</option>
@@ -17,12 +19,22 @@
         <option value="zh">中文</option>
       </select>
     </div>
-    <div class="scoreboard">
-      점수: <span id="score">0</span> | 시간: <span id="timer">30</span>s
+
+    <!-- 시간 선택 -->
+    <div>
+      <button class="time-btn" data-time="30">30s</button>
+      <button class="time-btn" data-time="60">60s</button>
+      <button class="time-btn" data-time="90">90s</button>
     </div>
+
+    <div class="scoreboard">
+      <span id="score-label">점수:</span> <span id="score">0</span> | 
+      <span id="time-label">시간:</span> <span id="timer">30</span>s
+    </div>
+
     <div id="game-area"></div>
     <button id="restart-btn">다시 시작</button>
-    <label><input type="checkbox" id="infinite-mode"> 무한 모드</label>
+    <label><input type="checkbox" id="infinite-mode"> <span id="infinite-label">무한 모드</span></label>
   </div>
 
   <script src="../../lang/lang.js"></script>
