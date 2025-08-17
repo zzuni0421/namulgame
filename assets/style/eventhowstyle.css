@@ -1,0 +1,48 @@
+body {
+  font-family: 'Nanum Gothic', sans-serif;
+  background-color: #fef9f0;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  text-align: center;
+  background-color: #a3d2ca;
+  color: #fff;
+  padding: 20px;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+section#info {
+  max-width: 600px;
+  margin: 20px auto;
+  padding: 20px;
+  background-color: #fff3e0;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+section#info a {
+  color: #d32f2f;
+  font-weight: bold;
+  text-decoration: none;
+}
+
+section#info a:hover {
+  text-decoration: underline;
+}
+
+footer {
+  text-align: center;
+  padding: 10px;
+  background-color: #a3d2ca;
+  color: #fff;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
