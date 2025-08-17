@@ -7,19 +7,14 @@
   <link rel="stylesheet" href="../../assets/style/style.css"/>
 </head>
 <body>
-  <!-- 닉네임 입력 -->
-  <div id="nicknameSection" class="panel">
+  <div id="nicknameSection">
     <input type="text" id="nicknameInput" placeholder="닉네임 입력" />
     <button id="submitBtn">시작하기</button>
   </div>
 
-  <!-- 게임 UI -->
-  <div id="gameUI" class="panel" style="display:none;">
-    <div class="hud">
-      <h2 id="timerDisplay">시간: 0초</h2>
-      <h3 id="scoreDisplay">점수: 0점</h3>
-    </div>
-
+  <div id="gameUI" style="display:none;">
+    <h2 id="timerDisplay"></h2>
+    <h3 id="scoreDisplay"></h3>
     <div class="buttonGroup">
       <button class="modeBtn" data-time="10">10초</button>
       <button class="modeBtn" data-time="20">20초</button>
@@ -27,30 +22,23 @@
       <button class="modeBtn" data-time="60">1분</button>
       <button class="modeBtn" data-time="infinite">무한모드</button>
     </div>
-
-    <div class="buttonRow">
-      <button id="replayBtn" style="display:none;">다시하기</button>
-      <button id="bgmToggle">🔊 BGM</button>
-    </div>
+    <button id="replayBtn" style="display:none;">다시하기</button>
+    <button id="bgmToggle">🔊 BGM</button>
   </div>
 
-  <!-- 게임 영역 -->
-  <div id="gameArea" aria-label="game-area"></div>
+  <div id="gameArea"></div>
 
-  <!-- 풋터 & 언어 -->
   <footer>
     <p>&copy; cc 나물게임. All rights reserved.</p>
-  <select id="langSelect">
-   <option value="ko">한국어</option>
-   <option value="en">English</option>
-   <option value="zh">中文</option>
-   <option value="ja">日本語</option>
- </select>
+    <select id="langSelect">
+      <option value="ko">한국어</option>
+      <option value="en">English</option>
+      <option value="zh">中文</option>
+      <option value="ja">日本語</option>
+    </select>
   </footer>
 
   <audio id="bgm" loop src="../../assets/bgm.mp3"></audio>
-
-  <!-- 스크립트들 -->
   <script src="../../lang/lang.js"></script>
   <script src="../js/game.js" defer></script>
 </body>
