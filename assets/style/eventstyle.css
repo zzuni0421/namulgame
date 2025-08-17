@@ -1,0 +1,47 @@
+/* 기본 스타일 */
+body {
+  font-family: 'Nanum Gothic', sans-serif;
+  background-color: #fef9f0;
+  color: #333;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  text-align: center;
+  background-color: #a3d2ca;
+  padding: 20px;
+  color: #fff;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 2rem;
+}
+
+section {
+  padding: 20px;
+  max-width: 600px;
+  margin: 0 auto;
+}
+
+#ranking-section {
+  background-color: #ffe5b4;
+  border-radius: 10px;
+  padding: 20px;
+}
+
+#ranking-list {
+  list-style: decimal inside;
+  padding-left: 0;
+}
+
+footer {
+  text-align: center;
+  padding: 10px;
+  background-color: #a3d2ca;
+  color: #fff;
+  position: fixed;
+  bottom: 0;
+  width: 100%;
+}
