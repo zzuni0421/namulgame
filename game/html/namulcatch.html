@@ -7,9 +7,13 @@
   <link rel="stylesheet" href="../../assets/style/style.css"/>
 </head>
 <body>
-<div id="namul-event-banner">
-  🌱 이 게임에서 이벤트 진행 중! <a href="../../event">참여하러 가기</a> 🌱
-</div>
+  <!-- 이벤트 배너 -->
+  <div id="namul-event-banner">
+    <span id="banner-text-before">🌱 이 게임에서 이벤트 진행 중! </span>
+    <a id="banner-link" href="../../event">참여하러 가기</a>
+    <span id="banner-text-after"> 🌱</span>
+  </div>
+
   <div id="main-menu">
     <h1>🌱 나물 줍기</h1>
 
@@ -41,6 +45,8 @@
     </div>
 
     <div id="game-area"></div>
+
+    <p id="game-over-msg" style="display:none;">게임 종료!</p>
 
     <div class="row">
       <button id="restart-btn">다시 시작</button>
