@@ -1,28 +1,86 @@
-const LANG = {
-  ko: { title:"🌱 나물 줍기", score:"점수", time:"시간", restart:"다시 시작", infinite:"무한 모드", start:"게임 시작", back:"메인으로" },
-  en: { title:"🌱 Namul Catcher", score:"Score", time:"Time", restart:"Restart", infinite:"Infinite Mode", start:"Start Game", back:"Back to Main" },
-  ja: { title:"🌱 ナムルキャッチ", score:"スコア", time:"時間", restart:"再スタート", infinite:"無限モード", start:"ゲーム開始", back:"メインへ" },
-  zh: { title:"🌱 拾取蔬菜", score:"分数", time:"时间", restart:"重新开始", infinite:"无限模式", start:"开始游戏", back:"返回主界面" }
+const translations = {
+  ko: {
+    title: "🌱 나물 줍기",
+    timeSelect: "시간 선택",
+    backIndexBtn: "메인으로",
+    scoreLabel: "점수:",
+    restartBtn: "다시 시작",
+    backBtn: "처음부터",
+    timeLabel: "시간:"
+  },
+  en: {
+    title: "🌱 Namul Picking",
+    timeSelect: "Select Time",
+    backIndexBtn: "Back to Main",
+    scoreLabel: "Score:",
+    restartBtn: "Restart",
+    backBtn: "Back to Start",
+    timeLabel: "Time:"
+  },
+  ja: {
+    title: "🌱 山菜取り",
+    timeSelect: "時間を選択",
+    backIndexBtn: "メインへ",
+    scoreLabel: "スコア:",
+    restartBtn: "リスタート",
+    backBtn: "最初から",
+    timeLabel: "時間:"
+  },
+  zh: {
+    title: "🌱 采野菜游戏",
+    timeSelect: "选择时间",
+    backIndexBtn: "回到主页",
+    scoreLabel: "分数:",
+    restartBtn: "重新开始",
+    backBtn: "重新开始",
+    timeLabel: "时间:"
+  }
 };
 
-let currentLang = "ko";
-
+// 언어 적용 함수
 function setLang(lang) {
-  currentLang = lang;
-  document.querySelectorAll("h1").forEach(h=>h.textContent = LANG[lang].title);
+  const dict = translations[lang];
+  if (!dict) return;
 
-  const restart = document.getElementById("restart-btn");
-  if (restart) restart.textContent = LANG[lang].restart;
+  // title (h1)
+  const titleEl = document.querySelector("#main-menu h1");
+  if (titleEl) titleEl.textContent = dict.title;
 
-  const start = document.getElementById("start-btn");
-  if (start) start.textContent = LANG[lang].start;
+  // 시간 선택 (h2)
+  const timeSelectEl = document.querySelector("#main-menu h2");
+  if (timeSelectEl) timeSelectEl.textContent = dict.timeSelect;
 
-  const back = document.getElementById("back-btn");
-  if (back) back.textContent = LANG[lang].back;
+  // 메인으로 버튼
+  const backIndexBtn = document.getElementById("back-index-btn");
+  if (backIndexBtn) backIndexBtn.textContent = dict.backIndexBtn;
 
-  const infLabel = document.getElementById("infinite-label");
-  if (infLabel) infLabel.textContent = LANG[lang].infinite;
+  // 점수 라벨
+  const scoreLabel = document.getElementById("score-label");
+  if (scoreLabel) scoreLabel.textContent = dict.scoreLabel;
 
-  document.getElementById("score-label").textContent = LANG[lang].score + ":";
-  document.getElementById("time-label").textContent  = LANG[lang].time  + ":";
+  // 시간 라벨
+  const timeBox = document.querySelector("#time-box");
+  if (timeBox) {
+    // 안에 시간 숫자(span#time)는 남겨둬야 함
+    timeBox.firstChild.textContent = ` | ${dict.timeLabel} `;
+  }
+
+  // 다시 시작 버튼
+  const restartBtn = document.getElementById("restart-btn");
+  if (restartBtn) restartBtn.textContent = dict.restartBtn;
+
+  // 처음부터 버튼
+  const backBtn = document.getElementById("back-btn");
+  if (backBtn) backBtn.textContent = dict.backBtn;
 }
+
+// 언어 선택 이벤트 연결
+document.addEventListener("DOMContentLoaded", () => {
+  const langSelect = document.getElementById("lang-select");
+  if (langSelect) {
+    setLang(langSelect.value); // 기본 한국어
+    langSelect.addEventListener("change", (e) => {
+      setLang(e.target.value);
+    });
+  }
+});
