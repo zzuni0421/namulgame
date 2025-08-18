@@ -1,8 +1,8 @@
-// lang.js
-
 const translations = {
   ko: {
-    eventBanner: "🌱 이 게임에서 이벤트 진행 중! 참여하러 가기 🌱",
+    eventBannerBefore: "🌱 이 게임에서 이벤트 진행 중! ",
+    eventBannerLink: "참여하러 가기",
+    eventBannerAfter: " 🌱",
     title: "🌱 나물 줍기",
     timeSelect: "시간 선택",
     backIndexBtn: "메인으로",
@@ -17,7 +17,9 @@ const translations = {
     gameOver: "게임 종료!"
   },
   en: {
-    eventBanner: "🌱 Event in progress in this game! Join now 🌱",
+    eventBannerBefore: "🌱 Event in progress in this game! ",
+    eventBannerLink: "Join Now",
+    eventBannerAfter: " 🌱",
     title: "🌱 Namul Picking",
     timeSelect: "Select Time",
     backIndexBtn: "Back to Main",
@@ -32,7 +34,9 @@ const translations = {
     gameOver: "Game Over!"
   },
   ja: {
-    eventBanner: "🌱 このゲームでイベント開催中！ 参加しよう 🌱",
+    eventBannerBefore: "🌱 このゲームでイベント開催中！ ",
+    eventBannerLink: "参加しよう",
+    eventBannerAfter: " 🌱",
     title: "🌱 山菜取り",
     timeSelect: "時間を選択",
     backIndexBtn: "メインへ",
@@ -47,7 +51,9 @@ const translations = {
     gameOver: "ゲーム終了!"
   },
   zh: {
-    eventBanner: "🌱 本游戏正在进行活动！快来参加 🌱",
+    eventBannerBefore: "🌱 本游戏正在进行活动！ ",
+    eventBannerLink: "快来参加",
+    eventBannerAfter: " 🌱",
     title: "🌱 采野菜游戏",
     timeSelect: "选择时间",
     backIndexBtn: "回到主页",
@@ -70,8 +76,12 @@ function setLang(lang) {
   if (!dict) return;
 
   // 이벤트 배너
-  const banner = document.getElementById("namul-event-banner");
-  if (banner) banner.textContent = dict.eventBanner;
+  const bannerBefore = document.getElementById("banner-text-before");
+  const bannerLink = document.getElementById("banner-link");
+  const bannerAfter = document.getElementById("banner-text-after");
+  if (bannerBefore) bannerBefore.textContent = dict.eventBannerBefore;
+  if (bannerLink) bannerLink.textContent = dict.eventBannerLink;
+  if (bannerAfter) bannerAfter.textContent = dict.eventBannerAfter;
 
   // 제목
   const titleEl = document.querySelector("#main-menu h1");
@@ -112,7 +122,7 @@ function setLang(lang) {
   const backBtn = document.getElementById("back-btn");
   if (backBtn) backBtn.textContent = dict.backBtn;
 
-  // 게임 종료 메시지 (게임 끝날 때 game.js에서 호출하도록)
+  // 게임 종료 메시지
   const gameOverEl = document.getElementById("game-over-msg");
   if (gameOverEl) gameOverEl.textContent = dict.gameOver;
 }
@@ -122,7 +132,7 @@ function setLang(lang) {
 document.addEventListener("DOMContentLoaded", () => {
   const langSelect = document.getElementById("lang-select");
   if (langSelect) {
-    setLang(langSelect.value); // 기본 한국어
+    setLang(langSelect.value); // 기본 언어
     langSelect.addEventListener("change", (e) => {
       setLang(e.target.value);
     });
