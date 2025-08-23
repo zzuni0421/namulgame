@@ -44,7 +44,3 @@ function openModal(genre) {
 function closeModal(e) {
   document.getElementById("genreModal").classList.remove("show");
 }
-
-document.getElementById("goLobbyBtn").addEventListener("click", () => {
-  window.location.href = "../../index.html";
-});
