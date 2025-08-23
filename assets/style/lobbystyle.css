@@ -96,16 +96,20 @@ h1 {
   cursor: pointer;
 }
 
-.yt-btn {
-  display: block;     
-  margin: 30px auto;
+.yt-btn, .license-btn {
+  display: inline-block;      /* 내용만큼만 길이 */
+  margin: 20px auto;          /* 상하 여백, 좌우 중앙 */
   padding: 10px 20px;
-  background-color: #FF0000;
+  background-color: #FF0000;  /* 유튜브 버튼 빨강 */
   color: white;
   text-decoration: none;
   font-size: 18px;
   border-radius: 8px;
   text-align: center;
+}
+
+.license-btn {
+  background-color: #4CAF50;  /* 녹색 */
 }
 
 .yt-btn:hover {
@@ -125,18 +129,13 @@ h1 {
   font-weight: bold;
   font-size: 1.2rem;
 }
+
 #event-banner a {
   text-decoration: none;
   color: #d32f2f;
   font-weight: bold;
 }
+
 #event-banner a:hover {
   text-decoration: underline;
-}
-
-footer.footer {
-  text-align: center;
-  margin-top: 40px;
-  font-size: 14px;
-  color: #aaa;
 }
