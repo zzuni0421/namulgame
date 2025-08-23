@@ -97,18 +97,15 @@ h1 {
 }
 
 .yt-btn {
-  display: inline-block;
-  padding: 12px 20px;
-  margin-top: 20px;
-  font-size: 1.1rem;
-  font-weight: 600;
+  display: block;     
+  margin: 30px auto;
+  padding: 10px 20px;
+  background-color: #FF0000;
   color: white;
-  background: #ff0000;
-  border: none;
-  border-radius: 30px;
   text-decoration: none;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-  transition: transform 0.2s ease, background 0.3s ease;
+  font-size: 18px;
+  border-radius: 8px;
+  text-align: center;
 }
 
 .yt-btn:hover {
@@ -135,4 +132,11 @@ h1 {
 }
 #event-banner a:hover {
   text-decoration: underline;
+}
+
+footer.footer {
+  text-align: center;
+  margin-top: 40px;
+  font-size: 14px;
+  color: #aaa;
 }
