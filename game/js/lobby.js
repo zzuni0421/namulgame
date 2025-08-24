@@ -161,3 +161,14 @@ async function saveMemory(username, memory){
     });
   } catch(err){ console.error("saveMemory fetch 에러:", err);}
 }
+
+async function sendScore(nickname, score) {
+  const res = await fetch("../../api/namul", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ nickname, score }),
+  });
+
+  const result = await res.json();
+  console.log("Server response:", result);
+}
