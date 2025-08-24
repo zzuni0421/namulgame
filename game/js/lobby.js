@@ -1,5 +1,5 @@
 // ------------------ 설정 ------------------
-const API_URL = "https://script.google.com/macros/s/AKfycbwvHEjmP_iP9vP53ByGwu2pB9AiZytkWp44RrhLuoq1zj2bspl0XZoRV6AGURTN0dh5yw/exec";
+const API_URL = "/api/namul";
 
 const authModal = document.getElementById("authModal");
 const registerModal = document.getElementById("registerModal");
