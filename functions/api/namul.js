@@ -36,3 +36,4 @@ export async function onRequest(context) {
     );
   }
 }
+console.log("Body received:", body);
