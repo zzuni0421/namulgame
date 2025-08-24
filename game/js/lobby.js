@@ -1,4 +1,4 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbwz-8qrTtkc21f28Vnm3Vdfrt4GksWgYIggcPaxdWWjSWqJxeNfy6urL2Fb-V6nXUUPLg/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwFTnk5tEN65-GruESvVtLqMhCnuXjgoQau5Gy1CdqvJV01E9WEvO9Rs_UgDCE_sk8VMA/exec";
 
 const authModal = document.getElementById("authModal");
 const registerModal = document.getElementById("registerModal");
