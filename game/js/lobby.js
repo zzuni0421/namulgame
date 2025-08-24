@@ -97,7 +97,7 @@ btnLogout.onclick = ()=>{
 // ------------------ 회원가입 ------------------
 async function register(username, password){
   try{
-    const res = await fetch(API_URL,{
+    const res = await fetch(https://script.google.com/macros/s/AKfycbxRBhNINhWqqA5JhVvdhQ_YDpWWqubA5q6zsb5b7lWwqrRsAhC2ib_txdzvhvU41CdaWg/exec,{
       method:"POST",
       headers: {"Content-Type":"application/json"},
       body: JSON.stringify({ action:"register", username, password }),
