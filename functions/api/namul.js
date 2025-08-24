@@ -12,7 +12,7 @@ export async function onRequest(context) {
     const body = await request.json();
     console.log("Received in CF Function:", body);
 
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbxLgmOMU64FXJ3sJL5nK5_9KS8yGmQQVQmMmcFMb7o5ukUvS3x5TuXWAz83gO5zXGsyJA/exec";
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbzXrtDcnrSwrqVOnaiIl6Idj1PckOPMUS63QSP0GxATisbvC_QE_wBZdfoj5lNhFvFl0g/exec";
 
     // GAS로 전달
     const res = await fetch(GAS_URL, {
