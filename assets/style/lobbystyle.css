@@ -1,4 +1,4 @@
-/* ===== 기본 설정 ===== */
+/* ===== 기본 바디 설정 ===== */
 body {
   font-family: 'Noto Sans KR', sans-serif;
   margin: 0;
@@ -13,67 +13,67 @@ body {
   justify-content: space-between;
   align-items: center;
   padding: 12px 20px;
-  background-color: #ffffff;
+  background-color: #fff;
   border-bottom: 1px solid #e0e0e0;
   box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
-/* ===== 버튼 공통 ===== */
+/* ===== 공통 버튼 ===== */
 .btn {
   padding: 10px 18px;
-  margin: 5px;
+  margin: 5px 0;
   border: none;
   border-radius: 8px;
   cursor: pointer;
   font-weight: 500;
   transition: all 0.2s ease;
   box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  background-color: #4caf50;
+  color: #fff;
 }
 
-/* 버튼 hover 애니메이션 */
+/* hover / active 애니메이션 */
 .btn:hover {
   transform: translateY(-2px);
   box-shadow: 0 4px 8px rgba(0,0,0,0.15);
 }
 
-/* 버튼 클릭 애니메이션 */
 .btn:active {
   transform: translateY(1px);
   box-shadow: 0 1px 2px rgba(0,0,0,0.2);
 }
 
-/* ===== 버튼 색상 ===== */
-.btn.primary {
-  background-color: #4caf50;
-  color: #fff;
-}
-
+/* outline 버튼 */
 .btn.outline {
   background-color: #fff;
   color: #4caf50;
   border: 2px solid #4caf50;
 }
 
+/* 작은 버튼 */
 .btn.sm {
   padding: 6px 12px;
   font-size: 0.875rem;
 }
 
-/* ===== 모달 스타일 ===== */
+/* ===== 모달 ===== */
 .modal {
-  display: none;
+  display: none; /* 초기 숨김 */
   position: fixed;
-  top:0; left:0;
-  width:100%;
-  height:100%;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
   background: rgba(0,0,0,0.5);
-  justify-content: center;
-  align-items: center;
+  display: flex;
+  justify-content: center; /* 가로 중앙 */
+  align-items: center;     /* 세로 중앙 */
   z-index: 1000;
 }
 
+/* 모달 콘텐츠 */
 .modal-content {
-  background: #ffffff;
+  background: #fff;
   padding: 20px 30px;
   border-radius: 12px;
   min-width: 300px;
@@ -82,6 +82,7 @@ body {
   animation: modalFade 0.3s ease;
 }
 
+/* 모달 열릴 때 애니메이션 */
 @keyframes modalFade {
   from {opacity: 0; transform: translateY(-10px);}
   to {opacity: 1; transform: translateY(0);}
@@ -103,7 +104,7 @@ body {
   border-bottom: 1px solid #f0e68c;
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center; /* 중앙 정렬 */
 }
 
 .event-link {
@@ -123,6 +124,7 @@ body {
   font-size: 0.875rem;
   color: #777;
   margin-top: 4px;
+  text-align: center;
 }
 
 /* ===== 중앙 액션 버튼 ===== */
