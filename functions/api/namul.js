@@ -13,7 +13,7 @@ export async function onRequest(context) {
     console.log("Received in CF Function:", body);
 
     // GAS URL (본인 웹앱 URL로 교체)
-    const GAS_URL = "https://script.google.com/macros/s/AKfycbxhv6nJ9slLuWszZGqwU2oZ9E--uSZZdmGo-KRv3uN6JnApXKZcdeul4Ox8x5UNnJRlVQ/exec";
+    const GAS_URL = "https://script.google.com/macros/s/AKfycbzy-ETqgx_MCleubqahOkh5XGPeBwfnSrdKkgebaIYpqs_K1HbWsR-norNE7ZS4Yf70jQ/exec";
 
     // GAS로 전달
     const res = await fetch(GAS_URL, {
