@@ -1,5 +1,5 @@
 // ------------------ 설정 ------------------
-const API_URL = "/api"; 
+const API_URL = "/api/namul"; 
 
 const authModal = document.getElementById("authModal");
 const registerModal = document.getElementById("registerModal");
