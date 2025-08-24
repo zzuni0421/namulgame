@@ -162,11 +162,11 @@ async function saveMemory(username, memory){
   } catch(err){ console.error("saveMemory fetch 에러:", err);}
 }
 
-async function sendScore(nickname, score) {
-  const res = await fetch("../../api/namul", {
+async function sendScore(username, score) {
+  const res = await fetch("API_URL", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ nickname, score }),
+    body: JSON.stringify({ username, score }),
   });
 
   const result = await res.json();
