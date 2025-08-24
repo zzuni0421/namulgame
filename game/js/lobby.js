@@ -1,5 +1,5 @@
 // ------------------ 설정 ------------------
-const API_URL = "https://script.google.com/macros/s/AKfycbxhv6nJ9slLuWszZGqwU2oZ9E--uSZZdmGo-KRv3uN6JnApXKZcdeul4Ox8x5UNnJRlVQ/exec"; 
+const API_URL = "/api"; 
 
 const authModal = document.getElementById("authModal");
 const registerModal = document.getElementById("registerModal");
@@ -59,23 +59,31 @@ function openModal(type){
   showModal(genreModal);
 }
 
+// ------------------ 공통 fetch 함수 ------------------
+async function apiPost(action, payload){
+  try{
+    const res = await fetch(API_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action, ...payload })
+    });
+    return await res.json();
+  } catch(err){
+    console.error(`${action} fetch 에러:`, err);
+    return { success: false, msg: "서버 요청 실패" };
+  }
+}
+
 // ------------------ 로그인 ------------------
 async function login(username,password){
-  try{
-    const res = await fetch(API_URL,{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body: JSON.stringify({action:"login", username, password})
-    });
-    const data = await res.json();
-    if(data.success){
-      loginStatus.textContent = `${username}님 로그인됨`;
-      btnLogout.style.display="inline-block";
-      btnOpenLogin.style.display="none";
-      btnSecret.style.display="inline-block";
-      hideModal(authModal);
-    } else alert(data.msg);
-  } catch(err){ console.error("login fetch 에러:", err);}
+  const data = await apiPost("login",{ username, password });
+  if(data.success){
+    loginStatus.textContent = `${username}님 로그인됨`;
+    btnLogout.style.display="inline-block";
+    btnOpenLogin.style.display="none";
+    btnSecret.style.display="inline-block";
+    hideModal(authModal);
+  } else alert(data.msg);
 }
 document.getElementById("btnLogin").onclick = ()=>{
   const username = document.getElementById("loginUsername").value;
@@ -93,19 +101,12 @@ btnLogout.onclick = ()=>{
 
 // ------------------ 회원가입 ------------------
 async function register(username,password){
-  try{
-    const res = await fetch(API_URL,{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body: JSON.stringify({action:"register", username, password})
-    });
-    const data = await res.json();
-    if(data.success){
-      alert("회원가입 성공! 로그인하세요.");
-      hideModal(registerModal);
-      showModal(authModal);
-    } else alert(data.msg);
-  } catch(err){ console.error("register fetch 에러:", err);}
+  const data = await apiPost("register",{ username, password });
+  if(data.success){
+    alert("회원가입 성공! 로그인하세요.");
+    hideModal(registerModal);
+    showModal(authModal);
+  } else alert(data.msg);
 }
 document.getElementById("btnRegister").onclick = ()=>{
   const username = document.getElementById("registerUsername").value;
@@ -115,14 +116,7 @@ document.getElementById("btnRegister").onclick = ()=>{
 
 // ------------------ 시크릿 코드 확인 ------------------
 async function checkSecret(username, code){
-  try{
-    const res = await fetch(API_URL,{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body: JSON.stringify({action:"checkSecret", username, code})
-    });
-    return res.json();
-  } catch(err){ console.error("checkSecret fetch 에러:", err);}
+  return await apiPost("checkSecret",{ username, code });
 }
 document.getElementById("btnCheckSecret").onclick = async ()=>{
   const username = document.getElementById("loginUsername").value;
@@ -134,24 +128,12 @@ document.getElementById("btnCheckSecret").onclick = async ()=>{
 
 // ------------------ 점수 저장 ------------------
 async function saveScore(username,score){
-  try{
-    await fetch(API_URL,{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body: JSON.stringify({action:"saveScore", username, score})
-    });
-  } catch(err){ console.error("saveScore fetch 에러:", err);}
+  await apiPost("saveScore",{ username, score });
 }
 
 // ------------------ 메모 저장 ------------------
 async function saveMemory(username,memory){
-  try{
-    await fetch(API_URL,{
-      method:"POST",
-      headers:{"Content-Type":"application/json"},
-      body: JSON.stringify({action:"saveMemory", username, memory})
-    });
-  } catch(err){ console.error("saveMemory fetch 에러:", err);}
+  await apiPost("saveMemory",{ username, memory });
 }
 
 // ------------------ sendScore ------------------
