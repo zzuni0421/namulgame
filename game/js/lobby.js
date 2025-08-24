@@ -1,5 +1,5 @@
 // ------------------ 설정 ------------------
-const API_URL = "/api/namul";
+const API_URL = "https://script.google.com/macros/s/AKfycbyS2FoHXK9cwYr5xkHeO45MjedTxTqewwXfKAHCqp4-WSAI8IIDKKhf3qHqUJWM5ZFEpA/exec"; 
 
 const authModal = document.getElementById("authModal");
 const registerModal = document.getElementById("registerModal");
@@ -20,10 +20,10 @@ const loginStatus = document.getElementById("loginStatus");
 // ------------------ 모달 열기/닫기 ------------------
 function showModal(modal){
   modal.style.display = "flex";
-  modal.removeAttribute("aria-hidden");
-  modal.removeAttribute("inert");
   modal.style.justifyContent = "center";
   modal.style.alignItems = "center";
+  modal.removeAttribute("aria-hidden");
+  modal.removeAttribute("inert");
 }
 function hideModal(modal){
   modal.style.display = "none";
@@ -31,17 +31,15 @@ function hideModal(modal){
   modal.setAttribute("inert","");
 }
 
-// ------------------ 로그인/회원가입/시크릿 모달 ------------------
+// ------------------ 모달 버튼 연결 ------------------
 btnOpenLogin.onclick = ()=>showModal(authModal);
 btnCloseAuth.onclick = ()=>hideModal(authModal);
-
-linkRegister.onclick = (e)=>{
+linkRegister.onclick = e=>{
   e.preventDefault();
   hideModal(authModal);
   showModal(registerModal);
-}
+};
 btnCloseRegister.onclick = ()=>hideModal(registerModal);
-
 btnSecret.onclick = ()=>showModal(secretModal);
 btnCloseSecret.onclick = ()=>hideModal(secretModal);
 btnCloseGenre.onclick = ()=>hideModal(genreModal);
@@ -58,22 +56,20 @@ function openModal(type){
   else if(type==="game") gameList.innerHTML = `
     <button class="btn" onclick="location.href='/game/html/namulcatch.html'">🎮 나물 줍기</button>
     <button class="btn" onclick="location.href='/game/html/jumpgame.html'">🎮 점프 게임</button>`;
-
   showModal(genreModal);
 }
 
 // ------------------ 로그인 ------------------
-async function login(username, password){
+async function login(username,password){
   try{
-    const res = await fetch(API_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "login", username, password }),
-      mode: "cors"
+    const res = await fetch(API_URL,{
+      method:"POST",
+      headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({action:"login", username, password})
     });
     const data = await res.json();
     if(data.success){
-      loginStatus.textContent = username+"님 로그인됨";
+      loginStatus.textContent = `${username}님 로그인됨`;
       btnLogout.style.display="inline-block";
       btnOpenLogin.style.display="none";
       btnSecret.style.display="inline-block";
@@ -85,24 +81,23 @@ document.getElementById("btnLogin").onclick = ()=>{
   const username = document.getElementById("loginUsername").value;
   const password = document.getElementById("loginPassword").value;
   login(username,password);
-}
+};
 
 // ------------------ 로그아웃 ------------------
 btnLogout.onclick = ()=>{
   loginStatus.textContent = "";
-  btnLogout.style.display = "none";
-  btnOpenLogin.style.display = "inline-block";
-  btnSecret.style.display = "none";
-}
+  btnLogout.style.display="none";
+  btnOpenLogin.style.display="inline-block";
+  btnSecret.style.display="none";
+};
 
 // ------------------ 회원가입 ------------------
-async function register(username, password){
+async function register(username,password){
   try{
     const res = await fetch(API_URL,{
       method:"POST",
-      headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({ action:"register", username, password }),
-      mode: "cors"
+      headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({action:"register", username, password})
     });
     const data = await res.json();
     if(data.success){
@@ -116,16 +111,15 @@ document.getElementById("btnRegister").onclick = ()=>{
   const username = document.getElementById("registerUsername").value;
   const password = document.getElementById("registerPassword").value;
   register(username,password);
-}
+};
 
-// ------------------ 시크릿 코드 ------------------
+// ------------------ 시크릿 코드 확인 ------------------
 async function checkSecret(username, code){
   try{
     const res = await fetch(API_URL,{
       method:"POST",
-      headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({ action:"checkSecret", username, code }),
-      mode: "cors"
+      headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({action:"checkSecret", username, code})
     });
     return res.json();
   } catch(err){ console.error("checkSecret fetch 에러:", err);}
@@ -136,39 +130,31 @@ document.getElementById("btnCheckSecret").onclick = async ()=>{
   const data = await checkSecret(username, code);
   if(data.success) location.href = data.url;
   else alert(data.msg);
-}
+};
 
 // ------------------ 점수 저장 ------------------
-async function saveScore(username, score){
+async function saveScore(username,score){
   try{
     await fetch(API_URL,{
       method:"POST",
-      headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({ action:"saveScore", username, score }),
-      mode: "cors"
+      headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({action:"saveScore", username, score})
     });
   } catch(err){ console.error("saveScore fetch 에러:", err);}
 }
 
 // ------------------ 메모 저장 ------------------
-async function saveMemory(username, memory){
+async function saveMemory(username,memory){
   try{
     await fetch(API_URL,{
       method:"POST",
-      headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({ action:"saveMemory", username, memory }),
-      mode: "cors"
+      headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({action:"saveMemory", username, memory})
     });
   } catch(err){ console.error("saveMemory fetch 에러:", err);}
 }
 
-async function sendScore(username, score) {
-  const res = await fetch("API_URL", {
-    method: "POST",
-    headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ username, score }),
-  });
-
-  const result = await res.json();
-  console.log("Server response:", result);
+// ------------------ sendScore ------------------
+async function sendScore(username,score){
+  await saveScore(username,score);
 }
