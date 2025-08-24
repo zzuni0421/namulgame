@@ -1,60 +1,48 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbwz-8qrTtkc21f28Vnm3Vdfrt4GksWgYIggcPaxdWWjSWqJxeNfy6urL2Fb-V6nXUUPLg/exec";
+const API_URL = "https://script.google.com/macros/s/YOUR_DEPLOYED_URL/exec";
 
-// ===== 로그인 =====
-async function login(username, password){
-  try{
-    const res = await fetch(API_URL, {
-      method:"POST",
-      headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({action:"login", username, password})
-    });
-    const data = await res.json();
-    if(data.success){
-      document.getElementById("loginStatus").textContent = username + "님 로그인됨";
-      document.getElementById("btnLogout").style.display = "inline-block";
-      document.getElementById("btnOpenLogin").style.display = "none";
-      document.getElementById("btnSecret").style.display = "inline-block";
-    } else alert(data.msg);
-  } catch(err){ console.error(err); }
-}
+// DOM 로드 후 이벤트 연결
+document.addEventListener("DOMContentLoaded", ()=>{
+  const btnOpenLogin = document.getElementById("btnOpenLogin");
+  const btnCloseAuth = document.getElementById("btnCloseAuth");
+  const authModal = document.getElementById("authModal");
 
-// ===== 회원가입 =====
-async function register(username, password){
-  const res = await fetch(API_URL,{
-    method:"POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({action:"register", username, password})
+  btnOpenLogin.addEventListener("click", ()=>{
+    authModal.style.display = "flex";
+    authModal.removeAttribute("aria-hidden");
+    authModal.removeAttribute("inert");
   });
-  return res.json();
-}
 
-// ===== 시크릿 코드 확인 =====
-async function checkSecret(username, code){
-  const res = await fetch(API_URL,{
-    method:"POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({action:"checkSecret", username, code})
+  btnCloseAuth.addEventListener("click", ()=>{
+    authModal.style.display = "none";
+    authModal.setAttribute("aria-hidden","true");
+    authModal.setAttribute("inert","");
   });
-  return res.json();
-}
 
-// ===== 점수 저장 =====
-async function saveScore(username, score){
-  await fetch(API_URL,{
-    method:"POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({action:"saveScore", username, score})
+  // 로그인 버튼
+  document.getElementById("btnLogin").addEventListener("click", async ()=>{
+    const username = document.getElementById("loginUsername").value;
+    const password = document.getElementById("loginPassword").value;
+    try{
+      const res = await fetch(API_URL,{
+        method:"POST",
+        headers: {"Content-Type":"application/json"},
+        body: JSON.stringify({action:"login", username, password})
+      });
+      const data = await res.json();
+      if(data.success){
+        document.getElementById("loginStatus").textContent = username + "님 로그인됨";
+        document.getElementById("btnLogout").style.display = "inline-block";
+        btnOpenLogin.style.display = "none";
+        authModal.style.display = "none";
+      } else alert(data.msg);
+    } catch(err){ console.error(err); }
   });
-}
 
-// ===== 메모 저장 =====
-async function saveMemory(username, memory){
-  await fetch(API_URL,{
-    method:"POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({action:"saveMemory", username, memory})
+  // 모달 닫기
+  document.getElementById("btnCloseGenre").addEventListener("click", ()=>{
+    closeModal();
   });
-}
+});
 
 // ===== 모달 열기 =====
 function openModal(type){
@@ -73,30 +61,10 @@ function openModal(type){
   modal.style.display = "flex";
   modal.removeAttribute("aria-hidden");
   modal.removeAttribute("inert");
-  modal.style.justifyContent="center";
-  modal.style.alignItems="center";
 }
 
-// ===== 모달 닫기 =====
 function closeModal(){
   const modal = document.getElementById("genreModal");
-  modal.style.display="none";
-  modal.setAttribute("aria-hidden","true");
-  modal.setAttribute("inert","");
-}
-
-// ===== 시크릿 코드 모달 열기/닫기 =====
-function openSecretModal(){
-  const modal = document.getElementById("secretModal");
-  modal.style.display="flex";
-  modal.removeAttribute("aria-hidden");
-  modal.removeAttribute("inert");
-  modal.style.justifyContent="center";
-  modal.style.alignItems="center";
-}
-
-function closeSecretModal(){
-  const modal = document.getElementById("secretModal");
   modal.style.display="none";
   modal.setAttribute("aria-hidden","true");
   modal.setAttribute("inert","");
