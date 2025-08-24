@@ -3,32 +3,37 @@ const API_URL = "https://script.google.com/macros/s/AKfycbwz-8qrTtkc21f28Vnm3Vdf
 const authModal = document.getElementById("authModal");
 const registerModal = document.getElementById("registerModal");
 const secretModal = document.getElementById("secretModal");
+const genreModal = document.getElementById("genreModal");
+
 const btnOpenLogin = document.getElementById("btnOpenLogin");
 const btnCloseAuth = document.getElementById("btnCloseAuth");
 const btnCloseRegister = document.getElementById("btnCloseRegister");
 const btnCloseSecret = document.getElementById("btnCloseSecret");
+const btnCloseGenre = document.getElementById("btnCloseGenre");
+
 const linkRegister = document.getElementById("linkRegister");
 const btnLogout = document.getElementById("btnLogout");
 const btnSecret = document.getElementById("btnSecret");
 const loginStatus = document.getElementById("loginStatus");
 
-// 모달 열기/닫기
+// ------------------ 모달 열기/닫기 ------------------
 function showModal(modal){
-  modal.style.display="flex";
+  modal.style.display = "flex";
   modal.removeAttribute("aria-hidden");
   modal.removeAttribute("inert");
+  modal.style.justifyContent = "center";
+  modal.style.alignItems = "center";
 }
 function hideModal(modal){
-  modal.style.display="none";
+  modal.style.display = "none";
   modal.setAttribute("aria-hidden","true");
   modal.setAttribute("inert","");
 }
 
-// 로그인 열기/닫기
+// ------------------ 로그인/회원가입/시크릿 모달 ------------------
 btnOpenLogin.onclick = ()=>showModal(authModal);
 btnCloseAuth.onclick = ()=>hideModal(authModal);
 
-// 회원가입 열기/닫기
 linkRegister.onclick = (e)=>{
   e.preventDefault();
   hideModal(authModal);
@@ -36,11 +41,12 @@ linkRegister.onclick = (e)=>{
 }
 btnCloseRegister.onclick = ()=>hideModal(registerModal);
 
-// 시크릿 열기/닫기
 btnSecret.onclick = ()=>showModal(secretModal);
 btnCloseSecret.onclick = ()=>hideModal(secretModal);
 
-// 게임 목록 모달
+btnCloseGenre.onclick = ()=>hideModal(genreModal);
+
+// ------------------ 게임 목록 모달 ------------------
 function openModal(type){
   const gameList = document.getElementById("gameList");
   if(type==="simulation") gameList.innerHTML = `
@@ -53,12 +59,10 @@ function openModal(type){
     <button class="btn" onclick="location.href='/game/html/namulcatch.html'">🎮 나물 줍기</button>
     <button class="btn" onclick="location.href='/game/html/jumpgame.html'">🎮 점프 게임</button>`;
 
-  showModal(document.getElementById("genreModal"));
+  showModal(genreModal);
 }
 
-document.getElementById("btnCloseGenre").onclick = ()=>hideModal(document.getElementById("genreModal"));
-
-// 로그인
+// ------------------ 로그인 ------------------
 async function login(username, password){
   try{
     const res = await fetch(API_URL, {
@@ -82,19 +86,29 @@ document.getElementById("btnLogin").onclick = ()=>{
   login(username,password);
 }
 
-// 회원가입
+// ------------------ 로그아웃 ------------------
+btnLogout.onclick = ()=>{
+  loginStatus.textContent = "";
+  btnLogout.style.display = "none";
+  btnOpenLogin.style.display = "inline-block";
+  btnSecret.style.display = "none";
+}
+
+// ------------------ 회원가입 ------------------
 async function register(username, password){
-  const res = await fetch(API_URL,{
-    method:"POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({action:"register", username, password})
-  });
-  const data = await res.json();
-  if(data.success){
-    alert("회원가입 성공! 로그인하세요.");
-    hideModal(registerModal);
-    showModal(authModal);
-  } else alert(data.msg);
+  try{
+    const res = await fetch(API_URL,{
+      method:"POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({action:"register", username, password})
+    });
+    const data = await res.json();
+    if(data.success){
+      alert("회원가입 성공! 로그인하세요.");
+      hideModal(registerModal);
+      showModal(authModal);
+    } else alert(data.msg);
+  } catch(err){ console.error(err);}
 }
 document.getElementById("btnRegister").onclick = ()=>{
   const username = document.getElementById("registerUsername").value;
@@ -102,14 +116,16 @@ document.getElementById("btnRegister").onclick = ()=>{
   register(username,password);
 }
 
-// 시크릿 코드 확인
+// ------------------ 시크릿 코드 ------------------
 async function checkSecret(username, code){
-  const res = await fetch(API_URL,{
-    method:"POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({action:"checkSecret", username, code})
-  });
-  return res.json();
+  try{
+    const res = await fetch(API_URL,{
+      method:"POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({action:"checkSecret", username, code})
+    });
+    return res.json();
+  } catch(err){ console.error(err);}
 }
 document.getElementById("btnCheckSecret").onclick = async ()=>{
   const username = document.getElementById("loginUsername").value;
@@ -119,11 +135,24 @@ document.getElementById("btnCheckSecret").onclick = async ()=>{
   else alert(data.msg);
 }
 
-// 점수 저장
+// ------------------ 점수 저장 ------------------
 async function saveScore(username, score){
-  await fetch(API_URL,{
-    method:"POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({action:"saveScore", username, score})
-  });
+  try{
+    await fetch(API_URL,{
+      method:"POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({action:"saveScore", username, score})
+    });
+  } catch(err){ console.error(err);}
+}
+
+// ------------------ 메모 저장 ------------------
+async function saveMemory(username, memory){
+  try{
+    await fetch(API_URL,{
+      method:"POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({action:"saveMemory", username, memory})
+    });
+  } catch(err){ console.error(err);}
 }
