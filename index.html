@@ -1,99 +1,65 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>나물게임</title>
-  <link rel="stylesheet" href="assets/style/lobbystyle.css" />
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>나물게임</title>
+<link rel="stylesheet" href="lobbystyle.css">
 </head>
 <body>
-  <div class="top-bar">
-    <div class="top-left">
-      <span id="loginStatus">비로그인 상태</span>
-    </div>
-    <div class="top-right">
-      <button class="btn sm" id="btnOpenLogin">로그인</button>
-      <button class="btn sm" id="btnLogout" style="display:none;">로그아웃</button>
-      <button class="btn sm" id="btnSecret" style="display:none;">시크릿 코드</button>
-    </div>
+
+<div class="top-bar">
+  <div class="top-left"><span id="loginStatus">비로그인 상태</span></div>
+  <div class="top-right">
+    <button class="btn sm" id="btnOpenLogin">로그인</button>
+    <button class="btn sm" id="btnLogout" style="display:none;">로그아웃</button>
+    <button class="btn sm" id="btnSecret" style="display:none;" onclick="openSecretModal()">시크릿 코드</button>
   </div>
+</div>
 
-  <div id="event-banner">
-    🎉 이벤트 중이에요!
-    <a href="/event" class="event-link disabled" id="eventLink" aria-disabled="true" title="로그인 필요">서둘러 참여하세요!</a>
-    <a href="event/how" class="event-link disabled" id="eventHow" aria-disabled="true" title="로그인 필요">참여 방법 보기</a>
-    <span class="hint" id="eventHint">(로그인하면 이용 가능)</span>
+<div id="event-banner">
+  🎉 이벤트 중이에요!
+  <a href="/event" class="event-link disabled" id="eventLink" aria-disabled="true" title="로그인 필요">서둘러 참여하세요!</a>
+  <a href="event/how" class="event-link disabled" id="eventHow" aria-disabled="true" title="로그인 필요">참여 방법 보기</a>
+  <span class="hint" id="eventHint">(로그인하면 이용 가능)</span>
+</div>
+
+<div class="lobby-container">
+  <h1>나물게임</h1>
+  <p class="sub">장르를 골라서 원하는 게임을 시작해보세요!</p>
+
+  <div class="genre-buttons">
+    <button class="btn" onclick="openModal('simulation')">🧪 시뮬레이션</button>
+    <button class="btn" onclick="openModal('test')">🧠 테스트</button>
+    <button class="btn" onclick="openModal('game')">🎮 게임</button>
   </div>
+</div>
 
-  <div class="lobby-container">
-    <h1>나물게임</h1>
-    <p class="sub">장르를 골라서 원하는 게임을 시작해보세요!</p>
-
-    <div class="genre-buttons">
-      <button class="btn" onclick="openModal('simulation')">🧪 시뮬레이션</button>
-      <button class="btn" onclick="openModal('test')">🧠 테스트</button>
-      <button class="btn" onclick="openModal('game')">🎮 게임</button>
-    </div>
+<!-- 장르 모달 -->
+<div class="modal" id="genreModal" aria-hidden="true" inert>
+  <div class="modal-content" role="dialog" aria-modal="true">
+    <h2 id="modalTitle">장르 선택</h2>
+    <div id="gameList" class="game-list"></div>
+    <button class="btn outline" onclick="closeModal()">닫기</button>
   </div>
+</div>
 
-  <div class="modal" id="genreModal" aria-hidden="true">
-    <div class="modal-content" role="dialog" aria-modal="true">
-      <h2 id="modalTitle">장르</h2>
-      <div id="gameList" class="game-list"></div>
-      <button class="btn outline" id="btnCloseGenre">닫기</button>
-    </div>
+<!-- 시크릿 코드 모달 -->
+<div class="modal" id="secretModal" aria-hidden="true" inert>
+  <div class="modal-content" role="dialog" aria-modal="true">
+    <h2>시크릿 코드</h2>
+    <input type="password" id="secretCodeInput" placeholder="코드 입력">
+    <button class="btn primary" id="btnCheckSecret">확인</button>
+    <button class="btn outline" onclick="closeSecretModal()">닫기</button>
+    <p class="muted tiny">로그인한 유저만 시크릿 스테이지 입장 가능</p>
   </div>
+</div>
 
-  <div class="modal" id="authModal" aria-hidden="true">
-    <div class="modal-content narrow" role="dialog" aria-modal="true">
-      <h2>로그인</h2>
-      <input type="text" id="loginUsername" placeholder="아이디 (닉네임)" />
-      <input type="password" id="loginPassword" placeholder="비밀번호" />
-      <button class="btn primary" id="btnLogin">로그인</button>
-      <p class="muted">아직 회원이 아니신가요? <a href="#" id="linkRegister">회원가입</a></p>
-      <button class="btn outline" id="btnCloseAuth">닫기</button>
-    </div>
-  </div>
+<div class="centered-actions">
+  <a href="https://www.youtube.com/@나물게임" target="_blank" class="pill-btn">🎬 나물게임 유튜브 보러가기!</a>
+  <a href="license.html" target="_blank" class="pill-btn green">📝 나물게임 라이선스 보기</a>
+</div>
 
-  <div class="modal" id="registerModal" aria-hidden="true">
-    <div class="modal-content narrow" role="dialog" aria-modal="true">
-      <h2>회원가입</h2>
-      <input type="text" id="registerUsername" placeholder="아이디 (닉네임)" />
-      <input type="password" id="registerPassword" placeholder="비밀번호" />
-      <label class="agree">
-        <input type="checkbox" id="agreeLicense" />
-        <span>라이선스에 동의합니다</span>
-      </label>
-
-      <div class="license-box">
-        <h3>나물게임 라이선스 (요약)</h3>
-        <p>
-          비상업적 사용 가능, 원저작자 표기 필수. 상업적 사용 제한.
-          본 소프트웨어는 있는 그대로 제공되며 보증하지 않습니다.
-          자세한 내용은 <a href="license.html" target="_blank">전체 라이선스</a>를 참고하세요.
-        </p>
-      </div>
-
-      <button class="btn primary" id="btnRegister">회원가입</button>
-      <button class="btn outline" id="btnCloseRegister">닫기</button>
-    </div>
-  </div>
-
-  <div class="modal" id="secretModal" aria-hidden="true">
-    <div class="modal-content narrow" role="dialog" aria-modal="true">
-      <h2>시크릿 코드</h2>
-      <input type="password" id="secretCodeInput" placeholder="코드 입력" />
-      <button class="btn primary" id="btnCheckSecret">확인</button>
-      <button class="btn outline" id="btnCloseSecret">닫기</button>
-      <p class="muted tiny">로그인한 유저만 시크릿 스테이지 입장 가능</p>
-    </div>
-  </div>
-
-  <div class="centered-actions">
-    <a href="https://www.youtube.com/@나물게임" target="_blank" class="pill-btn">🎬 나물게임 유튜브 보러가기!</a>
-    <a href="license.html" target="_blank" class="pill-btn green">📝 나물게임 라이선스 보기</a>
-  </div>
-
-  <script src="game/js/lobby.js"></script>
+<script src="game/js/lobby.js"></script>
 </body>
 </html>
