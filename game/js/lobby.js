@@ -1,5 +1,5 @@
 // ------------------ 설정 ------------------
-const API_URL = "https://script.google.com/macros/s/AKfycbzZPcZNNpJZ-eylSGAvIRzcFIpeLl_G0IPFVz2sPOmTxq2eY34m73Cd_CdTMmL8SV61Ow/exec"; 
+const API_URL = "https://script.google.com/macros/s/AKfycbxhv6nJ9slLuWszZGqwU2oZ9E--uSZZdmGo-KRv3uN6JnApXKZcdeul4Ox8x5UNnJRlVQ/exec"; 
 
 const authModal = document.getElementById("authModal");
 const registerModal = document.getElementById("registerModal");
