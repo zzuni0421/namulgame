@@ -55,7 +55,7 @@ async function saveMemory(username, memory){
   });
 }
 
-// 모달에서 게임 버튼 출력
+// 모달에서 게임 버튼 출력 및 접근성 처리
 function openModal(type){
   const gameList = document.getElementById("gameList");
   if(type === "simulation") gameList.innerHTML = `
@@ -67,5 +67,21 @@ function openModal(type){
   else if(type === "game") gameList.innerHTML = `
     <button class="btn" onclick="location.href='/game/html/namulcatch.html'">🎮 나물 줍기</button>
     <button class="btn" onclick="location.href='/game/html/jumpgame.html'">🎮 점프 게임</button>`;
-  document.getElementById("genreModal").style.display = "flex";
+
+  const modal = document.getElementById("genreModal");
+  modal.style.display = "flex";        // 화면에 표시
+  modal.removeAttribute("aria-hidden"); // aria-hidden 해제
+  modal.removeAttribute("inert");       // inert 해제 (포커스 가능)
+
+  // 모달 중앙 정렬 보장
+  modal.style.justifyContent = "center";
+  modal.style.alignItems = "center";
+}
+
+// 모달 닫기 함수
+function closeModal() {
+  const modal = document.getElementById("genreModal");
+  modal.style.display = "none";        // 화면에서 숨김
+  modal.setAttribute("aria-hidden", "true"); // 접근성 처리
+  modal.setAttribute("inert", "");     // 포커스 방지
 }
