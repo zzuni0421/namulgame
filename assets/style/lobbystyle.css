@@ -1,66 +1,191 @@
-:root{
-  --bg:#0f1115; --panel:#151823; --text:#e5e7eb; --muted:#9ca3af;
-  --brand:#6ee7b7; --accent:#60a5fa; --danger:#ef4444; --ok:#34d399; --line:#232636;
+/* 기본 설정 */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  font-family: 'Noto Sans KR', sans-serif;
 }
 
-*{box-sizing:border-box}
-html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:ui-sans-serif,system-ui,AppleSDGothicNeo,"Segoe UI",Roboto,Arial,"Noto Sans KR",sans-serif}
-a{color:var(--accent);text-decoration:none}
-a:hover{text-decoration:underline}
-
-/* Top bar */
-.top-bar{display:flex;justify-content:space-between;align-items:center;padding:10px 16px;border-bottom:1px solid var(--line);background:#0e1117;position:sticky;top:0;z-index:10}
-.top-bar .btn.sm{padding:6px 10px;font-size:13px;margin-left:8px}
-.top-left{font-weight:600}
-.top-right{display:flex;align-items:center}
-
-/* Event banner */
-#event-banner{padding:10px 16px;background:#12172a;border-bottom:1px solid var(--line)}
-#event-banner .event-link{margin-left:8px}
-#event-banner .event-link.disabled{opacity:.5;pointer-events:none}
-#event-banner .hint{margin-left:8px;color:var(--muted);font-size:12px}
-
-/* Lobby */
-.lobby-container{max-width:920px;margin:40px auto 24px;padding:0 16px;text-align:center}
-h1{margin:0 0 8px;font-size:42px}
-.sub{color:var(--muted);margin:0 0 24px}
-
-/* Buttons */
-.btn{display:inline-block;padding:12px 16px;border-radius:10px;background:#1f2332;border:1px solid var(--line);color:var(--text);cursor:pointer;transition:transform .05s ease, background .2s}
-.btn:hover{background:#252a3d;transform:translateY(-1px)}
-.btn.primary{background:var(--accent);color:#0b1020;border:none}
-.btn.primary:hover{filter:brightness(1.05)}
-.btn.outline{background:transparent;border:1px solid var(--line)}
-.btn.sm{padding:8px 12px;border-radius:8px}
-
-.genre-buttons .btn{margin:0 8px 12px}
-
-/* Modal */
-.modal{position:fixed;inset:0;display:none;align-items:center;justify-content:center;background:rgba(0,0,0,.5);backdrop-filter:saturate(120%) blur(2px);z-index:50}
-.modal.show{display:flex}
-.modal-content{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;max-width:720px;width:92%}
-.modal-content.narrow{max-width:420px}
-.modal-content h2{margin:0 0 12px}
-.modal-content input[type="text"], .modal-content input[type="password"]{
-  width:100%;padding:10px 12px;border-radius:10px;border:1px solid var(--line);
-  background:#0e1220;color:var(--text);margin:6px 0 10px;outline:none
+html, body {
+  height: 100%;
+  background-color: #fdf6e3; /* 밝은 배경 */
+  color: #333;
 }
-.modal-content input:focus{border-color:#2c375a}
 
-/* Game list */
-.game-list{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:10px;margin:12px 0 16px}
-.game-list .btn{text-align:left}
+a {
+  text-decoration: none;
+  color: #0077cc;
+}
 
-/* License box in register */
-.license-box{border:1px solid var(--line);border-radius:10px;padding:12px;background:#0e1220;margin:8px 0 12px}
-.agree{display:flex;align-items:center;gap:8px;margin:4px 0 8px}
+/* 이벤트 배너 */
+#event-banner {
+  width: 100%;
+  padding: 12px 20px;
+  background: #fffae6;
+  border-bottom: 2px solid #ffd700;
+  text-align: center;
+  font-weight: bold;
+  font-size: 0.95rem;
+}
 
-/* Centered tiny actions (YT & License) */
-.centered-actions{display:flex;flex-direction:column;align-items:center;gap:12px;margin:28px 0 40px}
-.pill-btn{display:inline-block;padding:10px 18px;border-radius:999px;background:#ef4444;color:#fff;text-decoration:none}
-.pill-btn:hover{filter:brightness(1.05)}
-.pill-btn.green{background:#10b981}
+#event-banner a {
+  margin-left: 10px;
+  color: #d2691e;
+}
 
-/* Helpers */
-.muted{color:var(--muted)}
-.tiny{font-size:12px}
+/* 로비 컨테이너 */
+.lobby-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 80vh;
+  text-align: center;
+  padding: 20px;
+}
+
+.lobby-container h1 {
+  font-size: 3rem;
+  color: #2e8b57;
+  margin-bottom: 10px;
+}
+
+.lobby-container .sub {
+  font-size: 1.2rem;
+  margin-bottom: 30px;
+}
+
+/* 장르 버튼 */
+.genre-buttons {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.genre-buttons button {
+  padding: 12px 22px;
+  font-size: 1.1rem;
+  border: none;
+  border-radius: 12px;
+  background-color: #98fb98;
+  color: #003300;
+  cursor: pointer;
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.genre-buttons button:hover {
+  transform: translateY(-4px);
+  background-color: #90ee90;
+}
+
+/* 모달 */
+.modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0,0,0,0.45);
+  z-index: 1000;
+}
+
+.modal.show {
+  display: flex;
+}
+
+.modal-content {
+  background: #fffaf0;
+  padding: 30px 40px;
+  border-radius: 16px;
+  max-width: 400px;
+  width: 90%;
+  text-align: center;
+  box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+}
+
+.modal-content h2 {
+  margin-bottom: 20px;
+  color: #2e8b57;
+}
+
+.game-list {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.game-list button {
+  padding: 10px;
+  border: none;
+  border-radius: 10px;
+  background-color: #e0ffe0;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.2s;
+}
+
+.game-list button:hover {
+  background-color: #c8facc;
+}
+
+.close-btn {
+  padding: 8px 20px;
+  border: none;
+  border-radius: 10px;
+  background-color: #f08080;
+  color: #fff;
+  cursor: pointer;
+  font-size: 0.95rem;
+}
+
+.close-btn:hover {
+  background-color: #e06666;
+}
+
+/* 유튜브 & 라이선스 버튼 */
+.yt-btn, .license-btn {
+  display: inline-block;
+  margin: 15px auto;
+  padding: 12px 25px;
+  border-radius: 12px;
+  font-weight: bold;
+  font-size: 1rem;
+  background-color: #ff6347;
+  color: #fff;
+  cursor: pointer;
+  text-align: center;
+  transition: transform 0.2s, background-color 0.2s;
+}
+
+.yt-btn:hover, .license-btn:hover {
+  transform: translateY(-3px);
+  background-color: #ff4500;
+}
+
+.license-btn {
+  background-color: #4682b4;
+}
+
+.license-btn:hover {
+  background-color: #1e90ff;
+}
+
+/* 반응형 */
+@media (max-width: 480px) {
+  .genre-buttons {
+    flex-direction: column;
+  }
+
+  .lobby-container h1 {
+    font-size: 2.2rem;
+  }
+
+  .lobby-container .sub {
+    font-size: 1rem;
+  }
+}
