@@ -10,17 +10,30 @@ export async function onRequest(context) {
 
   try {
     const body = await request.json();
+    console.log("Received in CF Function:", body);
 
-    // GAS URL
+    // GAS URL (본인 웹앱 URL로 교체)
     const GAS_URL = "https://script.google.com/macros/s/AKfycbxhv6nJ9slLuWszZGqwU2oZ9E--uSZZdmGo-KRv3uN6JnApXKZcdeul4Ox8x5UNnJRlVQ/exec";
 
+    // GAS로 전달
     const res = await fetch(GAS_URL, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(body),
     });
 
-    const data = await res.json();
+    let data;
+    try {
+      data = await res.json();
+    } catch (err) {
+      console.error("GAS 응답 JSON 파싱 실패:", err);
+      return new Response(
+        JSON.stringify({ success: false, msg: "GAS 응답 파싱 실패", err: err.message }),
+        { status: 500, headers: { "Content-Type": "application/json" } }
+      );
+    }
+
+    console.log("GAS Response:", data);
 
     return new Response(JSON.stringify(data), {
       status: 200,
@@ -30,10 +43,10 @@ export async function onRequest(context) {
       },
     });
   } catch (err) {
+    console.error("CF Function 에러:", err);
     return new Response(
-      JSON.stringify({ success: false, msg: "프록시 에러", err: err.message }),
+      JSON.stringify({ success: false, msg: "CF Function 에러", err: err.message }),
       { status: 500, headers: { "Content-Type": "application/json" } }
     );
   }
 }
-console.log("Body received:", body);
