@@ -1,6 +1,6 @@
 const API_URL = "https://script.google.com/macros/s/AKfycbwz-8qrTtkc21f28Vnm3Vdfrt4GksWgYIggcPaxdWWjSWqJxeNfy6urL2Fb-V6nXUUPLg/exec";
 
-// 로그인
+// ===== 로그인 =====
 async function login(username, password){
   try{
     const res = await fetch(API_URL, {
@@ -13,49 +13,72 @@ async function login(username, password){
       document.getElementById("loginStatus").textContent = username + "님 로그인됨";
       document.getElementById("btnLogout").style.display = "inline-block";
       document.getElementById("btnOpenLogin").style.display = "none";
-    } else alert(data.msg);
-  } catch(err){ console.error(err); }
+      document.getElementById("btnSecret").style.display = "inline-block";
+    } else {
+      alert(data.msg);
+    }
+  } catch(err){
+    console.error("로그인 에러:", err);
+  }
 }
 
-// 회원가입
+// ===== 회원가입 =====
 async function register(username, password){
-  const res = await fetch(API_URL,{
-    method:"POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({action:"register", username, password})
-  });
-  return res.json();
+  try{
+    const res = await fetch(API_URL,{
+      method:"POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({action:"register", username, password})
+    });
+    return await res.json();
+  } catch(err){
+    console.error("회원가입 에러:", err);
+    return {success:false, msg:"회원가입 실패"};
+  }
 }
 
-// 시크릿 코드 확인
+// ===== 시크릿 코드 확인 =====
 async function checkSecret(username, code){
-  const res = await fetch(API_URL,{
-    method:"POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({action:"checkSecret", username, code})
-  });
-  return res.json();
+  try{
+    const res = await fetch(API_URL,{
+      method:"POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({action:"checkSecret", username, code})
+    });
+    return await res.json();
+  } catch(err){
+    console.error("시크릿 코드 확인 에러:", err);
+    return {success:false, msg:"시크릿 코드 확인 실패"};
+  }
 }
 
-// 점수 저장
+// ===== 점수 저장 =====
 async function saveScore(username, score){
-  await fetch(API_URL,{
-    method:"POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({action:"saveScore", username, score})
-  });
+  try{
+    await fetch(API_URL,{
+      method:"POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({action:"saveScore", username, score})
+    });
+  } catch(err){
+    console.error("점수 저장 실패:", err);
+  }
 }
 
-// 메모 저장
+// ===== 메모 저장 =====
 async function saveMemory(username, memory){
-  await fetch(API_URL,{
-    method:"POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({action:"saveMemory", username, memory})
-  });
+  try{
+    await fetch(API_URL,{
+      method:"POST",
+      headers: {"Content-Type":"application/json"},
+      body: JSON.stringify({action:"saveMemory", username, memory})
+    });
+  } catch(err){
+    console.error("메모 저장 실패:", err);
+  }
 }
 
-// 모달에서 게임 버튼 출력 및 접근성 처리
+// ===== 모달에서 게임 버튼 출력 및 접근성 처리 =====
 function openModal(type){
   const gameList = document.getElementById("gameList");
   if(type === "simulation") gameList.innerHTML = `
@@ -69,19 +92,34 @@ function openModal(type){
     <button class="btn" onclick="location.href='/game/html/jumpgame.html'">🎮 점프 게임</button>`;
 
   const modal = document.getElementById("genreModal");
-  modal.style.display = "flex";        // 화면에 표시
-  modal.removeAttribute("aria-hidden"); // aria-hidden 해제
-  modal.removeAttribute("inert");       // inert 해제 (포커스 가능)
-
-  // 모달 중앙 정렬 보장
+  modal.style.display = "flex";
+  modal.removeAttribute("aria-hidden");
+  modal.removeAttribute("inert");
   modal.style.justifyContent = "center";
   modal.style.alignItems = "center";
 }
 
-// 모달 닫기 함수
+// ===== 모달 닫기 =====
 function closeModal() {
   const modal = document.getElementById("genreModal");
-  modal.style.display = "none";        // 화면에서 숨김
-  modal.setAttribute("aria-hidden", "true"); // 접근성 처리
-  modal.setAttribute("inert", "");     // 포커스 방지
+  modal.style.display = "none";
+  modal.setAttribute("aria-hidden", "true");
+  modal.setAttribute("inert", "");
+}
+
+// ===== 시크릿 모달 열기 =====
+function openSecretModal() {
+  const modal = document.getElementById("secretModal");
+  modal.style.display = "flex";
+  modal.removeAttribute("aria-hidden");
+  modal.removeAttribute("inert");
+  document.getElementById("secretCodeInput").focus();
+}
+
+// ===== 시크릿 모달 닫기 =====
+function closeSecretModal() {
+  const modal = document.getElementById("secretModal");
+  modal.style.display = "none";
+  modal.setAttribute("aria-hidden", "true");
+  modal.setAttribute("inert", "");
 }
