@@ -36,16 +36,16 @@ document.addEventListener("DOMContentLoaded", () => {
     gameList.innerHTML = "";
 
     if(type === "simulation") gameList.innerHTML = `
-  <button class="btn" onclick="location.href='/game/grownamul.html'">🤣 나물 키우기 방치형</button>
-  <button class="btn" onclick="location.href='/game/interview.html'">🤣 인터뷰 시뮬레이션</button>
+  <button class="btn" onclick="location.href='/game/html/grownamul.html'">🤣 나물 키우기 방치형</button>
+  <button class="btn" onclick="location.href='/game/html/interview.html'">🤣 인터뷰 시뮬레이션</button>
 `;
 else if(type === "test") gameList.innerHTML = `
-  <button class="btn" onclick="location.href='/game/likecelab.html'">😁 내가 연예인이라면?</button>
-  <button class="btn" onclick="location.href='/game/namultest.html'">😁 나물 유형 테스트</button>
+  <button class="btn" onclick="location.href='/game/html/likecelab.html'">😁 내가 연예인이라면?</button>
+  <button class="btn" onclick="location.href='/game/html/namultest.html'">😁 나물 유형 테스트</button>
 `;
 else if(type === "game") gameList.innerHTML = `
-  <button class="btn" onclick="location.href='/game/namulcatch.html'">🎮 나물 줍기</button>
-  <button class="btn" onclick="location.href='/game/jumpgame.html'">🎮 점프 게임</button>
+  <button class="btn" onclick="location.href='/game/html/namulcatch.html'">🎮 나물 줍기</button>
+  <button class="btn" onclick="location.href='/game/html/jumpgame.html'">🎮 점프 게임</button>
 `;
 
     title.textContent = type === "simulation" ? "시뮬레이션" : type === "test" ? "테스트" : "게임";
