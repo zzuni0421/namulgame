@@ -138,3 +138,30 @@ function endGame(showAlert = true) {
     alert(`게임 종료! 점수: ${score}`);
   }
 }
+
+// 닉네임 등록
+async function registerNickname(username) {
+  const response = await fetch("https://script.google.com/macros/s/AKfycbx12345abcde/exec", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      action: "register",
+      username: username
+    })
+  });
+  return response.json(); // { success: true, message: "..."}
+}
+
+// 점수 저장
+async function saveScore(username, score) {
+  const response = await fetch("https://script.google.com/macros/s/AKfycbx12345abcde/exec", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      action: "saveScore",
+      username: username,
+      score: score
+    })
+  });
+  return response.json();
+}
