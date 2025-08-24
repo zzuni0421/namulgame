@@ -1,4 +1,4 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbwFTnk5tEN65-GruESvVtLqMhCnuXjgoQau5Gy1CdqvJV01E9WEvO9Rs_UgDCE_sk8VMA/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbxUJSwqjuJdHgoIrhr6Me7dOXa8XbLRdn-y1VH-AFi8rFvguzCPFoVeO11RBv2GTTtfkQ/exec";
 
 const authModal = document.getElementById("authModal");
 const registerModal = document.getElementById("registerModal");
@@ -43,7 +43,6 @@ btnCloseRegister.onclick = ()=>hideModal(registerModal);
 
 btnSecret.onclick = ()=>showModal(secretModal);
 btnCloseSecret.onclick = ()=>hideModal(secretModal);
-
 btnCloseGenre.onclick = ()=>hideModal(genreModal);
 
 // ------------------ 게임 목록 모달 ------------------
@@ -66,9 +65,10 @@ function openModal(type){
 async function login(username, password){
   try{
     const res = await fetch(API_URL, {
-      method:"POST",
-      headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({action:"login", username, password})
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "login", username, password }),
+      mode: "cors"
     });
     const data = await res.json();
     if(data.success){
@@ -78,7 +78,7 @@ async function login(username, password){
       btnSecret.style.display="inline-block";
       hideModal(authModal);
     } else alert(data.msg);
-  } catch(err){ console.error(err);}
+  } catch(err){ console.error("login fetch 에러:", err);}
 }
 document.getElementById("btnLogin").onclick = ()=>{
   const username = document.getElementById("loginUsername").value;
@@ -100,7 +100,8 @@ async function register(username, password){
     const res = await fetch(API_URL,{
       method:"POST",
       headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({action:"register", username, password})
+      body: JSON.stringify({ action:"register", username, password }),
+      mode: "cors"
     });
     const data = await res.json();
     if(data.success){
@@ -108,7 +109,7 @@ async function register(username, password){
       hideModal(registerModal);
       showModal(authModal);
     } else alert(data.msg);
-  } catch(err){ console.error(err);}
+  } catch(err){ console.error("register fetch 에러:", err);}
 }
 document.getElementById("btnRegister").onclick = ()=>{
   const username = document.getElementById("registerUsername").value;
@@ -122,10 +123,11 @@ async function checkSecret(username, code){
     const res = await fetch(API_URL,{
       method:"POST",
       headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({action:"checkSecret", username, code})
+      body: JSON.stringify({ action:"checkSecret", username, code }),
+      mode: "cors"
     });
     return res.json();
-  } catch(err){ console.error(err);}
+  } catch(err){ console.error("checkSecret fetch 에러:", err);}
 }
 document.getElementById("btnCheckSecret").onclick = async ()=>{
   const username = document.getElementById("loginUsername").value;
@@ -141,9 +143,10 @@ async function saveScore(username, score){
     await fetch(API_URL,{
       method:"POST",
       headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({action:"saveScore", username, score})
+      body: JSON.stringify({ action:"saveScore", username, score }),
+      mode: "cors"
     });
-  } catch(err){ console.error(err);}
+  } catch(err){ console.error("saveScore fetch 에러:", err);}
 }
 
 // ------------------ 메모 저장 ------------------
@@ -152,7 +155,8 @@ async function saveMemory(username, memory){
     await fetch(API_URL,{
       method:"POST",
       headers: {"Content-Type":"application/json"},
-      body: JSON.stringify({action:"saveMemory", username, memory})
+      body: JSON.stringify({ action:"saveMemory", username, memory }),
+      mode: "cors"
     });
-  } catch(err){ console.error(err);}
+  } catch(err){ console.error("saveMemory fetch 에러:", err);}
 }
