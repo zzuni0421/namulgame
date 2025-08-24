@@ -1,4 +1,4 @@
-const API_URL = "https://script.google.com/macros/s/YOUR_DEPLOYED_URL/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbybFbvh-mGhCw2aNZqBwH8LtA1fjbka7uTZ84F6yfHpOCCYzaGqduUAHujHIXzEPlM-Dg/exec";
 
 // DOM 로드 후 이벤트 연결
 document.addEventListener("DOMContentLoaded", ()=>{
