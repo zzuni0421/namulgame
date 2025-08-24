@@ -141,7 +141,7 @@ function endGame(showAlert = true) {
 
 // 닉네임 등록
 async function registerNickname(username) {
-  const response = await fetch("https://script.google.com/macros/s/AKfycbx12345abcde/exec", {
+  const response = await fetch("https://script.google.com/macros/s/AKfycbzXrtDcnrSwrqVOnaiIl6Idj1PckOPMUS63QSP0GxATisbvC_QE_wBZdfoj5lNhFvFl0g/exec", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -154,7 +154,7 @@ async function registerNickname(username) {
 
 // 점수 저장
 async function saveScore(username, score) {
-  const response = await fetch("https://script.google.com/macros/s/AKfycbx12345abcde/exec", {
+  const response = await fetch("https://script.google.com/macros/s/AKfycbzXrtDcnrSwrqVOnaiIl6Idj1PckOPMUS63QSP0GxATisbvC_QE_wBZdfoj5lNhFvFl0g/exec", {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
