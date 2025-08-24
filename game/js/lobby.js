@@ -1,4 +1,4 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbyedTR5QJOGJJDycqd-Z2uB6Ql-3pwSY8tFq0r9PXYz8JDrJAstLbBbT9pklP5tTAa-Mw/exec";
+const API_URL = "https://script.google.com/macros/s/AKfycbwxyq2K-tSncG9Kd3WZS98Q5gQ5sgcVQtJoAy_-4r5zRBrfABIjq2-aXaBqtdaunUXJNQ/exec";
 
 document.addEventListener("DOMContentLoaded", () => {
   // 모달 요소
