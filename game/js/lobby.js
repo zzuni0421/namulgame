@@ -140,3 +140,20 @@ async function saveMemory(username,memory){
 async function sendScore(username,score){
   await saveScore(username,score);
 }
+
+async function testPost() {
+  const body = { action: "login", username: "test", password: "1234" };
+  try {
+    const res = await fetch("/api/namul", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(body),
+    });
+    const data = await res.json();
+    console.log("Final Response:", data);
+  } catch (err) {
+    console.error("Fetch 에러:", err);
+  }
+}
+
+testPost();
