@@ -1,42 +1,37 @@
-// js/frontend.js
-const API_URL = "/api/namul";  // Cloudflare Pages Functions 프록시
+const API_URL = "/api/namul";
 
-// POST 요청 helper
+// 공용 POST 요청
 async function apiRequest(action, data = {}) {
   const res = await fetch(API_URL, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
-    body: JSON.stringify({ action, ...data }),
+    body: JSON.stringify({ action, ...data })
   });
   return res.json();
 }
 
 // 회원가입
-async function register(username, password) {
-  return apiRequest("register", { username, password });
+export async function register(username, password, sheetid) {
+  return apiRequest("register", { username, password, sheetid });
 }
 
 // 로그인
-async function login(username, password) {
-  return apiRequest("login", { username, password });
+export async function login(username, password) {
+  const data = await apiRequest("login", { username, password });
+  if (data.success) localStorage.setItem("token", data.token);
+  return data;
 }
 
 // 토큰 로그인
-async function tokenLogin(token) {
+export async function tokenLogin() {
+  const token = localStorage.getItem("token");
+  if (!token) return { success: false };
   return apiRequest("tokenLogin", { token });
 }
 
-// 하드모드 해금
-async function unlockHard(token) {
-  return apiRequest("unlockHard", { token });
-}
-
-// 점수 저장
-async function saveScore(token, score) {
-  return apiRequest("saveScore", { token, score });
-}
-
-// 유저 정보 가져오기
-async function getUser(token) {
-  return apiRequest("getUser", { token });
+// secret 코드 해제
+export async function unlockHard(code) {
+  const token = localStorage.getItem("token");
+  if (!token) return { success: false };
+  return apiRequest("secretCheck", { code, token });
 }
