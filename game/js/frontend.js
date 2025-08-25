@@ -1,5 +1,4 @@
-const API_URL = "https://script.google.com/macros/s/AKfycbwLPd6AWjIthmF4v3_3Jr-lHbAiY1NhrHdUiIm1n0bv52CsteDEtNozsxle9WFcY0liqg/exec"; // 웹 앱 배포 URL
-
+const API_URL = "https://script.google.com/macros/s/AKfycbyPuutCk4YCw55e5ptkBHlWcbXEallQbgCQhiz4F_muZ0YXtgMxVNLVNDi4Ryel0MPeBQ/exec"; 
 // 회원가입
 async function register(username, password, sheetid) {
   const res = await fetch(API_URL, {
