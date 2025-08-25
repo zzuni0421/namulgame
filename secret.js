@@ -1,50 +1,41 @@
-const secretInput = document.getElementById("secretInput");
-const checkBtn = document.getElementById("checkBtn");
-const status = document.getElementById("status");
-const hardButtons = document.getElementById("hardButtons");
+const unlockBtn = document.getElementById("unlockBtn");
+const secretInput = document.getElementById("secretCode");
+const resultMsg = document.getElementById("resultMsg");
 
-const namulBtn = document.getElementById("namulHardBtn");
-const jumpBtn = document.getElementById("jumpHardBtn");
+unlockBtn.onclick = async () => {
+  const code = secretInput.value.trim();
 
-const API_URL = "/api/namul";
+  if (!code) {
+    resultMsg.textContent = "⚠ 코드를 입력하세요.";
+    resultMsg.style.color = "red";
+    return;
+  }
 
-// 시크릿 코드 확인
-checkBtn.addEventListener("click", async () => {
-    const code = secretInput.value.trim();
-    if(!code){
-        status.textContent = "코드를 입력하세요!";
-        return;
+  try {
+    const res = await fetch("/api/namul", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ action: "unlock", code })
+    });
+
+    if (!res.ok) throw new Error("서버 응답 오류");
+    const data = await res.json();
+
+    if (data.success) {
+      localStorage.setItem("hardunlock", "true");
+      resultMsg.textContent = "✅ 하드 모드가 열렸습니다!";
+      resultMsg.style.color = "green";
+
+      setTimeout(() => {
+        window.location.href = "index.html";
+      }, 1500);
+    } else {
+      resultMsg.textContent = "❌ 코드가 올바르지 않습니다.";
+      resultMsg.style.color = "red";
     }
-
-    try {
-        const res = await fetch(API_URL, {
-            method: "POST",
-            headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({ action: "checkSecret", code })
-        });
-        const data = await res.json();
-
-        if(data.success){
-            status.textContent = "✅ 시크릿 코드 확인 완료!";
-            hardButtons.style.display = "block"; // 버튼 표시
-        } else {
-            status.textContent = `❌ ${data.msg}`;
-        }
-
-    } catch(err){
-        status.textContent = "서버 연결 실패";
-        console.error(err);
-    }
-});
-
-// 나물 줍기 하드모드 버튼
-namulBtn.addEventListener("click", () => {
-    localStorage.setItem("namulHard", "true");
-    alert("나물 줍기 하드모드 활성화 완료!");
-});
-
-// 점프 게임 하드모드 버튼
-jumpBtn.addEventListener("click", () => {
-    localStorage.setItem("jumpHard", "true");
-    alert("점프 게임 하드모드 활성화 완료!");
-});
+  } catch (err) {
+    console.error("unlock fetch 에러:", err);
+    resultMsg.textContent = "⚠ 서버와 연결할 수 없습니다.";
+    resultMsg.style.color = "red";
+  }
+};
