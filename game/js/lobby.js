@@ -40,9 +40,6 @@ linkRegister.onclick = e=>{
   showModal(registerModal);
 };
 btnCloseRegister.onclick = ()=>hideModal(registerModal);
-btnSecret.onclick = ()=>showModal(secretModal);
-btnCloseSecret.onclick = ()=>hideModal(secretModal);
-btnCloseGenre.onclick = ()=>hideModal(genreModal);
 
 // ------------------ 게임 목록 모달 ------------------
 function openModal(type){
