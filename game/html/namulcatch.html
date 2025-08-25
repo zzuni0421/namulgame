@@ -57,21 +57,5 @@
   <script src="../../lang/lang.js"></script>
   <script src="../js/game.js"></script>
   <button id="hardBtn" style="display:none;">하드모드</button>
-
-<script type="module">
-import { tokenLogin } from "../js/frontend.js";
-
-window.addEventListener("DOMContentLoaded", async () => {
-  const user = await tokenLogin();
-  if (user.success && user.hardunlock === true) {
-    document.getElementById("hardBtn").style.display = "block";
-  }
-
-  document.getElementById("hardBtn").addEventListener("click", () => {
-    alert("하드모드 활성화!");
-    // 여기에 실제 게임 난이도 변경 코드 추가
-  });
-});
-</script>
 </body>
 </html>
