@@ -18,5 +18,14 @@
   </div>
 
   <script src="../js/game1.js" defer></script>
+  <script>
+  window.addEventListener("DOMContentLoaded", () => {
+    if (localStorage.getItem("hardmodeUnlocked") === "true") {
+      document.getElementById("hardmode-btn").style.display = "block";
+    }
+  });
+</script>
+
+<button id="hardmode-btn" style="display:none;">하드모드 시작</button>
 </body>
 </html>
