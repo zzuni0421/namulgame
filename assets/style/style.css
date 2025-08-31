@@ -20,8 +20,14 @@ body {
     text-decoration: underline;
 }
 
-#loginStatusContainer {
+#timeSelect {
     margin: 10px 0;
+}
+
+.timeBtn {
+    margin: 0 5px;
+    padding: 5px 10px;
+    cursor: pointer;
 }
 
 #controls {
