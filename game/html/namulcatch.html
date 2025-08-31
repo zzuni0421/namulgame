@@ -1,52 +1,35 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>나물 줍기 게임</title>
-  <link rel="stylesheet" href="../../assets/style/style.css"/>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>나물 줍기 게임</title>
+<link rel="stylesheet" href="../../assets/style/style.css">
 </head>
 <body>
-  <!-- 이벤트 배너 -->
-  <div id="namul-event-banner">
-    <span id="banner-text-before">🌱 이 게임에서 이벤트 진행 중! </span>
-    <a id="banner-link" href="../../event">참여하러 가기</a>
-    <span id="banner-text-after"> 🌱</span>
-  </div>
 
-  <!-- 메인 메뉴 -->
-  <div id="main-menu">
-    <h1>🌱 나물 줍기</h1>
+<div id="eventBanner">
+  🌱 이 게임에서 이벤트 진행 중! 
+  <a href="../../event" target="_blank">참여하러 가기</a> 🌱
+</div>
 
-    <h2>시간 선택</h2>
-    <div class="row">
-      <button class="time-btn" data-time="30">30s</button>
-      <button class="time-btn" data-time="60">60s</button>
-      <button class="time-btn" data-time="90">90s</button>
-      <button class="time-btn" data-time="infinite">∞ 무한</button>
-    </div>
+<div id="loginStatusContainer">
+    <span id="loginStatus"></span>
+    <button id="btnOpenLogin">로그인</button>
+    <button id="btnLogout" style="display:none;">로그아웃</button>
+    <button id="btnSecret" style="display:none;">하드모드</button>
+</div>
 
-    <button id="back-index-btn">메인으로</button>
-    <button id="hardmode-btn">🔥 하드모드 시작</button>
-  </div>
+<div id="controls">
+    <button id="hardModeBtn">하드모드 시작</button>
+</div>
 
-  <!-- 게임 화면 -->
-  <div id="game-container" style="display:none;">
-    <div class="scoreboard">
-      <span id="score-label">점수:</span> <span id="score">0</span>
-      <span id="time-box"> | 시간: <span id="time">0</span>s</span>
-    </div>
+<div id="gameContainer">
+    <div id="score">점수: 0</div>
+    <div id="gameBoard"></div>
+</div>
 
-    <div id="game-area"></div>
-
-    <p id="game-over-msg" style="display:none;">게임 종료!</p>
-
-    <div class="row">
-      <button id="restart-btn">다시 시작</button>
-      <button id="back-btn">처음부터</button>
-    </div>
-  </div>
-
-  <script type="module" src="../js/game.js"></script>
+<script type="module" src="gameAuth.js"></script>
+<script type="module" src="game.js"></script>
 </body>
 </html>
