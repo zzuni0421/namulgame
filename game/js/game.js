@@ -1,19 +1,23 @@
-import { tokenLogin } from "./frontend.js";
+import { tokenLogin } from "./gameAuth.js";
 
 let score = 0;
 let hardMode = false;
 let speed = 1; // 기본 속도
+let spawnInterval;
+
+const gameArea = document.getElementById("game-area");
+const scoreDisplay = document.getElementById("score");
+const hardBtn = document.getElementById("hardmode-btn");
 
 window.addEventListener("DOMContentLoaded", async () => {
-  // 하드모드 체크
   const user = await tokenLogin();
-  if (user.success && user.hardunlock === true) {
-    document.getElementById("hardBtn").style.display = "block";
+  if (user.success && user.secretUnlock === "o") {
+    hardBtn.style.display = "inline-block";
   }
 
-  document.getElementById("hardBtn").addEventListener("click", () => {
+  hardBtn.addEventListener("click", () => {
     hardMode = true;
-    speed = 2; // 하드모드에서는 2배 빠르게
+    speed = 2; // 하드모드 속도 2배
     alert("나물 줍기 하드모드 활성화!");
   });
 
@@ -21,25 +25,30 @@ window.addEventListener("DOMContentLoaded", async () => {
 });
 
 function startGame() {
-  const gameArea = document.getElementById("gameArea");
+  score = 0;
+  scoreDisplay.textContent = score;
+  gameArea.innerHTML = "";
 
-  function spawnNamul() {
-    const namul = document.createElement("div");
-    namul.className = "namul";
-    namul.style.left = "0px";
-    gameArea.appendChild(namul);
+  // 나물 스폰
+  spawnInterval = setInterval(spawnNamul, hardMode ? 500 : 1000);
+}
 
-    const moveInterval = setInterval(() => {
-      const left = parseInt(namul.style.left);
-      namul.style.left = left + speed + "px";
-      if (left > gameArea.offsetWidth) {
-        clearInterval(moveInterval);
-        namul.remove();
-        score += hardMode ? 2 : 1; // 하드모드 점수 2점
-        document.getElementById("scoreDisplay").textContent = `점수: ${score}`;
-      }
-    }, 20);
-  }
+function spawnNamul() {
+  const namul = document.createElement("div");
+  namul.className = "namul";
+  namul.style.left = "0px";
+  gameArea.appendChild(namul);
 
-  setInterval(spawnNamul, hardMode ? 500 : 1000); // 하드모드에서는 나물이 2배 빠르게 출현
+  const moveInterval = setInterval(() => {
+    let left = parseInt(namul.style.left);
+    left += speed;
+    namul.style.left = left + "px";
+
+    if (left > gameArea.offsetWidth) {
+      clearInterval(moveInterval);
+      namul.remove();
+      score += hardMode ? 2 : 1; // 점수 증가
+      scoreDisplay.textContent = score;
+    }
+  }, 20);
 }
