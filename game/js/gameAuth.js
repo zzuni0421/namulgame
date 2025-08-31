@@ -1,10 +1,10 @@
-const API_URL = "/api/namul";
+cconst API_URL = "/api/namul";
 const loginStatus = document.getElementById("loginStatus");
 const btnLogout = document.getElementById("btnLogout");
 const btnOpenLogin = document.getElementById("btnOpenLogin");
 const btnSecret = document.getElementById("btnSecret");
 
-// ------------------ 공통 fetch 함수 ------------------
+// 공통 fetch 함수
 async function apiPost(action, payload){
   try{
     const res = await fetch(API_URL, {
@@ -19,8 +19,8 @@ async function apiPost(action, payload){
   }
 }
 
-// ------------------ 로그인 ------------------
-async function login(username,password){
+// 로그인
+export async function login(username,password){
   const data = await apiPost("login",{ username, password });
   if(data.success){
     localStorage.setItem("namulToken", data.token);
@@ -28,7 +28,7 @@ async function login(username,password){
   } else alert(data.error || data.msg);
 }
 
-// ------------------ 토큰 로그인 ------------------
+// 토큰 로그인 (자동 로그인)
 export async function tokenLogin(){
   const token = localStorage.getItem("namulToken");
   if(token){
@@ -44,7 +44,7 @@ export async function tokenLogin(){
   return { success:false };
 }
 
-// ------------------ 로그아웃 ------------------
+// 로그아웃
 function logout(){
   localStorage.removeItem("namulToken");
   if(loginStatus) loginStatus.textContent = "";
@@ -53,7 +53,7 @@ function logout(){
   if(btnSecret) btnSecret.style.display="none";
 }
 
-// ------------------ UI ------------------
+// UI
 function setLoggedInUI(username){
   if(loginStatus) loginStatus.textContent = `${username}님 로그인됨`;
   if(btnLogout) btnLogout.style.display="inline-block";
