@@ -3,23 +3,15 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>🌱 나물 줍기 게임</title>
+  <title>나물 줍기 게임</title>
   <link rel="stylesheet" href="../../assets/style/style.css"/>
 </head>
 <body>
   <!-- 이벤트 배너 -->
   <div id="namul-event-banner">
-    <span>🌱 이 게임에서 이벤트 진행 중! </span>
+    <span id="banner-text-before">🌱 이 게임에서 이벤트 진행 중! </span>
     <a id="banner-link" href="../../event">참여하러 가기</a>
-    <span> 🌱</span>
-  </div>
-
-  <!-- 로그인 영역 -->
-  <div id="login-box">
-    <span id="loginStatus"></span>
-    <button id="btnOpenLogin">로그인</button>
-    <button id="btnLogout" style="display:none;">로그아웃</button>
-    <button id="btnSecret" style="display:none;">시크릿</button>
+    <span id="banner-text-after"> 🌱</span>
   </div>
 
   <!-- 메인 메뉴 -->
@@ -33,7 +25,9 @@
       <button class="time-btn" data-time="90">90s</button>
       <button class="time-btn" data-time="infinite">∞ 무한</button>
     </div>
+
     <button id="back-index-btn">메인으로</button>
+    <button id="hardmode-btn">🔥 하드모드 시작</button>
   </div>
 
   <!-- 게임 화면 -->
@@ -42,17 +36,17 @@
       <span id="score-label">점수:</span> <span id="score">0</span>
       <span id="time-box"> | 시간: <span id="time">0</span>s</span>
     </div>
+
     <div id="game-area"></div>
+
     <p id="game-over-msg" style="display:none;">게임 종료!</p>
+
     <div class="row">
       <button id="restart-btn">다시 시작</button>
       <button id="back-btn">처음부터</button>
     </div>
   </div>
 
-  <button id="hardmode-btn">🔥 하드모드 시작</button>
-
-  <script type="module" src="../js/gameAuth.js"></script>
   <script type="module" src="../js/game.js"></script>
 </body>
 </html>
