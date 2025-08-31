@@ -2,9 +2,10 @@ const unlockBtn = document.getElementById("unlockBtn");
 const secretInput = document.getElementById("secretCodeInput");
 const resultMsg = document.getElementById("resultMsg");
 
+// ------------------ 시크릿 코드 제출 ------------------
 unlockBtn.onclick = async () => {
   const code = secretInput.value.trim();
-  const token = localStorage.getItem("namulToken"); // 로그인 토큰 필수
+  const token = localStorage.getItem("namulToken"); // 로그인 토큰 가져오기
 
   if (!token) {
     resultMsg.textContent = "⚠ 로그인 후 이용하세요.";
@@ -26,13 +27,18 @@ unlockBtn.onclick = async () => {
     });
 
     if (!res.ok) throw new Error("서버 응답 오류");
-
     const data = await res.json();
 
     if (data.success) {
-      localStorage.setItem("hardunlock", "true");
-      resultMsg.textContent = "✅ 하드 모드가 열렸습니다!";
+      resultMsg.textContent = "✅ 시크릿 코드 성공! 하드모드 접근 가능";
       resultMsg.style.color = "green";
+
+      // 시트 업데이트: 하드모드 해금
+      await fetch("/api/namul", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ action: "unlockHard", token })
+      });
 
       setTimeout(() => {
         window.location.href = "index.html";
