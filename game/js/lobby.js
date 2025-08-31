@@ -132,12 +132,12 @@ document.getElementById("btnRegister").onclick = ()=>{
   register(username,password);
 };
 
-// ------------------ 하드모드 해금 ------------------
-async function unlockHard(){
+// ------------------ 하드모드 버튼 ------------------
+btnSecret.onclick = () => {
   const token = localStorage.getItem("token");
-  if(!token){ alert("로그인 후 이용 가능합니다."); return; }
-  const data = await apiPost("unlockHard", { token });
-  if(data.success) alert("하드모드 해금 완료!");
-  else alert(data.msg || data.error);
-}
-btnSecret.onclick = unlockHard;
+  if(!token){
+    alert("로그인 후 이용 가능합니다.");
+    return;
+  }
+  window.location.href = "../../secret.html";
+};
