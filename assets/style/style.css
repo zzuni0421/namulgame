@@ -1,37 +1,57 @@
 body {
-  font-family: sans-serif;
-  text-align: center;
-  background: #fdfdfd;
+    font-family: Arial, sans-serif;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 0;
+    background: #f0f8ff;
 }
 
-button {
-  padding: 10px 20px;
-  margin: 5px;
-  border: none;
-  border-radius: 8px;
-  background: #4caf50;
-  color: white;
-  font-size: 16px;
-  cursor: pointer;
+#eventBanner {
+    width: 100%;
+    text-align: center;
+    background: #aaf0d1;
+    font-weight: bold;
+    padding: 10px 0;
 }
 
-button:hover {
-  background: #45a049;
+#eventBanner a {
+    color: #064420;
+    text-decoration: underline;
 }
 
-#hardmode-btn {
-  background: #ff5722;
+#loginStatusContainer {
+    margin: 10px 0;
 }
 
-#hardmode-btn:hover {
-  background: #e64a19;
+#controls {
+    margin: 10px 0;
+}
+
+#gameContainer {
+    position: relative;
+    width: 480px;
+    height: 640px;
+    background: #87ceeb;
+    border: 2px solid #333;
+    overflow: hidden;
+}
+
+#score {
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-weight: bold;
+    color: white;
+    text-shadow: 1px 1px 2px black;
+    z-index: 10;
 }
 
 .namul {
-  width: 30px;
-  height: 30px;
-  background: url('namul.png') no-repeat center center;
-  background-size: cover; /* 이미지가 박스에 꽉 차게 */
-  position: absolute;
-  top: 50%;
+    width: 40px;
+    height: 40px;
+    background: url('namul.png') no-repeat center center;
+    background-size: cover;
+    position: absolute;
+    cursor: pointer;
 }
