@@ -3,7 +3,7 @@ export async function onRequestPost({ request }) {
     const body = await request.json();
 
     const GAS_URL =
-      "https://script.google.com/macros/s/AKfycbxwM0NfDkxko-8QeRF_oW7P8Pkc9IN7EqUCsorNxcCQd8hS2Z4uL6hWzWZIGCg58HADCQ/exec";
+      "https://script.google.com/macros/s/AKfycbwRaNKToEFHa9HMr3sJUn3sQXoH6Z7KYrGYZZsE1xpbyaB-k7RLU3LW8bFHNwKTEd1Dew/exec";
 
     // body 전체를 그대로 GAS에 전달 (action 포함)
     const res = await fetch(GAS_URL, {
