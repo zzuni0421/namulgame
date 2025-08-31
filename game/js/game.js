@@ -1,4 +1,4 @@
-import { tokenLogin } from "./gameAuth.js";
+import { tokenLogin } from "../js/gameAuth.js";
 
 let score = 0;
 let hardMode = false;
