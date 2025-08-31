@@ -1,159 +1,37 @@
-/* 전체 공통 스타일 */
-:root {
-  --bg: #faf8f5;
-  --primary: #4CAF50;
-  --primary-hover: #45a049;
-  --accent: #388e3c;
-  --panel: #dff0d8;
-  --text: #333;
-  --white: #fff;
-}
-
-* {
-  box-sizing: border-box;
-  margin: 0;
-  padding: 0;
-  font-family: 'Noto Sans KR', sans-serif;
-}
-
 body {
-  background: var(--bg);
-  color: var(--text);
+  font-family: sans-serif;
   text-align: center;
-  padding: 20px;
+  background: #fdfdfd;
 }
 
-/* 메인 메뉴 */
-#main-menu {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-#main-menu h1 {
-  font-size: 2.5rem;
-  margin-bottom: 20px;
-}
-
-#main-menu h2 {
-  font-size: 1.5rem;
-  margin: 15px 0;
-}
-
-.row {
-  margin: 12px 0;
-}
-
-/* 언어 선택 */
-#lang-select {
-  padding: 10px;
-  border-radius: 6px;
-  border: 1px solid #ccc;
-  font-size: 15px;
-  cursor: pointer;
-}
-
-/* 버튼 스타일 */
 button {
-  padding: 10px 16px;
-  border-radius: 8px;
-  font-size: 16px;
-  background: var(--primary);
-  color: var(--white);
+  padding: 10px 20px;
+  margin: 5px;
   border: none;
-  margin: 6px;
+  border-radius: 8px;
+  background: #4caf50;
+  color: white;
+  font-size: 16px;
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.1s ease;
 }
 
 button:hover {
-  background: var(--primary-hover);
+  background: #45a049;
 }
 
-button:active {
-  transform: scale(0.96);
+#hardmode-btn {
+  background: #ff5722;
 }
 
-.time-btn {
-  min-width: 70px;
+#hardmode-btn:hover {
+  background: #e64a19;
 }
 
-/* 게임 화면 */
-#game-container {
-  max-width: 400px;
-  margin: 0 auto;
-}
-
-.scoreboard {
-  font-size: 20px;
-  font-weight: 600;
-  margin-bottom: 15px;
-}
-
-#game-area {
-  position: relative;
-  width: 100%;
-  height: 400px;
-  margin: 0 auto 20px;
-  background: var(--panel);
-  border-radius: 12px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
-  overflow: hidden;
-}
-
-/* 나물 이미지 */
 .namul {
+  width: 30px;
+  height: 30px;
+  background: url('namul.png') no-repeat center center;
+  background-size: cover; /* 이미지가 박스에 꽉 차게 */
   position: absolute;
-  width: 64px;
-  height: 64px;
-  cursor: pointer;
-  transition: transform 0.1s ease;
-}
-
-.namul:active {
-  transform: scale(0.85);
-}
-
-/* 다시 시작 & 메인 버튼 */
-#restart-btn,
-#back-btn,
-#back-index-btn {
-  background: var(--accent);
-}
-
-#restart-btn:hover,
-#back-btn:hover,
-#back-index-btn:hover {
-  background: #2e7031;
-}
-
-#namul-event-banner {
-  background: linear-gradient(90deg, #a8e063, #56ab2f); /* 산뜻한 초록 그라데이션 */
-  color: #fff;
-  text-align: center;
-  padding: 15px;
-  font-weight: bold;
-  font-size: 1.2rem;
-  border-radius: 12px;
-  margin: 10px auto;
-  width: 90%;
-  max-width: 600px;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-  animation: glow 2s infinite alternate;
-}
-
-#namul-event-banner a {
-  text-decoration: none;
-  color: #ffeb3b;
-  font-weight: bold;
-  margin-left: 10px;
-}
-
-#namul-event-banner a:hover {
-  text-decoration: underline;
-}
-
-@keyframes glow {
-  from { box-shadow: 0 0 10px rgba(86,171,47,0.5); }
-  to { box-shadow: 0 0 20px rgba(168,224,99,0.9); }
+  top: 50%;
 }
