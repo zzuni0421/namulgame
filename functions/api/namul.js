@@ -24,3 +24,16 @@ export async function onRequestPost({ request }) {
     );
   }
 }
+
+export async function onRequestGet(context) {
+  const { request, env } = context;
+  const cf = request.cf || {};
+
+  if (cf.isIntranet || cf.asn === "13335") { // 13335 = Cloudflare ASN 예시
+    return Response.redirect("/error.html", 302);
+  }
+
+  return new Response(await fetch("index.html").then(r => r.text()), {
+    headers: { "Content-Type": "text/html" }
+  });
+}
