@@ -1,9 +1,16 @@
 const unlockBtn = document.getElementById("unlockBtn");
-const secretInput = document.getElementById("secretCode");
+const secretInput = document.getElementById("secretCodeInput");
 const resultMsg = document.getElementById("resultMsg");
 
 unlockBtn.onclick = async () => {
   const code = secretInput.value.trim();
+  const token = localStorage.getItem("namulToken"); // 로그인 토큰 필수
+
+  if (!token) {
+    resultMsg.textContent = "⚠ 로그인 후 이용하세요.";
+    resultMsg.style.color = "red";
+    return;
+  }
 
   if (!code) {
     resultMsg.textContent = "⚠ 코드를 입력하세요.";
@@ -15,10 +22,11 @@ unlockBtn.onclick = async () => {
     const res = await fetch("/api/namul", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action: "unlock", code })
+      body: JSON.stringify({ action: "checkSecret", token, code })
     });
 
     if (!res.ok) throw new Error("서버 응답 오류");
+
     const data = await res.json();
 
     if (data.success) {
