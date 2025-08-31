@@ -1,4 +1,4 @@
-cconst API_URL = "/api/namul";
+const API_URL = "/api/namul";
 const loginStatus = document.getElementById("loginStatus");
 const btnLogout = document.getElementById("btnLogout");
 const btnOpenLogin = document.getElementById("btnOpenLogin");
