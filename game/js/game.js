@@ -3,22 +3,17 @@ import { tokenLogin } from "./gameAuth.js";
 let score = 0;
 let hardMode = false;
 let speed = 1; // 기본 속도
-let spawnInterval;
-
-const user = await tokenLogin();
-const gameArea = document.getElementById("game-area");
-const scoreDisplay = document.getElementById("score");
-const hardBtn = document.getElementById("hardmode-btn");
 
 window.addEventListener("DOMContentLoaded", async () => {
+  // 로그인 확인
   const user = await tokenLogin();
-  if (user.success && user.secretUnlock === "o") {
-    hardBtn.style.display = "inline-block";
+  if (user.success && user.hardunlock === true) {
+    document.getElementById("hardmode-btn").style.display = "block";
   }
 
-  hardBtn.addEventListener("click", () => {
+  document.getElementById("hardmode-btn").addEventListener("click", () => {
     hardMode = true;
-    speed = 2; // 하드모드 속도 2배
+    speed = 2;
     alert("나물 줍기 하드모드 활성화!");
   });
 
@@ -26,30 +21,28 @@ window.addEventListener("DOMContentLoaded", async () => {
 });
 
 function startGame() {
-  score = 0;
-  scoreDisplay.textContent = score;
-  gameArea.innerHTML = "";
+  const gameArea = document.getElementById("game-area");
+  const scoreDisplay = document.getElementById("score");
 
-  // 나물 스폰
-  spawnInterval = setInterval(spawnNamul, hardMode ? 500 : 1000);
-}
+  function spawnNamul() {
+    const namul = document.createElement("div");
+    namul.className = "namul";
+    namul.style.left = "0px";
+    namul.style.top = Math.random() * (gameArea.offsetHeight - 40) + "px";
+    gameArea.appendChild(namul);
 
-function spawnNamul() {
-  const namul = document.createElement("div");
-  namul.className = "namul";
-  namul.style.left = "0px";
-  gameArea.appendChild(namul);
+    const moveInterval = setInterval(() => {
+      const left = parseInt(namul.style.left);
+      namul.style.left = left + speed + "px";
 
-  const moveInterval = setInterval(() => {
-    let left = parseInt(namul.style.left);
-    left += speed;
-    namul.style.left = left + "px";
+      if (left > gameArea.offsetWidth) {
+        clearInterval(moveInterval);
+        namul.remove();
+        score += hardMode ? 2 : 1;
+        scoreDisplay.textContent = score;
+      }
+    }, 20);
+  }
 
-    if (left > gameArea.offsetWidth) {
-      clearInterval(moveInterval);
-      namul.remove();
-      score += hardMode ? 2 : 1; // 점수 증가
-      scoreDisplay.textContent = score;
-    }
-  }, 20);
+  setInterval(spawnNamul, hardMode ? 500 : 1000);
 }
