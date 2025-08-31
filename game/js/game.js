@@ -5,6 +5,7 @@ let hardMode = false;
 let speed = 1; // 기본 속도
 let spawnInterval;
 
+const user = await tokenLogin();
 const gameArea = document.getElementById("game-area");
 const scoreDisplay = document.getElementById("score");
 const hardBtn = document.getElementById("hardmode-btn");
