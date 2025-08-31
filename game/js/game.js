@@ -1,17 +1,41 @@
-import { tokenLogin } from './gameAuth.js';
-
 const gameBoard = document.getElementById('gameBoard');
 const scoreDisplay = document.getElementById('score');
 const hardModeBtn = document.getElementById('hardModeBtn');
+const timeButtons = document.querySelectorAll('.timeBtn');
 
 let score = 0;
 let hardMode = false;
 let spawnInterval = 2000;
 let namulTimer;
+let gameTime = 0;
+let countdownTimer;
 
-async function initGame() {
-    await tokenLogin(); // 자동 로그인 후 시작
+// 시작할 때 시간 선택
+timeButtons.forEach(btn => {
+    btn.addEventListener('click', () => {
+        gameTime = parseInt(btn.dataset.time);
+        startGame();
+    });
+});
+
+function startGame(){
+    score = 0;
+    scoreDisplay.textContent = `점수: ${score}`;
+    clearBoard();
+    clearInterval(namulTimer);
+    clearInterval(countdownTimer);
+    spawnInterval = hardMode ? 1000 : 2000;
     startSpawning();
+
+    let remaining = gameTime;
+    countdownTimer = setInterval(() => {
+        remaining--;
+        if(remaining <= 0){
+            clearInterval(namulTimer);
+            clearInterval(countdownTimer);
+            alert(`시간 종료! 최종 점수: ${score}`);
+        }
+    }, 1000);
 }
 
 function startSpawning() {
@@ -47,6 +71,12 @@ function spawnNamul() {
     }
 }
 
+function clearBoard(){
+    while(gameBoard.firstChild){
+        gameBoard.removeChild(gameBoard.firstChild);
+    }
+}
+
 hardModeBtn.addEventListener('click', ()=>{
     hardMode = !hardMode;
     hardModeBtn.textContent = hardMode ? "하드모드 중지" : "하드모드 시작";
@@ -54,5 +84,3 @@ hardModeBtn.addEventListener('click', ()=>{
     spawnInterval = hardMode ? 1000 : 2000;
     startSpawning();
 });
-
-document.addEventListener('DOMContentLoaded', initGame);
