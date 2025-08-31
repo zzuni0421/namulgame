@@ -63,17 +63,38 @@ async function apiPost(action, payload){
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ action, ...payload })
     });
-    return await res.json();
+    // 디버깅용 로그
+    console.log(`${action} fetch status:`, res.status, res.statusText);
+    const text = await res.text();
+    console.log(`${action} fetch text:`, text);
+    return JSON.parse(text);
   } catch(err){
     console.error(`${action} fetch 에러:`, err);
     return { success: false, msg: "서버 요청 실패" };
   }
 }
 
+// ------------------ 자동 로그인 ------------------
+async function autoLogin(){
+  const token = localStorage.getItem("token");
+  if(!token) return; // 토큰 없으면 그냥 비로그인 플레이
+  const data = await apiPost("tokenLogin", { token });
+  if(data.success){
+    loginStatus.textContent = `${data.username}님 로그인됨`;
+    btnLogout.style.display="inline-block";
+    btnOpenLogin.style.display="none";
+    btnSecret.style.display="inline-block";
+  } else {
+    localStorage.removeItem("token"); // 토큰 만료 시 삭제
+  }
+}
+document.addEventListener("DOMContentLoaded", autoLogin);
+
 // ------------------ 로그인 ------------------
 async function login(username,password){
   const data = await apiPost("login",{ username, password });
   if(data.success){
+    localStorage.setItem("token", data.token); // 자동 로그인용 저장
     loginStatus.textContent = `${username}님 로그인됨`;
     btnLogout.style.display="inline-block";
     btnOpenLogin.style.display="none";
@@ -89,6 +110,7 @@ document.getElementById("btnLogin").onclick = ()=>{
 
 // ------------------ 로그아웃 ------------------
 btnLogout.onclick = ()=>{
+  localStorage.removeItem("token");
   loginStatus.textContent = "";
   btnLogout.style.display="none";
   btnOpenLogin.style.display="inline-block";
@@ -110,24 +132,12 @@ document.getElementById("btnRegister").onclick = ()=>{
   register(username,password);
 };
 
-// ------------------ 공통 fetch 함수 ------------------
-async function apiPost(action, payload){
-  try{
-    const res = await fetch(API_URL, {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ action, ...payload })
-    });
-
-    // 디버깅용 로그 추가
-    console.log(`${action} fetch status:`, res.status, res.statusText);
-    const text = await res.text();
-    console.log(`${action} fetch text:`, text);
-
-    // 기존 코드 유지: 정상 JSON이면 파싱
-    return JSON.parse(text);
-  } catch(err){
-    console.error(`${action} fetch 에러:`, err);
-    return { success: false, msg: "서버 요청 실패" };
-  }
+// ------------------ 하드모드 해금 ------------------
+async function unlockHard(){
+  const token = localStorage.getItem("token");
+  if(!token){ alert("로그인 후 이용 가능합니다."); return; }
+  const data = await apiPost("unlockHard", { token });
+  if(data.success) alert("하드모드 해금 완료!");
+  else alert(data.msg || data.error);
 }
+btnSecret.onclick = unlockHard;
