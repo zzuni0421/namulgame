@@ -25,27 +25,23 @@ async function apiPost(action, payload){
 async function login(username,password){
   const data = await apiPost("login",{ username, password });
   if(data.success){
-    localStorage.setItem("namulToken", data.token); // 토큰 저장
+    localStorage.setItem("token", data.token); // 토큰 저장 이름 통일
     setLoggedInUI(username);
   } else alert(data.error || data.msg);
 }
 
 // ------------------ 토큰 자동 로그인 ------------------
-async function autoLogin(){
-  const token = localStorage.getItem("namulToken");
-  if(token){
-    const data = await apiPost("tokenLogin",{ token });
-    if(data.success){
-      setLoggedInUI(data.username);
-    } else {
-      localStorage.removeItem("namulToken"); // 실패하면 제거
-    }
-  }
+async function tokenLogin(){
+  const token = localStorage.getItem("token");
+  if(!token) return { success: false };
+  const data = await apiPost("tokenLogin",{ token });
+  if(data.success) setLoggedInUI(data.username);
+  return data;
 }
 
 // ------------------ 로그아웃 ------------------
 function logout(){
-  localStorage.removeItem("namulToken");
+  localStorage.removeItem("token");
   loginStatus.textContent = "";
   btnLogout.style.display="none";
   btnOpenLogin.style.display="inline-block";
@@ -70,7 +66,7 @@ async function register(username,password){
 
 // ------------------ 하드모드 해금 ------------------
 async function unlockHard(){
-  const token = localStorage.getItem("namulToken");
+  const token = localStorage.getItem("token");
   if(!token){
     alert("로그인 후 사용 가능합니다.");
     return;
@@ -81,12 +77,12 @@ async function unlockHard(){
 }
 
 // ------------------ 이벤트 연결 ------------------
-document.getElementById("btnLogin")?.addEventListener("click", ()=>{
+document.getElementById("btnLogin")?.addEventListener("click", ()=> {
   const username = document.getElementById("loginUsername").value;
   const password = document.getElementById("loginPassword").value;
   login(username,password);
 });
-document.getElementById("btnRegister")?.addEventListener("click", ()=>{
+document.getElementById("btnRegister")?.addEventListener("click", ()=> {
   const username = document.getElementById("registerUsername").value;
   const password = document.getElementById("registerPassword").value;
   register(username,password);
@@ -94,4 +90,7 @@ document.getElementById("btnRegister")?.addEventListener("click", ()=>{
 btnLogout?.addEventListener("click", logout);
 
 // ------------------ 페이지 로드 시 자동 로그인 ------------------
-document.addEventListener("DOMContentLoaded", autoLogin);
+document.addEventListener("DOMContentLoaded", tokenLogin);
+
+// ------------------ Export (named) ------------------
+export { login, register, logout, tokenLogin, unlockHard };
