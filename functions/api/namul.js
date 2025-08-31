@@ -1,5 +1,5 @@
 // api/namul.js
-const GAS_URL = "https://script.google.com/macros/s/AKfycbz1aDAJ5GSZVXDKZia3zYWJUeeYcOV8gL43Q2_h8Zoef8G432LDVyV76ncu6Z4S2uUkgg/exec";
+const GAS_URL = "https://script.google.com/macros/s/AKfycbxTuwvFpVFcsFjShTwaJ-77WeMbO2cWNZmrCX2ko6b1iHuzWsEBJa6Zpy8OazqIyyiRug/exec";
 
 export async function onRequestPost({ request }) {
   const body = await request.json();
