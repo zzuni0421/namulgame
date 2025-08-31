@@ -7,17 +7,16 @@
 <link rel="stylesheet" href="../../assets/style/style.css">
 </head>
 <body>
-
 <div id="eventBanner">
   🌱 이 게임에서 이벤트 진행 중! 
   <a href="../../event" target="_blank">참여하러 가기</a> 🌱
 </div>
 
-<div id="loginStatusContainer">
-    <span id="loginStatus"></span>
-    <button id="btnOpenLogin">로그인</button>
-    <button id="btnLogout" style="display:none;">로그아웃</button>
-    <button id="btnSecret" style="display:none;">하드모드</button>
+<div id="timeSelect">
+  <button class="timeBtn" data-time="10">10초</button>
+  <button class="timeBtn" data-time="20">20초</button>
+  <button class="timeBtn" data-time="30">30초</button>
+  <button class="timeBtn" data-time="60">1분</button>
 </div>
 
 <div id="controls">
@@ -29,7 +28,7 @@
     <div id="gameBoard"></div>
 </div>
 
-<script type="module" src="../js/gameAuth.js"></script>
-<script type="module" src="../js/game.js"></script>
+<script type="module" src="gameAuth.js"></script>
+<script type="module" src="game.js"></script>
 </body>
 </html>
