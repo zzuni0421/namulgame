@@ -5,7 +5,7 @@ const resultMsg = document.getElementById("resultMsg");
 // ------------------ 시크릿 코드 제출 ------------------
 unlockBtn.onclick = async () => {
   const code = secretInput.value.trim();
-  const token = localStorage.getItem("namulToken"); // 로그인 토큰 가져오기
+  const token = localStorage.getItem("token"); // 로그인 토큰 가져오기
 
   if (!token) {
     resultMsg.textContent = "⚠ 로그인 후 이용하세요.";
