@@ -1,86 +1,91 @@
-const gameBoard = document.getElementById('gameBoard');
-const scoreDisplay = document.getElementById('score');
-const hardModeBtn = document.getElementById('hardModeBtn');
-const timeButtons = document.querySelectorAll('.timeBtn');
+document.addEventListener("DOMContentLoaded", () => {
+  const namul = document.getElementById("namul");
+  const scoreDisplay = document.getElementById("score");
+  const timeDisplay = document.getElementById("time");
+  const restartBtn = document.getElementById("restart-btn");
+  const buttons = document.querySelectorAll(".mode-btn");
+  const playerNameDisplay = document.getElementById("player-name");
 
-let score = 0;
-let hardMode = false;
-let spawnInterval = 2000;
-let namulTimer;
-let gameTime = 0;
-let countdownTimer;
+  // 로그인 여부 확인 
+  const playerId = localStorage.getItem("id");
+  const playerName = playerId ? playerId : "(게스트)";
+  playerNameDisplay.textContent = `플레이어: ${playerName}`;
 
-// 시작할 때 시간 선택
-timeButtons.forEach(btn => {
-    btn.addEventListener('click', () => {
-        gameTime = parseInt(btn.dataset.time);
-        startGame();
-    });
-});
+  let score = 0;
+  let timeLeft = 0;
+  let gameInterval;
+  let namulTimeout;
+  let infiniteMode = false;
 
-function startGame(){
+  function startGame(mode) {
     score = 0;
-    scoreDisplay.textContent = `점수: ${score}`;
-    clearBoard();
-    clearInterval(namulTimer);
-    clearInterval(countdownTimer);
-    spawnInterval = hardMode ? 1000 : 2000;
-    startSpawning();
+    scoreDisplay.textContent = score;
+    infiniteMode = mode === "infinite";
+    timeLeft = infiniteMode ? 9999 : parseInt(mode, 10);
+    timeDisplay.textContent = infiniteMode ? "∞" : timeLeft;
 
-    let remaining = gameTime;
-    countdownTimer = setInterval(() => {
-        remaining--;
-        if(remaining <= 0){
-            clearInterval(namulTimer);
-            clearInterval(countdownTimer);
-            alert(`시간 종료! 최종 점수: ${score}`);
+    restartBtn.classList.add("hidden");
+
+    // 시간 줄이기
+    if (!infiniteMode) {
+      gameInterval = setInterval(() => {
+        timeLeft--;
+        timeDisplay.textContent = timeLeft;
+        if (timeLeft <= 0) {
+          endGame();
         }
-    }, 1000);
-}
+      }, 1000);
+    }
 
-function startSpawning() {
-    namulTimer = setInterval(spawnNamul, spawnInterval);
-}
+    spawnNamul();
+  }
 
-function spawnNamul() {
-    const namul = document.createElement('div');
-    namul.classList.add('namul');
+  function spawnNamul() {
+    const gameArea = document.getElementById("game-area");
+    const areaWidth = gameArea.offsetWidth - 80;
+    const areaHeight = gameArea.offsetHeight - 80;
 
-    const boardWidth = gameBoard.clientWidth - 40;
-    const boardHeight = gameBoard.clientHeight - 40;
-
-    const x = Math.random() * boardWidth;
-    const y = Math.random() * boardHeight;
+    const x = Math.random() * areaWidth;
+    const y = Math.random() * areaHeight;
 
     namul.style.left = `${x}px`;
     namul.style.top = `${y}px`;
+    namul.classList.remove("hidden");
 
-    namul.addEventListener('click', () => {
-        score++;
-        scoreDisplay.textContent = `점수: ${score}`;
-        gameBoard.removeChild(namul);
+    // 일정 시간 후 사라졌다가 다시 등장
+    namulTimeout = setTimeout(() => {
+      namul.classList.add("hidden");
+      if ((timeLeft > 0 || infiniteMode) && !gameOver) {
+        setTimeout(spawnNamul, 500 + Math.random() * 1000); // 랜덤 간격
+      }
+    }, 800);
+  }
+
+  function endGame() {
+    clearInterval(gameInterval);
+    clearTimeout(namulTimeout);
+    namul.classList.add("hidden");
+    restartBtn.classList.remove("hidden");
+  }
+
+  let gameOver = false;
+
+  namul.addEventListener("click", () => {
+    score++;
+    scoreDisplay.textContent = score;
+    namul.classList.add("hidden");
+  });
+
+  buttons.forEach((btn) => {
+    btn.addEventListener("click", () => {
+      clearInterval(gameInterval);
+      clearTimeout(namulTimeout);
+      gameOver = false;
+      startGame(btn.dataset.time);
     });
+  });
 
-    gameBoard.appendChild(namul);
-
-    // 하드모드에서는 일정 시간 후 자동 제거
-    if(hardMode){
-        setTimeout(()=> {
-            if(gameBoard.contains(namul)) gameBoard.removeChild(namul);
-        }, spawnInterval);
-    }
-}
-
-function clearBoard(){
-    while(gameBoard.firstChild){
-        gameBoard.removeChild(gameBoard.firstChild);
-    }
-}
-
-hardModeBtn.addEventListener('click', ()=>{
-    hardMode = !hardMode;
-    hardModeBtn.textContent = hardMode ? "하드모드 중지" : "하드모드 시작";
-    clearInterval(namulTimer);
-    spawnInterval = hardMode ? 1000 : 2000;
-    startSpawning();
+  restartBtn.addEventListener("click", () => {
+    location.reload();
+  });
 });
