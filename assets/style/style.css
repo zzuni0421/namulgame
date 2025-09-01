@@ -1,86 +1,76 @@
-/* 전체 레이아웃 */
 body {
-  margin: 0;
-  font-family: "Pretendard", "Noto Sans KR", sans-serif;
-  background: linear-gradient(135deg, #e6ffe6, #f0fff0);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 100vh;
-}
-
-.game-container {
-  background: #ffffffcc;
-  backdrop-filter: blur(6px);
-  border-radius: 20px;
-  padding: 30px;
-  width: 420px;
-  box-shadow: 0 8px 16px rgba(0,0,0,0.15);
+  font-family: "Arial", sans-serif;
+  background: #f0fff0;
   text-align: center;
+  margin: 0;
+  padding: 0;
 }
 
-header h1 {
-  font-size: 1.8rem;
+.container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+h1 {
+  font-size: 2rem;
   margin-bottom: 10px;
-  color: #2d6a4f;
+  color: #2e7d32;
 }
 
-.user-info {
-  font-size: 0.95rem;
-  margin-bottom: 20px;
-  color: #555;
-}
-
-/* 메뉴 */
-.menu h2 {
-  margin-bottom: 15px;
-  color: #1b4332;
+.button-group {
+  margin: 20px 0;
 }
 
 .mode-btn {
-  display: block;
-  width: 100%;
-  margin: 8px 0;
-  padding: 12px;
-  font-size: 1rem;
+  background: #81c784;
   border: none;
-  border-radius: 12px;
+  padding: 10px 20px;
+  margin: 5px;
+  border-radius: 10px;
   cursor: pointer;
-  background: #95d5b2;
-  color: #fff;
+  font-size: 1rem;
   transition: 0.2s;
 }
 
 .mode-btn:hover {
-  background: #74c69d;
-  transform: translateY(-2px);
+  background: #66bb6a;
 }
 
-.mode-btn.hard {
-  background: #ff6b6b;
+#game-area {
+  position: relative;
+  width: 100%;
+  height: 400px;
+  background: #c8e6c9;
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 20px auto;
 }
 
-.mode-btn.hard:hover {
-  background: #fa5252;
+.namul {
+  position: absolute;
+  width: 80px;
+  height: 80px;
+  cursor: pointer;
+  transition: opacity 0.2s;
 }
 
-/* 게임 영역 */
-#gameArea {
+.hidden {
+  display: none;
+}
+
+.info {
+  font-size: 1.2rem;
+  margin-top: 10px;
+}
+
+#restart-btn {
+  background: #388e3c;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 10px;
+  font-size: 1rem;
+  cursor: pointer;
   margin-top: 20px;
-  padding: 20px;
-  background: #f8fff8;
-  border: 2px dashed #95d5b2;
-  border-radius: 15px;
-  min-height: 200px;
-}
-
-#gameArea .info {
-  color: #888;
-}
-
-/* 푸터 */
-footer {
-  margin-top: 20px;
-  font-size: 0.8rem;
-  color: #666;
 }
