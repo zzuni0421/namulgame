@@ -1,90 +1,86 @@
+/* 전체 레이아웃 */
 body {
   margin: 0;
-  padding: 0;
-  font-family: 'Noto Sans KR', sans-serif;
-  background: #fdfaf4; 
-  color: #4a3c2a; 
+  font-family: "Pretendard", "Noto Sans KR", sans-serif;
+  background: linear-gradient(135deg, #e6ffe6, #f0fff0);
   display: flex;
-  flex-direction: column;
+  justify-content: center;
   align-items: center;
   min-height: 100vh;
 }
 
-.container {
-  margin-top: 40px;
-  background: #fff;
+.game-container {
+  background: #ffffffcc;
+  backdrop-filter: blur(6px);
   border-radius: 20px;
   padding: 30px;
-  box-shadow: 0 6px 16px rgba(0,0,0,0.08);
+  width: 420px;
+  box-shadow: 0 8px 16px rgba(0,0,0,0.15);
   text-align: center;
-  width: 90%;
-  max-width: 500px;
 }
 
-h1, h2, h3 {
+header h1 {
+  font-size: 1.8rem;
+  margin-bottom: 10px;
+  color: #2d6a4f;
+}
+
+.user-info {
+  font-size: 0.95rem;
   margin-bottom: 20px;
-  color: #2e4a32; 
-  font-weight: bold;
+  color: #555;
 }
 
-button {
-  background: linear-gradient(135deg, #a8e6a3, #6ccf65); 
+/* 메뉴 */
+.menu h2 {
+  margin-bottom: 15px;
+  color: #1b4332;
+}
+
+.mode-btn {
+  display: block;
+  width: 100%;
+  margin: 8px 0;
+  padding: 12px;
+  font-size: 1rem;
   border: none;
   border-radius: 12px;
-  padding: 12px 20px;
-  margin: 8px;
-  font-size: 16px;
-  font-weight: 600;
-  color: #fff;
   cursor: pointer;
-  transition: all 0.2s ease;
-  box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+  background: #95d5b2;
+  color: #fff;
+  transition: 0.2s;
 }
 
-button:hover {
+.mode-btn:hover {
+  background: #74c69d;
   transform: translateY(-2px);
-  box-shadow: 0 6px 12px rgba(0,0,0,0.15);
 }
 
-button:active {
-  transform: translateY(0);
-  box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+.mode-btn.hard {
+  background: #ff6b6b;
 }
 
-button.primary {
-  background: linear-gradient(135deg, #ffda96, #f5a623);
+.mode-btn.hard:hover {
+  background: #fa5252;
 }
 
-input, select {
-  border: 2px solid #c8d6c2;
-  border-radius: 10px;
-  padding: 10px;
-  font-size: 15px;
-  outline: none;
-  margin: 6px 0;
-  width: 80%;
-  transition: border 0.2s ease;
+/* 게임 영역 */
+#gameArea {
+  margin-top: 20px;
+  padding: 20px;
+  background: #f8fff8;
+  border: 2px dashed #95d5b2;
+  border-radius: 15px;
+  min-height: 200px;
 }
 
-input:focus, select:focus {
-  border-color: #6ccf65;
-  box-shadow: 0 0 6px rgba(108, 207, 101, 0.3);
+#gameArea .info {
+  color: #888;
 }
 
-.event-banner {
-  background: #e7f8e3;
-  border: 2px dashed #6ccf65;
-  border-radius: 16px;
-  padding: 16px;
-  margin: 20px 0;
-  color: #3e5b38;
-  font-weight: 600;
-}
-
-.footer {
-  margin-top: auto;
-  padding: 15px;
-  font-size: 14px;
-  color: #7a6f63;
-  text-align: center;
+/* 푸터 */
+footer {
+  margin-top: 20px;
+  font-size: 0.8rem;
+  color: #666;
 }
