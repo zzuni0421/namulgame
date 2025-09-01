@@ -6,33 +6,29 @@
   <link rel="stylesheet" href="../../assets/style/style.css">
 </head>
 <body>
-  <div class="game-container">
-    <header>
-      <h1>🌱 나물 줍기 게임 🌱</h1>
-      <div class="user-info">
-        <span id="userDisplay"></span>
-      </div>
-    </header>
+  <div class="container">
+    <h1>나물 줍기 게임</h1>
+    <p id="player-name"></p>
+    
+    <div class="button-group">
+      <button class="mode-btn" data-time="10">10초</button>
+      <button class="mode-btn" data-time="20">20초</button>
+      <button class="mode-btn" data-time="30">30초</button>
+      <button class="mode-btn" data-time="60">1분</button>
+      <button class="mode-btn" data-time="infinite">무한 모드</button>
+      <button class="mode-btn hard">하드 모드</button>
+    </div>
 
-    <main>
-      <div class="menu">
-        <h2>게임 모드 선택</h2>
-        <button class="mode-btn" data-mode="10">10초</button>
-        <button class="mode-btn" data-mode="20">20초</button>
-        <button class="mode-btn" data-mode="30">30초</button>
-        <button class="mode-btn" data-mode="60">1분</button>
-        <button class="mode-btn" data-mode="infinite">무한</button>
-        <button class="mode-btn hard" data-mode="hard">하드모드</button>
-      </div>
+    <div id="game-area">
+      <img src="../../assets/namul.png" alt="나물" class="namul hidden" id="namul">
+    </div>
 
-      <div class="game" id="gameArea">
-        <p class="info">게임 모드를 선택하면 시작합니다.</p>
-      </div>
-    </main>
+    <div class="info">
+      <p>⏱ 남은 시간: <span id="time">0</span></p>
+      <p>🌿 점수: <span id="score">0</span></p>
+    </div>
 
-    <footer>
-      <p>© 2025 나물게임</p>
-    </footer>
+    <button id="restart-btn" class="hidden">다시하기</button>
   </div>
 
   <script src="../js/game.js"></script>
