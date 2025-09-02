@@ -1,91 +1,98 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const namul = document.getElementById("namul");
-  const scoreDisplay = document.getElementById("score");
-  const timeDisplay = document.getElementById("time");
+  const field = document.getElementById("field");
+  const timerEl = document.getElementById("timer");
+  const scoreEl = document.getElementById("score");
+  const gameOverEl = document.getElementById("game-over");
+  const finalScoreEl = document.getElementById("final-score");
   const restartBtn = document.getElementById("restart-btn");
-  const buttons = document.querySelectorAll(".mode-btn");
-  const playerNameDisplay = document.getElementById("player-name");
-
-  // 로그인 여부 확인 
-  const playerId = localStorage.getItem("id");
-  const playerName = playerId ? playerId : "(게스트)";
-  playerNameDisplay.textContent = `플레이어: ${playerName}`;
 
   let score = 0;
   let timeLeft = 0;
-  let gameInterval;
-  let namulTimeout;
-  let infiniteMode = false;
+  let gameInterval, spawnInterval;
+  let isInfinite = false;
+
+  const isLoggedIn = false;
+  const username = isLoggedIn ? "사용자아이디" : "(게스트)";
+  document.getElementById("username").textContent = username;
+
+  document.querySelectorAll(".mode-btn").forEach(btn => {
+    btn.addEventListener("click", () => {
+      const mode = btn.dataset.time;
+      startGame(mode);
+    });
+  });
+
+  restartBtn.addEventListener("click", () => {
+    gameOverEl.classList.add("hidden");
+    score = 0;
+    scoreEl.textContent = "점수: 0";
+    timerEl.textContent = "남은 시간: -";
+  });
 
   function startGame(mode) {
     score = 0;
-    scoreDisplay.textContent = score;
-    infiniteMode = mode === "infinite";
-    timeLeft = infiniteMode ? 9999 : parseInt(mode, 10);
-    timeDisplay.textContent = infiniteMode ? "∞" : timeLeft;
+    scoreEl.textContent = "점수: 0";
+    gameOverEl.classList.add("hidden");
 
-    restartBtn.classList.add("hidden");
+    if (mode === "infinite") {
+      isInfinite = true;
+      timeLeft = 0;
+      timerEl.textContent = "무한 모드";
+    } else if (mode === "hard") {
+      isInfinite = false;
+      timeLeft = 30; // 하드모드 고정 30초
+      timerEl.textContent = `남은 시간: ${timeLeft}`;
+    } else {
+      isInfinite = false;
+      timeLeft = parseInt(mode);
+      timerEl.textContent = `남은 시간: ${timeLeft}`;
+    }
 
-    // 시간 줄이기
-    if (!infiniteMode) {
+    clearInterval(gameInterval);
+    clearInterval(spawnInterval);
+
+    if (!isInfinite) {
       gameInterval = setInterval(() => {
         timeLeft--;
-        timeDisplay.textContent = timeLeft;
+        timerEl.textContent = `남은 시간: ${timeLeft}`;
         if (timeLeft <= 0) {
           endGame();
         }
       }, 1000);
     }
 
-    spawnNamul();
+    spawnInterval = setInterval(spawnNamul, 1000);
   }
 
   function spawnNamul() {
-    const gameArea = document.getElementById("game-area");
-    const areaWidth = gameArea.offsetWidth - 80;
-    const areaHeight = gameArea.offsetHeight - 80;
+    field.innerHTML = "";
 
-    const x = Math.random() * areaWidth;
-    const y = Math.random() * areaHeight;
+    const count = Math.floor(Math.random() * 2) + 5; // 5~6개
+    for (let i = 0; i < count; i++) {
+      const namul = document.createElement("img");
+      namul.src = "../../assets/namul.png";
+      namul.classList.add("namul");
 
-    namul.style.left = `${x}px`;
-    namul.style.top = `${y}px`;
-    namul.classList.remove("hidden");
+      const x = Math.random() * (field.clientWidth - 50);
+      const y = Math.random() * (field.clientHeight - 50);
+      namul.style.left = `${x}px`;
+      namul.style.top = `${y}px`;
 
-    // 일정 시간 후 사라졌다가 다시 등장
-    namulTimeout = setTimeout(() => {
-      namul.classList.add("hidden");
-      if ((timeLeft > 0 || infiniteMode) && !gameOver) {
-        setTimeout(spawnNamul, 500 + Math.random() * 1000); // 랜덤 간격
-      }
-    }, 800);
+      namul.addEventListener("click", () => {
+        score++;
+        scoreEl.textContent = `점수: ${score}`;
+        namul.remove();
+      });
+
+      field.appendChild(namul);
+    }
   }
 
   function endGame() {
     clearInterval(gameInterval);
-    clearTimeout(namulTimeout);
-    namul.classList.add("hidden");
-    restartBtn.classList.remove("hidden");
+    clearInterval(spawnInterval);
+    field.innerHTML = "";
+    gameOverEl.classList.remove("hidden");
+    finalScoreEl.textContent = `${username} 님의 점수: ${score}`;
   }
-
-  let gameOver = false;
-
-  namul.addEventListener("click", () => {
-    score++;
-    scoreDisplay.textContent = score;
-    namul.classList.add("hidden");
-  });
-
-  buttons.forEach((btn) => {
-    btn.addEventListener("click", () => {
-      clearInterval(gameInterval);
-      clearTimeout(namulTimeout);
-      gameOver = false;
-      startGame(btn.dataset.time);
-    });
-  });
-
-  restartBtn.addEventListener("click", () => {
-    location.reload();
-  });
 });
