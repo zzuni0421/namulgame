@@ -1,76 +1,60 @@
 body {
-  margin: 0;
-  font-family: 'Arial', sans-serif;
-  background: #f0fff0;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+  font-family: 'Nanum Gothic', sans-serif;
+  background: #f8f4f0;
+  color: #333;
+  margin:0; padding:0;
 }
+.container { max-width: 500px; margin: 30px auto; text-align:center; }
 
-#game-container {
-  width: 90%;
-  max-width: 500px;
-  text-align: center;
-}
-
-h1 {
-  font-size: 2rem;
-  margin-bottom: 10px;
-}
-
-#mode-buttons {
-  margin: 15px 0;
-}
-
-.mode-btn {
-  padding: 10px 15px;
-  margin: 5px;
-  border: none;
+.event-banner {
+  background: #ffe4b5;
+  color: #333;
+  padding: 10px;
   border-radius: 10px;
-  background: #6ab04c;
-  color: white;
-  cursor: pointer;
-  font-size: 1rem;
-  transition: transform 0.1s;
-}
-.mode-btn:hover {
-  transform: scale(1.05);
-}
-.mode-btn.hard {
-  background: #e74c3c;
+  margin-bottom: 20px;
+  cursor:pointer;
 }
 
-#hud {
-  margin: 10px 0;
-  font-size: 1.2rem;
-  font-weight: bold;
+.event-banner:hover { background:#ffd899; }
+
+.form-box {
+  background:#fff8f0;
+  padding:15px;
+  border-radius:10px;
+  box-shadow:0 4px 12px rgba(0,0,0,0.1);
+  margin-bottom:15px;
 }
 
-#field {
-  width: 100%;
-  height: 400px;
-  background: #dff9fb;
-  border: 2px solid #6ab04c;
-  border-radius: 15px;
-  position: relative;
-  overflow: hidden;
+.form-box input {
+  display:block;
+  width:80%;
+  margin:10px auto;
+  padding:8px;
+  border-radius:8px;
+  border:1px solid #ddd;
+  font-size:14px;
 }
 
-.namul {
-  width: 50px;
-  height: 50px;
-  position: absolute;
-  cursor: pointer;
-  transition: transform 0.2s;
-}
-.namul:hover {
-  transform: scale(1.2);
+.btn {
+  padding:8px 16px;
+  margin:5px;
+  border:none;
+  border-radius:8px;
+  background:#a3d9a5;
+  color:#fff;
+  cursor:pointer;
+  transition:0.2s;
 }
 
-#game-over {
-  margin-top: 20px;
-}
-.hidden {
-  display: none;
-}
+.btn:hover { background:#8bc98b; }
+
+.user-info { font-weight:bold; margin:10px 0; }
+.genre-buttons { margin:20px 0; }
+.genre-btn { background:#f5b76e; color:#fff; }
+.genre-btn:hover { background:#e89c4d; }
+.secret-btn { background:#f06292; color:#fff; }
+.secret-btn:hover { background:#e34b7a; }
+
+.modal { display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); justify-content:center; align-items:center; }
+.modal-content { background:#fff; padding:20px; border-radius:12px; text-align:center; position:relative; }
+.close { position:absolute; top:10px; right:15px; cursor:pointer; font-size:20px; font-weight:bold; }
