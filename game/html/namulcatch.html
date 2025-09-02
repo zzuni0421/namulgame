@@ -2,35 +2,39 @@
 <html lang="ko">
 <head>
   <meta charset="UTF-8">
-  <title>나물 줍기 게임</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>나물 게임</title>
   <link rel="stylesheet" href="../../assets/style/style.css">
 </head>
 <body>
-  <div class="container">
+  <div id="game-container">
     <h1>나물 줍기 게임</h1>
-    <p id="player-name"></p>
-    
-    <div class="button-group">
+    <div id="user-info">
+      <span id="username">(게스트)</span>
+    </div>
+
+    <div id="mode-buttons">
       <button class="mode-btn" data-time="10">10초</button>
       <button class="mode-btn" data-time="20">20초</button>
       <button class="mode-btn" data-time="30">30초</button>
       <button class="mode-btn" data-time="60">1분</button>
-      <button class="mode-btn" data-time="infinite">무한 모드</button>
-      <button class="mode-btn hard">하드 모드</button>
+      <button class="mode-btn" data-time="infinite">무한</button>
+      <button class="mode-btn hard" data-time="hard">하드모드</button>
     </div>
 
-    <div id="game-area">
-      <img src="../../assets/namul.png" alt="나물" class="namul hidden" id="namul">
+    <div id="hud">
+      <span id="timer">남은 시간: -</span>
+      <span id="score">점수: 0</span>
     </div>
 
-    <div class="info">
-      <p>⏱ 남은 시간: <span id="time">0</span></p>
-      <p>🌿 점수: <span id="score">0</span></p>
-    </div>
+    <div id="field"></div>
 
-    <button id="restart-btn" class="hidden">다시하기</button>
+    <div id="game-over" class="hidden">
+      <h2>게임 종료!</h2>
+      <p id="final-score"></p>
+      <button id="restart-btn">다시하기</button>
+    </div>
   </div>
-
   <script src="../js/game.js"></script>
 </body>
 </html>
