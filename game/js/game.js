@@ -75,6 +75,7 @@ document.addEventListener("DOMContentLoaded", () => {
     if (!lobbyBtn) {
       lobbyBtn = document.createElement("button");
       lobbyBtn.textContent = "로비로 돌아가기";
+      lobbyBtn.classList.add("game-over-button", "lobby-btn"); 
       lobbyBtn.addEventListener("click", () => {
         window.location.href = "../../index.html";
       });
