@@ -11,21 +11,14 @@
 <div class="container">
 
   <div class="event-banner">
-    🌱 이 게임에서 이벤트 진행 중! <a href="secret.html type="_blank">참여하러 가기 🌱</a>
+    🌱 이 게임에서 이벤트 진행 중! 참여하러 가기 🌱
   </div>
 
-  <div id="loginForm" class="form-box">
-    <input type="text" id="loginUsername" placeholder="아이디">
-    <input type="password" id="loginPassword" placeholder="비밀번호">
-    <button id="btnLogin" class="btn">로그인</button>
+  <div class="auth-buttons">
+    <button id="btnOpenLogin" class="btn">로그인</button>
+    <button id="btnOpenRegister" class="btn">회원가입</button>
   </div>
 
-  <div id="registerForm" class="form-box">
-    <input type="text" id="registerUsername" placeholder="아이디">
-    <input type="password" id="registerPassword" placeholder="비밀번호">
-    <button id="btnRegister" class="btn">회원가입</button>
-  </div>
-  
   <div id="userInfo" class="user-info"></div>
   <button id="btnLogout" class="btn">로그아웃</button>
   <button id="btnSecret" class="btn secret-btn">하드모드</button>
@@ -35,14 +28,32 @@
     <button id="btnTest" class="btn genre-btn">Test</button>
     <button id="btnGame" class="btn genre-btn">Game</button>
   </div>
-
-  <div id="gameModal" class="modal">
-    <div class="modal-content">
-      <span id="btnCloseGameModal" class="close">&times;</span>
-      <div id="gameList" class="game-list"></div>
-    </div>
+</div>
+<div id="loginModal" class="modal">
+  <div class="modal-content">
+    <span class="close" id="closeLogin">&times;</span>
+    <h2>로그인</h2>
+    <input type="text" id="loginUsername" placeholder="아이디">
+    <input type="password" id="loginPassword" placeholder="비밀번호">
+    <button id="btnLogin" class="btn">로그인</button>
   </div>
+</div>
 
+<div id="registerModal" class="modal">
+  <div class="modal-content">
+    <span class="close" id="closeRegister">&times;</span>
+    <h2>회원가입</h2>
+    <input type="text" id="registerUsername" placeholder="아이디">
+    <input type="password" id="registerPassword" placeholder="비밀번호">
+    <button id="btnRegister" class="btn">회원가입</button>
+  </div>
+</div>
+
+<div id="gameModal" class="modal">
+  <div class="modal-content">
+    <span class="close" id="btnCloseGameModal">&times;</span>
+    <div id="gameList" class="game-list"></div>
+  </div>
 </div>
 
 <script src="game/js/lobby.js"></script>
