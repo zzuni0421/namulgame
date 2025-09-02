@@ -1,70 +1,50 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>나물게임 로비</title>
-  <link rel="stylesheet" href="assets/style/lobbystyle.css">
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>나물게임 로비</title>
+<link rel="stylesheet" href="asset/style/lobbystyle.css">
 </head>
 <body>
-  <!-- 상단 바 -->
-  <div class="top-bar">
-    <div class="top-left">
-      <span id="loginStatus">비로그인 상태</span>
-    </div>
-    <div class="top-right">
-      <button id="btnOpenLogin" class="btn sm">로그인</button>
-      <button id="btnLogout" class="btn sm" style="display:none;">로그아웃</button>
-      <button id="btnSecret" class="btn sm" style="display:none;" onclick="location.href='secret.html'">시크릿 코드</button>
-    </div>
+
+<div class="container">
+
+  <div class="event-banner">
+    🌱 이 게임에서 이벤트 진행 중! <a href="secret.html type="_blank">참여하러 가기 🌱</a>
   </div>
 
-  <!-- 메인 로비 -->
-  <div class="lobby-container">
-    <h1>🌱 나물게임</h1>
-    <p class="sub">장르를 골라서 게임을 시작하세요!</p>
-    <div class="genre-buttons">
-      <button class="btn big" onclick="openModal('simulation')">🧪 시뮬레이션</button>
-      <button class="btn big" onclick="openModal('test')">🧠 테스트</button>
-      <button class="btn big" onclick="openModal('game')">🎮 게임</button>
-    </div>
+  <div id="loginForm" class="form-box">
+    <input type="text" id="loginUsername" placeholder="아이디">
+    <input type="password" id="loginPassword" placeholder="비밀번호">
+    <button id="btnLogin" class="btn">로그인</button>
   </div>
 
-  <!-- 장르별 게임 목록 모달 -->
-  <div class="modal" id="genreModal" aria-hidden="true" inert>
+  <div id="registerForm" class="form-box">
+    <input type="text" id="registerUsername" placeholder="아이디">
+    <input type="password" id="registerPassword" placeholder="비밀번호">
+    <button id="btnRegister" class="btn">회원가입</button>
+  </div>
+  
+  <div id="userInfo" class="user-info"></div>
+  <button id="btnLogout" class="btn">로그아웃</button>
+  <button id="btnSecret" class="btn secret-btn">하드모드</button>
+
+  <div class="genre-buttons">
+    <button id="btnSimulation" class="btn genre-btn">Simulation</button>
+    <button id="btnTest" class="btn genre-btn">Test</button>
+    <button id="btnGame" class="btn genre-btn">Game</button>
+  </div>
+
+  <div id="gameModal" class="modal">
     <div class="modal-content">
-      <h2>게임 목록</h2>
+      <span id="btnCloseGameModal" class="close">&times;</span>
       <div id="gameList" class="game-list"></div>
-      <button id="btnCloseGenre" class="btn outline">닫기</button>
     </div>
   </div>
 
-  <!-- 로그인 모달 -->
-  <div class="modal" id="authModal" aria-hidden="true" inert>
-    <div class="modal-content narrow">
-      <h2>로그인</h2>
-      <input type="text" id="loginUsername" placeholder="닉네임">
-      <input type="password" id="loginPassword" placeholder="비밀번호">
-      <button id="btnLogin" class="btn primary">로그인</button>
-      <p class="muted">아직 회원이 아니신가요? <a href="#" id="linkRegister">회원가입</a></p>
-      <button id="btnCloseAuth" class="btn outline">닫기</button>
-    </div>
-  </div>
+</div>
 
-  <!-- 회원가입 모달 -->
-  <div class="modal" id="registerModal" aria-hidden="true" inert>
-    <div class="modal-content narrow">
-      <h2>회원가입</h2>
-      <input type="text" id="registerUsername" placeholder="닉네임">
-      <input type="password" id="registerPassword" placeholder="비밀번호">
-      <label class="agree">
-        <input type="checkbox" id="agreeLicense"> 라이선스 동의
-      </label>
-      <button id="btnRegister" class="btn primary">회원가입</button>
-      <button id="btnCloseRegister" class="btn outline">닫기</button>
-    </div>
-  </div>
-
-  <script src="game/js/lobby.js"></script>
+<script src="game/js/lobby.js"></script>
 </body>
 </html>
