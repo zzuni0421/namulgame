@@ -1,150 +1,87 @@
 document.addEventListener("DOMContentLoaded", () => {
-  const canvas = document.getElementById("gameCanvas");
-  const ctx = canvas.getContext("2d");
+  // ------------------ DOM 요소 ------------------
+  const nicknameInput = document.getElementById("nicknameInput");
+  const startButton = document.getElementById("startButton");
+  const replayButton = document.getElementById("replayButton");
+  const gameArea = document.getElementById("gameArea");
+  const scoreDisplay = document.getElementById("score");
+  const timerDisplay = document.getElementById("timer");
+  const message = document.getElementById("message");
 
-  // 캔버스 크기 설정
-  canvas.width = 800;
-  canvas.height = 400;
+  // ------------------ 게임 변수 ------------------
+  let score = 0;
+  let timeLeft = 30; // 기본 30초
+  let gameInterval, timerInterval;
+  let nickname = "";
 
-  // 플레이어 설정
-  const player = {
-    x: 50,
-    y: 0,
-    width: 40,
-    height: 40,
-    dy: 0,
-    gravity: 0.7,
-    jumpPower: -12,
-    grounded: false,
+  // ------------------ 게임 시작 ------------------
+  startButton.onclick = () => {
+    nickname = nicknameInput.value.trim();
+    if (!nickname) {
+      alert("닉네임을 입력하세요!");
+      return;
+    }
+
+    score = 0;
+    timeLeft = 30;
+    scoreDisplay.textContent = score;
+    timerDisplay.textContent = timeLeft;
+    message.textContent = "";
+
+    gameArea.innerHTML = ""; // 초기화
+    spawnNamul();
+
+    gameInterval = setInterval(spawnNamul, 1000);
+    timerInterval = setInterval(updateTimer, 1000);
+
+    startButton.style.display = "none";
+    replayButton.style.display = "none";
   };
 
-  // 바닥
-  const floor = canvas.height - player.height;
+  // ------------------ 나물 생성 ------------------
+  function spawnNamul() {
+    const namul = document.createElement("div");
+    namul.className = "namul";
+    namul.style.left = Math.random() * (gameArea.offsetWidth - 40) + "px";
+    namul.style.top = Math.random() * (gameArea.offsetHeight - 40) + "px";
 
-  // 장애물
-  let obstacles = [];
-  let obstacleTimer = 0;
-
-  // 점수 & 게임 상태
-  let score = 0;
-  let gameOver = false;
-  let gameStarted = false;
-
-  // 점프
-  function jump() {
-    if (player.grounded) {
-      player.dy = player.jumpPower;
-      player.grounded = false;
-    }
-  }
-
-  // 입력 처리 (모바일/PC 둘 다 지원)
-  document.addEventListener("keydown", (e) => {
-    if (e.code === "Space" || e.code === "ArrowUp") jump();
-  });
-  document.addEventListener("click", () => jump());
-
-  // 장애물 생성
-  function spawnObstacle() {
-    const height = 40;
-    obstacles.push({
-      x: canvas.width,
-      y: floor,
-      width: 40,
-      height: height,
-    });
-  }
-
-  // 충돌 체크
-  function checkCollision(a, b) {
-    return (
-      a.x < b.x + b.width &&
-      a.x + a.width > b.x &&
-      a.y < b.y + b.height &&
-      a.y + a.height > b.y
-    );
-  }
-
-  // 게임 루프
-  function update() {
-    if (gameOver || !gameStarted) return;
-
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-    // 플레이어 업데이트
-    player.y += player.dy;
-    player.dy += player.gravity;
-
-    if (player.y >= floor) {
-      player.y = floor;
-      player.dy = 0;
-      player.grounded = true;
-    }
-
-    // 장애물 업데이트
-    obstacleTimer++;
-    if (obstacleTimer % 120 === 0) spawnObstacle();
-
-    obstacles.forEach((obs, i) => {
-      obs.x -= 6;
-
-      if (obs.x + obs.width < 0) {
-        obstacles.splice(i, 1);
-        score++;
-      }
-
-      if (checkCollision(player, obs)) {
-        gameOver = true;
-      }
-
-      // 장애물 그리기
-      ctx.fillStyle = "green";
-      ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
-    });
-
-    // 플레이어 그리기
-    ctx.fillStyle = "blue";
-    ctx.fillRect(player.x, player.y, player.width, player.height);
-
-    // 점수
-    ctx.fillStyle = "black";
-    ctx.font = "20px Arial";
-    ctx.fillText("Score: " + score, 20, 30);
-
-    if (gameOver) {
-      ctx.fillStyle = "red";
-      ctx.font = "40px Arial";
-      ctx.fillText("Game Over", canvas.width / 2 - 100, canvas.height / 2);
-    } else {
-      requestAnimationFrame(update);
-    }
-  }
-
-  // 시작 버튼 이벤트
-  const startBtn = document.getElementById("startBtn");
-  const replayBtn = document.getElementById("replayBtn");
-
-  if (startBtn) {
-    startBtn.onclick = () => {
-      if (!gameStarted) {
-        gameStarted = true;
-        gameOver = false;
-        obstacles = [];
-        score = 0;
-        update();
-      }
+    namul.onclick = () => {
+      score++;
+      scoreDisplay.textContent = score;
+      namul.remove();
     };
+
+    gameArea.appendChild(namul);
+
+    // 3초 후 사라짐
+    setTimeout(() => {
+      if (gameArea.contains(namul)) namul.remove();
+    }, 3000);
   }
 
-  if (replayBtn) {
-    replayBtn.onclick = () => {
-      gameOver = false;
-      gameStarted = true;
-      obstacles = [];
-      score = 0;
-      player.y = floor;
-      player.dy = 0;
-      update();
-    };
+  // ------------------ 타이머 ------------------
+  function updateTimer() {
+    timeLeft--;
+    timerDisplay.textContent = timeLeft;
+
+    if (timeLeft <= 0) {
+      endGame();
+    }
   }
+
+  // ------------------ 게임 종료 ------------------
+  function endGame() {
+    clearInterval(gameInterval);
+    clearInterval(timerInterval);
+
+    message.textContent = `${nickname}님의 점수: ${score}`;
+    replayButton.style.display = "block";
+  }
+
+  // ------------------ 다시하기 ------------------
+  replayButton.onclick = () => {
+    startButton.style.display = "block";
+    replayButton.style.display = "none";
+    message.textContent = "";
+  };
 });
