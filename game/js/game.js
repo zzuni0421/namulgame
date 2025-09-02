@@ -1,85 +1,150 @@
-// lobby.js
-const API_URL = "/api/namul";
+document.addEventListener("DOMContentLoaded", () => {
+  const canvas = document.getElementById("gameCanvas");
+  const ctx = canvas.getContext("2d");
 
-const loginForm = document.getElementById("loginForm");
-const loginUsername = document.getElementById("loginUsername");
-const loginPassword = document.getElementById("loginPassword");
-const loginBtn = document.getElementById("btnLogin");
+  // 캔버스 크기 설정
+  canvas.width = 800;
+  canvas.height = 400;
 
-const registerForm = document.getElementById("registerForm");
-const registerUsername = document.getElementById("registerUsername");
-const registerPassword = document.getElementById("registerPassword");
-const registerBtn = document.getElementById("btnRegister");
+  // 플레이어 설정
+  const player = {
+    x: 50,
+    y: 0,
+    width: 40,
+    height: 40,
+    dy: 0,
+    gravity: 0.7,
+    jumpPower: -12,
+    grounded: false,
+  };
 
-const userInfo = document.getElementById("userInfo");
-const logoutBtn = document.getElementById("btnLogout");
-const btnSecret = document.getElementById("btnSecret");
+  // 바닥
+  const floor = canvas.height - player.height;
 
-const gameModal = document.getElementById("gameModal");
-const gameList = document.getElementById("gameList");
-const btnCloseGameModal = document.getElementById("btnCloseGameModal");
+  // 장애물
+  let obstacles = [];
+  let obstacleTimer = 0;
 
-function saveUser(username){ localStorage.setItem("namulUser", username); }
-function getUser(){ return localStorage.getItem("namulUser") || null; }
-function clearUser(){ localStorage.removeItem("namulUser"); }
+  // 점수 & 게임 상태
+  let score = 0;
+  let gameOver = false;
+  let gameStarted = false;
 
-function updateUI(){
-  const user = getUser();
-  if(user){
-    loginForm.style.display="none";
-    registerForm.style.display="none";
-    userInfo.textContent=`어서와요, ${user}님 🌱`;
-    userInfo.style.display="block";
-    logoutBtn.style.display="inline-block";
-    btnSecret.style.display=localStorage.getItem("hardmode")?"inline-block":"none";
-  }else{
-    loginForm.style.display="block";
-    registerForm.style.display="block";
-    userInfo.style.display="none";
-    logoutBtn.style.display="none";
-    btnSecret.style.display="none";
+  // 점프
+  function jump() {
+    if (player.grounded) {
+      player.dy = player.jumpPower;
+      player.grounded = false;
+    }
   }
-}
 
-async function apiPost(action,payload){
-  try{
-    const res=await fetch(API_URL,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({action,...payload})});
-    return await res.json();
-  }catch(e){ console.error(action,e); return {success:false,msg:"서버 요청 실패"}; }
-}
+  // 입력 처리 (모바일/PC 둘 다 지원)
+  document.addEventListener("keydown", (e) => {
+    if (e.code === "Space" || e.code === "ArrowUp") jump();
+  });
+  document.addEventListener("click", () => jump());
 
-async function login(username,password){
-  const data = await apiPost("login",{username,password});
-  if(data.success){ saveUser(data.username||username); updateUI(); }
-  else alert(data.msg);
-}
+  // 장애물 생성
+  function spawnObstacle() {
+    const height = 40;
+    obstacles.push({
+      x: canvas.width,
+      y: floor,
+      width: 40,
+      height: height,
+    });
+  }
 
-loginBtn.onclick=()=>{ const u=loginUsername.value.trim(); const p=loginPassword.value.trim(); if(u&&p) login(u,p); }
+  // 충돌 체크
+  function checkCollision(a, b) {
+    return (
+      a.x < b.x + b.width &&
+      a.x + a.width > b.x &&
+      a.y < b.y + b.height &&
+      a.y + a.height > b.y
+    );
+  }
 
-async function register(username,password){
-  const data = await apiPost("register",{username,password});
-  if(data.success) alert("회원가입 성공! 로그인하세요."); else alert(data.msg);
-}
-registerBtn.onclick=()=>{ const u=registerUsername.value.trim(); const p=registerPassword.value.trim(); if(u&&p) register(u,p); }
+  // 게임 루프
+  function update() {
+    if (gameOver || !gameStarted) return;
 
-document.addEventListener("DOMContentLoaded",()=>{ updateUI(); });
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-logoutBtn.onclick=()=>{ clearUser(); updateUI(); }
+    // 플레이어 업데이트
+    player.y += player.dy;
+    player.dy += player.gravity;
 
-btnSecret.onclick=()=>{ if(!getUser()){ alert("로그인 후 이용 가능합니다."); return; } window.location.href="../../secret.html"; }
+    if (player.y >= floor) {
+      player.y = floor;
+      player.dy = 0;
+      player.grounded = true;
+    }
 
-function openGameModal(genre){
-  let html="";
-  if(genre==="simulation") html=`<button onclick="location.href='/game/html/grownamul.html'">나물 키우기 방치형</button><button onclick="location.href='/game/html/interview.html'">인터뷰 시뮬레이션</button>`;
-  else if(genre==="test") html=`<button onclick="location.href='/game/html/likecelab.html'">내가 연예인이라면?</button><button onclick="location.href='/game/html/namultest.html'">나물 유형 테스트</button>`;
-  else if(genre==="game") html=`<button onclick="location.href='/game/html/namulcatch.html'">나물 줍기</button><button onclick="location.href='/game/html/jumpgame.html'">점프 게임</button>`;
-  gameList.innerHTML=html;
-  gameModal.style.display="flex";
-}
+    // 장애물 업데이트
+    obstacleTimer++;
+    if (obstacleTimer % 120 === 0) spawnObstacle();
 
-document.getElementById("btnSimulation").onclick=()=>openGameModal("simulation");
-document.getElementById("btnTest").onclick=()=>openGameModal("test");
-document.getElementById("btnGame").onclick=()=>openGameModal("game");
-btnCloseGameModal.onclick=()=>gameModal.style.display="none";
+    obstacles.forEach((obs, i) => {
+      obs.x -= 6;
 
-document.querySelector(".event-banner").onclick=()=>{ window.location.href="../../event"; }
+      if (obs.x + obs.width < 0) {
+        obstacles.splice(i, 1);
+        score++;
+      }
+
+      if (checkCollision(player, obs)) {
+        gameOver = true;
+      }
+
+      // 장애물 그리기
+      ctx.fillStyle = "green";
+      ctx.fillRect(obs.x, obs.y, obs.width, obs.height);
+    });
+
+    // 플레이어 그리기
+    ctx.fillStyle = "blue";
+    ctx.fillRect(player.x, player.y, player.width, player.height);
+
+    // 점수
+    ctx.fillStyle = "black";
+    ctx.font = "20px Arial";
+    ctx.fillText("Score: " + score, 20, 30);
+
+    if (gameOver) {
+      ctx.fillStyle = "red";
+      ctx.font = "40px Arial";
+      ctx.fillText("Game Over", canvas.width / 2 - 100, canvas.height / 2);
+    } else {
+      requestAnimationFrame(update);
+    }
+  }
+
+  // 시작 버튼 이벤트
+  const startBtn = document.getElementById("startBtn");
+  const replayBtn = document.getElementById("replayBtn");
+
+  if (startBtn) {
+    startBtn.onclick = () => {
+      if (!gameStarted) {
+        gameStarted = true;
+        gameOver = false;
+        obstacles = [];
+        score = 0;
+        update();
+      }
+    };
+  }
+
+  if (replayBtn) {
+    replayBtn.onclick = () => {
+      gameOver = false;
+      gameStarted = true;
+      obstacles = [];
+      score = 0;
+      player.y = floor;
+      player.dy = 0;
+      update();
+    };
+  }
+});
