@@ -1,98 +1,100 @@
 body {
-  margin: 0;
-  font-family: "Pretendard", sans-serif;
-  background: #f5f8f6;
+  font-family: 'Nanum Gothic', sans-serif;
+  background: #f8f4f0;
   color: #333;
+  margin:0; padding:0;
 }
 
-.top-bar {
-  display: flex;
-  justify-content: space-between;
-  padding: 10px 20px;
-  background: #4caf50;
-  color: white;
-}
-
-.top-bar .btn {
-  margin-left: 8px;
-}
-
-.lobby-container {
+.container {
+  max-width: 500px;
+  margin: 30px auto;
   text-align: center;
-  margin-top: 60px;
 }
 
-.lobby-container h1 {
-  font-size: 2.5rem;
-  margin-bottom: 0.5rem;
+/* 이벤트 배너 */
+.event-banner {
+  background: #ffe4b5;
+  color: #333;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  cursor: pointer;
 }
 
-.lobby-container .sub {
-  font-size: 1.2rem;
-  margin-bottom: 2rem;
-  color: #555;
-}
+.event-banner:hover { background:#ffd899; }
 
-.genre-buttons {
-  display: flex;
-  justify-content: center;
-  gap: 20px;
-}
-
+/* 버튼 */
 .btn {
-  padding: 10px 20px;
+  padding: 8px 16px;
+  margin: 5px;
   border: none;
-  background: #4caf50;
-  color: white;
   border-radius: 8px;
+  background: #a3d9a5;
+  color: #fff;
   cursor: pointer;
   transition: 0.2s;
-  font-size: 1rem;
-}
-.btn:hover {
-  background: #45a049;
-}
-.btn.sm {
-  padding: 5px 10px;
-  font-size: 0.9rem;
-}
-.btn.big {
-  font-size: 1.2rem;
-  padding: 15px 25px;
-}
-.btn.outline {
-  background: none;
-  color: #4caf50;
-  border: 2px solid #4caf50;
-}
-.btn.primary {
-  background: #4caf50;
-  color: white;
 }
 
+.btn:hover { background: #8bc98b; }
+
+/* 장르 버튼 */
+.genre-buttons { margin: 20px 0; }
+.genre-btn { background: #f5b76e; color: #fff; }
+.genre-btn:hover { background: #e89c4d; }
+
+/* 하드모드 버튼 */
+.secret-btn { background: #f06292; color: #fff; }
+.secret-btn:hover { background: #e34b7a; }
+
+/* 유저 정보 */
+.user-info { font-weight: bold; margin: 10px 0; }
+
+/* 모달 */
 .modal {
   display: none;
   position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.6);
+  top:0; left:0;
+  width:100%; height:100%;
+  background: rgba(0,0,0,0.4);
+  justify-content: center;
+  align-items: center;
 }
+
 .modal-content {
-  background: white;
+  background: #fff8f0;
   padding: 20px;
   border-radius: 12px;
-  width: 300px;
-  max-width: 90%;
+  text-align: center;
+  position: relative;
+  max-width: 300px;
+  margin: auto;
 }
-.modal-content.narrow {
-  width: 250px;
+
+.modal .close {
+  position: absolute;
+  top:10px;
+  right:15px;
+  font-size: 20px;
+  font-weight: bold;
+  cursor: pointer;
 }
+
+/* 게임 리스트 */
 .game-list {
   display: flex;
   flex-direction: column;
   gap: 10px;
-  margin-bottom: 15px;
+  align-items: center;
 }
-.muted {
-  font-size: 0.8rem;
-  color: #777;
+
+.game-list button {
+  width: 200px;
+  padding: 10px;
+  border-radius: 10px;
+  background: #a3d9a5;
+  color: #fff;
+  border: none;
+  cursor: pointer;
 }
+
+.game-list button:hover { background: #8bc98b; }
