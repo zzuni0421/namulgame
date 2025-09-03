@@ -15,7 +15,7 @@ document.addEventListener("DOMContentLoaded", () => {
   let timerInterval;
   let spawnInterval;
   let isHard = false;
-  const API_URL = "https://YOUR_GAS_DEPLOY_URL/api/namul";
+  const API_URL = "/api/namul";
 
   // ------------------ 토큰 로그인 ------------------
   const token = localStorage.getItem("token");
