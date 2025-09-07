@@ -99,10 +99,7 @@ footer{display:flex;justify-content:space-between;align-items:center;padding:6px
   let lastFrame = 0;
 
   const player = {
-    x: 80,
-    y: 0,
-    w: 44,
-    h: 44,
+    x: 80, y: 0, w: 44, h: 44,
     vy: 0,
     gravity: 1800,
     jumpVel: -720,
@@ -120,7 +117,8 @@ footer{display:flex;justify-content:space-between;align-items:center;padding:6px
 
   const obstacles = [];
   let obstacleTimer = 0;
-  let obstacleInterval = 1200;
+  let obstacleInterval = 900;
+  const OBSTACLE_SPEED = 300;
 
   const items = [];
   let itemTimer = 0;
@@ -129,27 +127,14 @@ footer{display:flex;justify-content:space-between;align-items:center;padding:6px
   const monsters = [];
 
   function spawnMonster(hp){
-    const m = {
-      x: canvas.width + 80,
-      y: canvas.height - 120,
-      w: 80,
-      h: 80,
-      hp: hp,
-      maxHp: hp,
-      vx: -80
-    };
+    const m = { x: canvas.width + 80, y: canvas.height - 120, w: 80, h: 80, hp, maxHp: hp, vx: -80 };
     monsters.push(m);
     hpChip.style.display = '';
     hpChip.textContent = `몬스터HP: ${m.hp}`;
   }
 
   function spawnItem(){
-    const it = {
-      x: canvas.width + Math.random()*200,
-      y: canvas.height - 200 - Math.random()*120,
-      r: 12,
-      vx: -220
-    };
+    const it = { x: canvas.width + Math.random()*200, y: canvas.height - 200 - Math.random()*120, r: 12, vx: -220 };
     items.push(it);
   }
 
@@ -160,15 +145,12 @@ footer{display:flex;justify-content:space-between;align-items:center;padding:6px
       y: canvas.height - height - floor.yOffset,
       w: 18 + Math.random()*26,
       h: height,
-      vx: - (220 + Math.random()*140)
+      vx: -OBSTACLE_SPEED
     };
     obstacles.push(ob);
   }
 
-  function computeThresholds(){
-    return [100,200,300,500,600,700,800,1000];
-  }
-
+  function computeThresholds(){ return [100,200,300,500,600,700,800,1000]; }
   let thresholds = computeThresholds();
   let nextThresholdIndex = 0;
 
@@ -178,13 +160,9 @@ footer{display:flex;justify-content:space-between;align-items:center;padding:6px
 
     if(nextThresholdIndex < thresholds.length && elapsed >= thresholds[nextThresholdIndex] && monsters.length === 0){
       const off = thresholds[nextThresholdIndex];
-      if(off === 100 || off === 200 || off === 300){
-        spawnMonster(100);
-      } else if(off >=500 && off < 1000){
-        spawnMonster(500);
-      } else if(off === 1000){
-        spawnMonster(1000);
-      }
+      if(off === 100 || off === 200 || off === 300) spawnMonster(100);
+      else if(off >=500 && off < 1000) spawnMonster(500);
+      else if(off === 1000) spawnMonster(1000);
       nextThresholdIndex++;
     }
 
@@ -194,78 +172,43 @@ footer{display:flex;justify-content:space-between;align-items:center;padding:6px
     }
   }
 
-  function rectColl(a,b){
-    return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y;
-  }
-
-  function circleRectColl(c, r){
-    const cx = c.x;
-    const cy = c.y;
-    const rx = r.x;
-    const ry = r.y;
-    const rw = r.w;
-    const rh = r.h;
+  function rectColl(a,b){ return a.x < b.x + b.w && a.x + a.w > b.x && a.y < b.y + b.h && a.y + a.h > b.y; }
+  function circleRectColl(c,r){
+    const cx=c.x, cy=c.y, rx=r.x, ry=r.y, rw=r.w, rh=r.h;
     const closestX = Math.max(rx, Math.min(cx, rx+rw));
     const closestY = Math.max(ry, Math.min(cy, ry+rh));
-    const dx = cx - closestX;
-    const dy = cy - closestY;
-    return (dx*dx + dy*dy) < (c.r * c.r);
+    const dx=cx-closestX, dy=cy-closestY;
+    return dx*dx + dy*dy < c.r*c.r;
   }
 
-  function doJump(){
-    if(!running) return;
-    if(player.grounded){
-      player.vy = player.jumpVel;
-      player.grounded = false;
-    }
-  }
+  function doJump(){ if(running && player.grounded){ player.vy = player.jumpVel; player.grounded=false; } }
   canvas.addEventListener('pointerdown', () => doJump());
-  window.addEventListener('keydown', (e)=>{
-    if(e.code === 'Space'){
-      e.preventDefault();
-      doJump();
-    }
-  });
+  window.addEventListener('keydown', (e)=>{ if(e.code==='Space'){ e.preventDefault(); doJump(); } });
 
   restartBtn.addEventListener('click', () => startGame());
-  lobbyBtn.addEventListener('click', () => {
-    if(confirm('로비로 돌아가시겠어요?')){
-      window.location.href = '/';
-    }
-  });
+  lobbyBtn.addEventListener('click', () => { if(confirm('로비로 돌아가시겠어요?')) window.location.href='/'; });
 
   function startGame(){
     resizeCanvas();
-    obstacles.length = 0; items.length = 0; monsters.length = 0;
-    score = 0; scoreChip.textContent = `점수: ${score}`;
-    lastResetTime = performance.now();
-    startTime = lastResetTime;
-    nextThresholdIndex = 0;
-    thresholds = computeThresholds();
-    obstacleTimer = 0; itemTimer = 0;
-    obstacleInterval = 900;
-    running = true;
-    msg.style.display = 'none';
-    hpChip.style.display = 'none';
-    const oldEnding = document.querySelector('.ending-screen');
-    if(oldEnding) oldEnding.remove();
+    obstacles.length=0; items.length=0; monsters.length=0;
+    score=0; scoreChip.textContent=`점수: ${score}`;
+    lastResetTime=performance.now(); startTime=lastResetTime;
+    nextThresholdIndex=0; thresholds=computeThresholds();
+    obstacleTimer=0; itemTimer=0; obstacleInterval=900;
+    running=true; msg.style.display='none'; hpChip.style.display='none';
+    const oldEnding = document.querySelector('.ending-screen'); if(oldEnding) oldEnding.remove();
     resetPlayer();
-    lastFrame = performance.now();
+    lastFrame=performance.now();
     requestAnimationFrame(loop);
   }
 
-  function gameOver(){
-    running = false;
-    msg.style.display = '';
-    msg.textContent = '게임 오버! 다시하기를 눌러라.';
-  }
-
+  function gameOver(){ running=false; msg.style.display=''; msg.textContent='게임 오버! 다시하기를 눌러라.'; }
   function triggerEnding(){
-    running = false;
+    running=false;
     const endDiv = document.createElement("div");
-    endDiv.className = "ending-screen";
-    endDiv.innerHTML = `
-      <h2>🎉 축하합니다! 최종 보스를 쓰러뜨렸습니다! 🎉</h2>
+    endDiv.className="ending-screen";
+    endDiv.innerHTML=`
+      <h2>🎉 축하합니다! 최종 보스를 쓰러뜨리셨습니다! 로그인하고 플레이하셨다면 유튜브에 자신의 닉과 캡쳐를 #나물게임_점프게임_클리어 #나물게임 해시태그를 달고 업로드 해주세요!🎉</h2>
       <p>플레이 시간: ${elapsed}s<br/>점수: ${score}</p>
       <button class="primary" onclick="location.reload()">다시하기</button>
       <button onclick="location.href='/'">로비로 돌아가기</button>
@@ -275,127 +218,77 @@ footer{display:flex;justify-content:space-between;align-items:center;padding:6px
 
   function loop(t){
     if(!running) return;
-    const dt = Math.min(40, t - lastFrame) / 1000;
-    lastFrame = t;
+    const dt = Math.min(40,t-lastFrame)/1000; lastFrame=t;
 
-    player.vy += player.gravity * dt;
-    player.y += player.vy * dt;
+    player.vy += player.gravity*dt;
+    player.y += player.vy*dt;
     const groundY = canvas.height - player.h - floor.yOffset;
-    if(player.y >= groundY){
-      player.y = groundY;
-      player.vy = 0;
-      player.grounded = true;
-    }
+    if(player.y >= groundY){ player.y=groundY; player.vy=0; player.grounded=true; }
 
     obstacleTimer += dt*1000;
     if(obstacleTimer > obstacleInterval){
-      obstacleTimer = 0;
-      obstacleInterval = 700 + Math.random()*900 - Math.min(500, Math.floor((performance.now()-startTime)/10000)*30);
+      obstacleTimer=0;
+      obstacleInterval=1500 + Math.random()*1500;
       spawnObstacle();
     }
 
-    for(let i = obstacles.length-1; i>=0; i--){
-      const o = obstacles[i];
-      o.x += o.vx * dt;
-      if(o.x + o.w < -50) obstacles.splice(i,1);
-      if(rectColl(player,o)){
-        gameOver();
-        return;
-      }
+    for(let i=obstacles.length-1;i>=0;i--){
+      const o=obstacles[i];
+      o.x+=o.vx*dt;
+      if(o.x+o.w < -50) obstacles.splice(i,1);
+      if(rectColl(player,o)){ gameOver(); return; }
     }
 
     checkSpecials();
 
-    for(let i = monsters.length-1; i>=0; i--){
-      const m = monsters[i];
-      m.x += m.vx * dt;
-      if(m.x < canvas.width*0.6) m.vx = 0;
-
-      const monRect = {x:m.x,y:m.y,w:m.w,h:m.h};
-      if(rectColl(player, monRect)){
-        gameOver();
-        return;
-      }
-
-      hpChip.textContent = `몬스터HP: ${m.hp}`;
+    for(let i=monsters.length-1;i>=0;i--){
+      const m=monsters[i];
+      m.x += m.vx*dt;
+      if(m.x < canvas.width*0.6) m.vx=0;
+      if(rectColl(player, {x:m.x,y:m.y,w:m.w,h:m.h})){ gameOver(); return; }
+      hpChip.textContent=`몬스터HP: ${m.hp}`;
     }
 
-    if(monsters.length > 0){
+    if(monsters.length>0){ 
       itemTimer += dt*1000;
-      if(itemTimer > itemInterval){
-        itemTimer = 0;
-        spawnItem();
-      }
+      if(itemTimer>itemInterval){ itemTimer=0; spawnItem(); }
     }
 
-    for(let i = items.length-1; i>=0; i--){
-      const it = items[i];
-      it.x += it.vx * dt;
-      const circ = {x: it.x, y: it.y, r: it.r};
-      if(circleRectColl(circ, player)){
+    for(let i=items.length-1;i>=0;i--){
+      const it=items[i];
+      it.x+=it.vx*dt;
+      if(circleRectColl(it, player)){
         if(monsters.length>0){
-          monsters[0].hp -= 10;
-          score += 7;
-          scoreChip.textContent = `점수: ${score}`;
-          if(monsters[0].hp <= 0){
-            if(monsters[0].maxHp === 1000){
-              triggerEnding();
-              return;
-            }
-            monsters.splice(0,1);
-            hpChip.style.display = 'none';
-            lastResetTime = performance.now();
-            nextThresholdIndex = 0;
-            thresholds = computeThresholds();
+          monsters[0].hp-=10; score+=7; scoreChip.textContent=`점수: ${score}`;
+          if(monsters[0].hp<=0){
+            if(monsters[0].maxHp===1000){ triggerEnding(); return; }
+            monsters.splice(0,1); hpChip.style.display='none';
+            lastResetTime=performance.now(); nextThresholdIndex=0; thresholds=computeThresholds();
           }
         }
-        items.splice(i,1);
-        continue;
+        items.splice(i,1); continue;
       }
-      if(it.x + it.r < -50) items.splice(i,1);
+      if(it.x+it.r<-50) items.splice(i,1);
     }
 
-    score += Math.floor(dt * 2);
-    scoreChip.textContent = `점수: ${score}`;
-
+    score+=Math.floor(dt*2); scoreChip.textContent=`점수: ${score}`;
     render();
-
     requestAnimationFrame(loop);
   }
 
   function render(){
     ctx.clearRect(0,0,canvas.width,canvas.height);
-
-    ctx.fillStyle = '#e6f5ff';
-    ctx.fillRect(0, canvas.height-120, canvas.width, 120);
-
-    ctx.fillStyle = '#0f172a';
-    ctx.fillRect(Math.round(player.x), Math.round(player.y), player.w, player.h);
-
-    ctx.fillStyle = '#fff';
-    ctx.fillRect(player.x+8, player.y+12, 8,8);
-    ctx.fillRect(player.x+28, player.y+12, 8,8);
-
-    ctx.fillStyle = '#064e3b';
-    obstacles.forEach(o => {
-      ctx.fillRect(Math.round(o.x), Math.round(o.y), Math.round(o.w), Math.round(o.h));
-    });
-
-    ctx.fillStyle = '#f59e0b';
-    items.forEach(it => {
-      ctx.beginPath(); ctx.arc(it.x, it.y, it.r, 0, Math.PI*2); ctx.fill();
-    });
-
+    ctx.fillStyle='#e6f5ff'; ctx.fillRect(0, canvas.height-120, canvas.width, 120);
+    ctx.fillStyle='#0f172a'; ctx.fillRect(Math.round(player.x), Math.round(player.y), player.w, player.h);
+    ctx.fillStyle='#fff'; ctx.fillRect(player.x+8, player.y+12, 8,8); ctx.fillRect(player.x+28, player.y+12, 8,8);
+    ctx.fillStyle='#064e3b'; obstacles.forEach(o => ctx.fillRect(Math.round(o.x), Math.round(o.y), Math.round(o.w), Math.round(o.h)));
+    ctx.fillStyle='#f59e0b'; items.forEach(it => { ctx.beginPath(); ctx.arc(it.x,it.y,it.r,0,Math.PI*2); ctx.fill(); });
     monsters.forEach(m => {
-      ctx.fillStyle = '#ef4444';
-      ctx.fillRect(Math.round(m.x), Math.round(m.y), m.w, m.h);
-      ctx.fillStyle = '#111827';
-      const barW = 80; const barH = 8;
-      const bx = Math.round(m.x + (m.w - barW)/2);
-      const by = Math.round(m.y - 14);
+      ctx.fillStyle='#ef4444'; ctx.fillRect(Math.round(m.x), Math.round(m.y), m.w, m.h);
+      ctx.fillStyle='#111827';
+      const barW=80, barH=8, bx=Math.round(m.x+(m.w-barW)/2), by=Math.round(m.y-14);
       ctx.fillRect(bx, by, barW, barH);
-      ctx.fillStyle = '#10b981';
-      const pct = Math.max(0, m.hp) / m.maxHp;
+      ctx.fillStyle='#10b981'; const pct=Math.max(0,m.hp)/m.maxHp;
       ctx.fillRect(bx, by, Math.round(barW*pct), barH);
     });
   }
@@ -403,7 +296,6 @@ footer{display:flex;justify-content:space-between;align-items:center;padding:6px
   resizeCanvas();
   resetPlayer();
   startGame();
-
 })();
 </script>
 </body>
