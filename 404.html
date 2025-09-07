@@ -1,29 +1,63 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta http-equiv="refresh" content="4; url=../index.html" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>404 에러</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>404 - 페이지를 찾을 수 없음</title>
   <style>
     body {
-      font-family: 'Pretendard', sans-serif;
-      background-color: #fefefe;
-      text-align: center;
-      padding: 100px;
+      margin: 0;
+      padding: 0;
+      font-family: 'Arial', sans-serif;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
       color: #333;
+      text-align: center;
+    }
+    .container {
+      background: rgba(255,255,255,0.9);
+      padding: 40px 30px;
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      max-width: 400px;
     }
     h1 {
-      font-size: 3rem;
+      font-size: 80px;
+      margin: 0;
+      color: #ff6f61;
+    }
+    h2 {
+      margin: 10px 0 20px 0;
+      font-size: 24px;
     }
     p {
-      margin-top: 20px;
-      font-size: 1.2rem;
+      font-size: 16px;
+      margin-bottom: 30px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      background-color: #6a5acd;
+      color: white;
+      border: none;
+      border-radius: 20px;
+      cursor: pointer;
+      transition: 0.2s;
+    }
+    button:hover {
+      background-color: #483d8b;
     }
   </style>
 </head>
 <body>
-  <h1>페이지를 찾을 수 없습니다.</h1>
-  <p>4초 후 메인 화면으로 이동합니다...</p>
+  <div class="container">
+    <h1>404</h1>
+    <h2>페이지를 찾을 수 없어요!</h2>
+    <p>길을 잃으셨군요. （；´д｀）ゞ</p>
+    <button onclick="location.href='/'">홈으로 돌아가기</button>
+  </div>
 </body>
 </html>
