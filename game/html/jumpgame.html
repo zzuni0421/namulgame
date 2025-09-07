@@ -1,9 +1,9 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>(v2)점프 게임</title>
+<title>점프 게임 (v2)</title>
 <style>
 :root{
 --bg: #f8fbff;
@@ -27,7 +27,7 @@ button.primary{background:var(--accent);color:white;border:0}
 .hud{display:flex;gap:12px;align-items:center}
 .hud .chip{background:var(--glass);padding:8px 10px;border-radius:10px;backdrop-filter:blur(6px);font-weight:600}
 
-.game-area{flex:1;display:flex;align-items:center;justify-content:center}
+.game-area{flex:1;display:flex;align-items:center;justify-content:center;position:relative}
 #gameCanvas{border-radius:14px;box-shadow:0 8px 30px rgba(15,23,42,0.08);background:linear-gradient(180deg,#dff6ff 0%, #ffffff 60%);touch-action:none}
 
 .overlay{position:absolute;left:50%;transform:translateX(-50%);top:110px;background:var(--card);padding:10px;border-radius:10px;box-shadow:0 10px 30px rgba(2,6,23,0.08);display:flex;gap:10px;align-items:center}
@@ -35,10 +35,11 @@ button.primary{background:var(--accent);color:white;border:0}
 footer{display:flex;justify-content:space-between;align-items:center;padding:6px 10px}
 .note{color:var(--muted);font-size:13px}
 
-@media (max-width:600px){
-h1{font-size:14px}
-.logo{width:42px;height:42px}
-}
+.ending-screen{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(255,255,255,0.95);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;text-align:center;z-index:10}
+.ending-screen h2{font-size:22px;margin:0}
+.ending-screen p{font-size:16px;color:#374151}
+.ending-screen button{padding:10px 16px;border-radius:10px;font-weight:600;cursor:pointer}
+.ending-screen button.primary{background:var(--accent);color:#fff;border:0}
 </style>
 </head>
 <body>
@@ -52,7 +53,6 @@ h1{font-size:14px}
 </div>
 </div>
 
-
 <div class="controls">
 <div class="hud">
 <div class="chip" id="scoreChip">점수: 0</div>
@@ -63,7 +63,6 @@ h1{font-size:14px}
 <button id="lobbyBtn">로비로</button>
 </div>
 </header>
-
 
 <div class="game-area">
 <canvas id="gameCanvas"></canvas>
@@ -82,10 +81,8 @@ h1{font-size:14px}
   const msg = document.getElementById('msg');
 
   function resizeCanvas(){
-    // header/footer heights are roughly 110px combined in this layout; compute available
     const headerHeight = document.querySelector('header').getBoundingClientRect().height;
-    const footerHeight = document.querySelector('footer').getBoundingClientRect().height;
-    const availableH = window.innerHeight - headerHeight - footerHeight - 30; // padding
+    const availableH = window.innerHeight - headerHeight - 30;
     const availableW = window.innerWidth - 20;
     canvas.width = Math.max(320, availableW);
     canvas.height = Math.max(240, availableH);
@@ -107,7 +104,7 @@ h1{font-size:14px}
     w: 44,
     h: 44,
     vy: 0,
-    gravity: 1800, // px/s^2
+    gravity: 1800,
     jumpVel: -720,
     grounded: false
   };
@@ -140,7 +137,7 @@ h1{font-size:14px}
       hp: hp,
       maxHp: hp,
       vx: -80
-n    };
+    };
     monsters.push(m);
     hpChip.style.display = '';
     hpChip.textContent = `몬스터HP: ${m.hp}`;
@@ -158,7 +155,6 @@ n    };
 
   function spawnObstacle(){
     const height = 20 + Math.random()*60;
-    const gap = 0; // single obstacle
     const ob = {
       x: canvas.width + Math.random()*120,
       y: canvas.height - height - floor.yOffset,
@@ -223,9 +219,7 @@ n    };
       player.grounded = false;
     }
   }
-  canvas.addEventListener('pointerdown', (e) => {
-    doJump();
-  });
+  canvas.addEventListener('pointerdown', () => doJump());
   window.addEventListener('keydown', (e)=>{
     if(e.code === 'Space'){
       e.preventDefault();
@@ -253,6 +247,8 @@ n    };
     running = true;
     msg.style.display = 'none';
     hpChip.style.display = 'none';
+    const oldEnding = document.querySelector('.ending-screen');
+    if(oldEnding) oldEnding.remove();
     resetPlayer();
     lastFrame = performance.now();
     requestAnimationFrame(loop);
@@ -264,9 +260,22 @@ n    };
     msg.textContent = '게임 오버! 다시하기를 눌러라.';
   }
 
+  function triggerEnding(){
+    running = false;
+    const endDiv = document.createElement("div");
+    endDiv.className = "ending-screen";
+    endDiv.innerHTML = `
+      <h2>🎉 축하합니다! 최종 보스를 쓰러뜨렸습니다! 🎉</h2>
+      <p>플레이 시간: ${elapsed}s<br/>점수: ${score}</p>
+      <button class="primary" onclick="location.reload()">다시하기</button>
+      <button onclick="location.href='/'">로비로 돌아가기</button>
+    `;
+    document.querySelector(".game-area").appendChild(endDiv);
+  }
+
   function loop(t){
     if(!running) return;
-    const dt = Math.min(40, t - lastFrame) / 1000; // seconds, clamp
+    const dt = Math.min(40, t - lastFrame) / 1000;
     lastFrame = t;
 
     player.vy += player.gravity * dt;
@@ -300,7 +309,7 @@ n    };
     for(let i = monsters.length-1; i>=0; i--){
       const m = monsters[i];
       m.x += m.vx * dt;
-      if(m.x < canvas.width*0.6) m.vx = 0;-
+      if(m.x < canvas.width*0.6) m.vx = 0;
 
       const monRect = {x:m.x,y:m.y,w:m.w,h:m.h};
       if(rectColl(player, monRect)){
@@ -326,9 +335,13 @@ n    };
       if(circleRectColl(circ, player)){
         if(monsters.length>0){
           monsters[0].hp -= 10;
-          score += 7; // reward
+          score += 7;
           scoreChip.textContent = `점수: ${score}`;
           if(monsters[0].hp <= 0){
+            if(monsters[0].maxHp === 1000){
+              triggerEnding();
+              return;
+            }
             monsters.splice(0,1);
             hpChip.style.display = 'none';
             lastResetTime = performance.now();
