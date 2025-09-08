@@ -4,68 +4,27 @@
   <meta charset="UTF-8" />
   <title>나물게임 QnA</title>
   <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f9f9f9;
-      margin: 0;
-      padding: 20px;
-      color: #333;
-    }
-    h1 {
-      text-align: center;
-    }
-    .qna-form {
-      background: #fff;
-      padding: 15px;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-      margin-bottom: 20px;
-    }
-    textarea {
-      width: 100%;
-      padding: 10px;
-      border-radius: 8px;
-      border: 1px solid #ccc;
-      resize: vertical;
-      font-size: 14px;
-    }
-    button {
-      margin-top: 10px;
-      padding: 10px 15px;
-      border: none;
-      border-radius: 8px;
-      background: #4CAF50;
-      color: #fff;
-      cursor: pointer;
-      font-size: 14px;
-    }
-    button:hover {
-      background: #45a049;
-    }
-    .qna-list {
-      background: #fff;
-      padding: 15px;
-      border-radius: 10px;
-      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
-    }
-    .qna-item {
-      border-bottom: 1px solid #eee;
-      padding: 10px 0;
-    }
-    .qna-item:last-child {
-      border-bottom: none;
-    }
-    .qna-user {
-      font-weight: bold;
-    }
-    .qna-answer {
-      margin-top: 5px;
-      color: #0077cc;
-    }
+    body { font-family: Arial,sans-serif; background:#f9f9f9; margin:0; padding:20px; color:#333; }
+    h1 { text-align:center; }
+    .qna-form { background:#fff; padding:15px; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); margin-bottom:20px; }
+    textarea { width:100%; padding:10px; border-radius:8px; border:1px solid #ccc; resize:vertical; font-size:14px; }
+    button { margin-top:10px; padding:10px 15px; border:none; border-radius:8px; background:#4CAF50; color:#fff; cursor:pointer; font-size:14px; }
+    button:hover { background:#45a049; }
+    .qna-list { background:#fff; padding:15px; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); }
+    .qna-item { border-bottom:1px solid #eee; padding:10px 0; }
+    .qna-item:last-child { border-bottom:none; }
+    .qna-user { font-weight:bold; }
+    .qna-answer { margin-top:5px; color:#0077cc; }
+    .top-controls { display:flex; justify-content:space-between; margin-bottom:10px; }
   </style>
 </head>
 <body>
   <h1>나물게임 QnA</h1>
+
+  <div class="top-controls">
+    <div>아이디: <strong id="userDisplay"></strong></div>
+    <button onclick="goLobby()">로비로 돌아가기</button>
+  </div>
 
   <div class="qna-form">
     <textarea id="question" rows="3" placeholder="질문을 입력하세요..."></textarea>
@@ -78,21 +37,18 @@
 
   <script>
     const userId = localStorage.getItem("userId") || "게스트";
+    document.getElementById("userDisplay").textContent = userId;
 
     async function submitQuestion() {
       const question = document.getElementById("question").value.trim();
-      if (!question) {
-        alert("질문을 입력하세요!");
-        return;
-      }
+      if(!question) { alert("질문을 입력하세요!"); return; }
       const res = await fetch("/api/qna", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId, question })
       });
       const data = await res.json();
-      if (data.success) {
-        alert("질문이 등록되었습니다!");
+      if(data.success){
         document.getElementById("question").value = "";
         loadQnA();
       } else {
@@ -116,6 +72,8 @@
         list.appendChild(div);
       });
     }
+
+    function goLobby() { window.location.href = "/"; }
 
     loadQnA();
   </script>
