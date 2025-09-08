@@ -7,9 +7,7 @@
 <link rel="stylesheet" href="assets/style/lobbystyle.css">
 </head>
 <body>
-
 <div class="container">
-
   <div class="event-banner">
     🌱 이 게임에서 이벤트 진행 중! 참여하러 가기 🌱
   </div>
@@ -43,7 +41,9 @@
   <div class="modal-content">
     <span class="close" id="closeRegister">&times;</span>
     <h2>회원가입</h2>
-    <input type="text" id="registerUsername" placeholder="아이디">
+    <input type="text" id="registerUsername" placeholder="아이디 (영문+숫자 3~15자)" oninput="validateUserId()">
+    <button type="button" onclick="checkDuplicate()">중복 확인</button>
+    <div id="idFeedback" style="font-size: 0.9rem; margin-top: 4px;"></div>
     <input type="password" id="registerPassword" placeholder="비밀번호">
     <button id="btnRegister" class="btn">회원가입</button>
   </div>
