@@ -4,68 +4,69 @@
   <meta charset="UTF-8" />
   <title>나물게임 QnA</title>
   <style>
-.qna-container {
-  max-width: 700px;
-  margin: 40px auto;
-  padding: 20px;
-  background: #ffffff;
-  border-radius: 16px;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
-  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
-}
+    .qna-container {
+      max-width: 700px;
+      margin: 40px auto;
+      padding: 20px;
+      background: #ffffff;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+      font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+    }
 
-.qna-item {
-  border-bottom: 1px solid #eee;
-  padding: 16px 0;
-  transition: all 0.3s ease;
-}
+    .qna-item {
+      border-bottom: 1px solid #eee;
+      padding: 16px 0;
+      transition: all 0.3s ease;
+    }
 
-.qna-item:last-child {
-  border-bottom: none;
-}
+    .qna-item:last-child {
+      border-bottom: none;
+    }
 
-.qna-question {
-  width: 100%;
-  text-align: left;
-  background: none;
-  border: none;
-  font-size: 18px;
-  font-weight: 600;
-  color: #333;
-  cursor: pointer;
-  padding: 8px 0;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+    .qna-question {
+      width: 100%;
+      text-align: left;
+      background: none;
+      border: none;
+      font-size: 18px;
+      font-weight: 600;
+      color: #333;
+      cursor: pointer;
+      padding: 8px 0;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
 
-.qna-question::after {
-  content: "＋";
-  font-size: 20px;
-  transition: transform 0.3s;
-}
+    .qna-question::after {
+      content: "＋";
+      font-size: 20px;
+      transition: transform 0.3s;
+    }
 
-.qna-item.active .qna-question::after {
-  content: "－";
-  transform: rotate(180deg);
-  color: #007bff;
-}
+    .qna-item.active .qna-question::after {
+      content: "－";
+      transform: rotate(180deg);
+      color: #007bff;
+    }
 
-.qna-answer {
-  max-height: 0;
-  overflow: hidden;
-  font-size: 16px;
-  color: #555;
-  line-height: 1.6;
-  transition: max-height 0.3s ease, padding 0.3s ease;
-  padding: 0;
-}
+    .qna-answer {
+      max-height: 0;
+      overflow: hidden;
+      font-size: 16px;
+      color: #555;
+      line-height: 1.6;
+      transition: max-height 0.3s ease, padding 0.3s ease;
+      padding: 0;
+    }
 
-.qna-item.active .qna-answer {
-  max-height: 300px;
-  padding: 12px 0;
-  color: #444;
-}
+    .qna-item.active .qna-answer {
+      max-height: 300px;
+      padding: 12px 0;
+      color: #444;
+    }
+  </style>
 </head>
 <body>
   <h1>나물게임 QnA</h1>
@@ -90,14 +91,17 @@
 
     async function submitQuestion() {
       const question = document.getElementById("question").value.trim();
-      if(!question) { alert("질문을 입력하세요!"); return; }
+      if (!question) {
+        alert("질문을 입력하세요!");
+        return;
+      }
       const res = await fetch("/api/qna", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ userId, question })
       });
       const data = await res.json();
-      if(data.success){
+      if (data.success) {
         document.getElementById("question").value = "";
         loadQnA();
       } else {
@@ -122,7 +126,9 @@
       });
     }
 
-    function goLobby() { window.location.href = "/"; }
+    function goLobby() {
+      window.location.href = "/";
+    }
 
     loadQnA();
   </script>
