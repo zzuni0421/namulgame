@@ -79,14 +79,49 @@ btnLogin.onclick=async()=>{
   else alert(data.msg);
 };
 
+// 아이디 유효성 검사 (영문+숫자, 3~15자, 한글/띄어쓰기 불가)
+function validateUserId(username) {
+  const regex = /^[a-zA-Z0-9]{3,15}$/;
+  return regex.test(username);
+}
+
+// 아이디 중복 확인
+async function checkDuplicate(username) {
+  const data = await apiPost("checkDuplicate", { username });
+  return data.success; // true면 사용 가능, false면 중복
+}
+
 // 회원가입
-btnRegister.onclick=async()=>{
-  const u=registerUsername.value.trim();
-  const p=registerPassword.value.trim();
-  if(!u||!p) return;
-  const data=await apiPost("register",{username:u,password:p});
-  if(data.success){ alert("회원가입 성공! 로그인하세요."); hideModal(registerModal); }
-  else alert(data.msg);
+btnRegister.onclick = async () => {
+  const u = registerUsername.value.trim();
+  const p = registerPassword.value.trim();
+
+  if (!u || !p) {
+    alert("아이디와 비밀번호를 입력하세요.");
+    return;
+  }
+
+  // 아이디 유효성 검사
+  if (!validateUserId(u)) {
+    alert("아이디는 영문+숫자 조합으로 3~15자만 가능합니다. (한글/띄어쓰기 불가)");
+    return;
+  }
+
+  // 중복 확인
+  const isAvailable = await checkDuplicate(u);
+  if (!isAvailable) {
+    alert("이미 존재하는 아이디입니다.");
+    return;
+  }
+
+  // 서버에 회원가입 요청
+  const data = await apiPost("register", { username: u, password: p });
+  if (data.success) {
+    alert("회원가입 성공! 로그인하세요.");
+    hideModal(registerModal);
+  } else {
+    alert(data.msg);
+  }
 };
 
 // 로그아웃
