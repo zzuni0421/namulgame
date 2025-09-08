@@ -1,4 +1,4 @@
-const GAS_URL = "https://script.google.com/macros/s/AKfycbyVlxOFm_L5RUeKSkBDZ69FWPX40ITzU1XQ_5GbBMydJEc3MomXYpbZv3BNTbHt1D3T/exec";
+const GAS_URL = "https://script.google.com/macros/s/AKfycbxaiewWWytOp12nXW5sF3Od11sWTIcnJkBKLXRbKq8hQsgK-fOzi1Mqo0ly4KzfD-27Qg/exec";
 
 export async function onRequestPost({ request }) {
   const body = await request.json();
