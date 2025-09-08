@@ -4,19 +4,68 @@
   <meta charset="UTF-8" />
   <title>나물게임 QnA</title>
   <style>
-    body { font-family: Arial,sans-serif; background:#f9f9f9; margin:0; padding:20px; color:#333; }
-    h1 { text-align:center; }
-    .qna-form { background:#fff; padding:15px; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); margin-bottom:20px; }
-    textarea { width:100%; padding:10px; border-radius:8px; border:1px solid #ccc; resize:vertical; font-size:14px; }
-    button { margin-top:10px; padding:10px 15px; border:none; border-radius:8px; background:#4CAF50; color:#fff; cursor:pointer; font-size:14px; }
-    button:hover { background:#45a049; }
-    .qna-list { background:#fff; padding:15px; border-radius:10px; box-shadow:0 2px 6px rgba(0,0,0,0.1); }
-    .qna-item { border-bottom:1px solid #eee; padding:10px 0; }
-    .qna-item:last-child { border-bottom:none; }
-    .qna-user { font-weight:bold; }
-    .qna-answer { margin-top:5px; color:#0077cc; }
-    .top-controls { display:flex; justify-content:space-between; margin-bottom:10px; }
-  </style>
+.qna-container {
+  max-width: 700px;
+  margin: 40px auto;
+  padding: 20px;
+  background: #ffffff;
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.08);
+  font-family: 'Pretendard', 'Noto Sans KR', sans-serif;
+}
+
+.qna-item {
+  border-bottom: 1px solid #eee;
+  padding: 16px 0;
+  transition: all 0.3s ease;
+}
+
+.qna-item:last-child {
+  border-bottom: none;
+}
+
+.qna-question {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: none;
+  font-size: 18px;
+  font-weight: 600;
+  color: #333;
+  cursor: pointer;
+  padding: 8px 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.qna-question::after {
+  content: "＋";
+  font-size: 20px;
+  transition: transform 0.3s;
+}
+
+.qna-item.active .qna-question::after {
+  content: "－";
+  transform: rotate(180deg);
+  color: #007bff;
+}
+
+.qna-answer {
+  max-height: 0;
+  overflow: hidden;
+  font-size: 16px;
+  color: #555;
+  line-height: 1.6;
+  transition: max-height 0.3s ease, padding 0.3s ease;
+  padding: 0;
+}
+
+.qna-item.active .qna-answer {
+  max-height: 300px;
+  padding: 12px 0;
+  color: #444;
+}
 </head>
 <body>
   <h1>나물게임 QnA</h1>
