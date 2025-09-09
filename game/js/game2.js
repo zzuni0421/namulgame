@@ -1,6 +1,6 @@
 // --- 게임 상태 ---
 let coins = 0;
-let plants = []; // {id, name, level, count, cps, cost}
+let plants = [];
 let startTime = Date.now();
 let totalPlaytime = 0;
 
@@ -26,7 +26,7 @@ const playtimeEl = document.getElementById("playtime");
 
 // --- 저장/불러오기 ---
 function saveGame() {
-  const data = { coins, plants, startTime, totalPlaytime, lastSave: Date.now() };
+  const data = { coins, plants, totalPlaytime, lastSave: Date.now() };
   localStorage.setItem("grownamul", JSON.stringify(data));
   alert("게임이 저장되었습니다!");
 }
@@ -36,18 +36,18 @@ function loadGame() {
   if (saved) {
     coins = saved.coins || 0;
     plants = saved.plants || [];
-    startTime = saved.startTime || Date.now();
     totalPlaytime = saved.totalPlaytime || 0;
 
-    // 오프라인 보상
     const elapsed = Math.floor((Date.now() - saved.lastSave) / 1000);
-    const offlineCoins = getTotalCps() * elapsed;
-    coins += offlineCoins;
-    if (offlineCoins > 0) alert(`오프라인 보상으로 ${offlineCoins}코인을 받았습니다!`);
+    coins += getTotalCps() * elapsed;
+    if (elapsed > 0) alert(`오프라인 보상으로 ${getTotalCps() * elapsed} 코인을 받았습니다!`);
+
+    startTime = Date.now();
   } else {
     plantTypes.forEach((p, i) => {
-      plants.push({ id: i, name: p.name, level: 1, count: 0, cps: p.baseCps, cost: p.baseCost });
+      plants.push({ id:i, name:p.name, level:1, count:0, cps:p.baseCps, cost:p.baseCost });
     });
+    startTime = Date.now();
   }
 }
 
@@ -63,28 +63,26 @@ function updateUI() {
   // 농장
   farmEl.innerHTML = "";
   plants.forEach(p => {
-    if (p.count > 0) {
-      const div = document.createElement("div");
-      div.className = "plant";
-      div.textContent = `${p.name} x${p.count}`;
-      
-      // 클릭 애니메이션
-      div.onclick = () => {
-        coins += p.cps; // 클릭 보상
-        animatePlant(div);
-        playSound("coin");
-        updateUI();
-      };
+    const div = document.createElement("div");
+    div.className = "plant";
+    div.textContent = `${p.name}\n x${p.count}`;
 
-      farmEl.appendChild(div);
-    }
+    div.onclick = () => {
+      coins += p.count > 0 ? p.cps : 1; // 최소 1코인
+      div.classList.add("clicked");
+      setTimeout(() => div.classList.remove("clicked"), 300);
+      playSound("coin");
+      updateUI();
+    };
+
+    farmEl.appendChild(div);
   });
 
   // 상점
   shopEl.innerHTML = "";
   plants.forEach(p => {
     const btn = document.createElement("button");
-    btn.textContent = `${p.name} (보유:${p.count}) | 가격: ${p.cost} | CPS:${p.cps}`;
+    btn.textContent = `${p.name} (보유:${p.count}) | 가격:${p.cost} | CPS:${p.cps}`;
     btn.onclick = () => buyPlant(p);
     shopEl.appendChild(btn);
   });
@@ -96,7 +94,7 @@ function updateUI() {
   if (totalPlaytime >= 10) addAchievement("10분 이상 플레이!");
 }
 
-function addAchievement(text) {
+function addAchievement(text){
   const li = document.createElement("li");
   li.textContent = text;
   achievementsEl.appendChild(li);
@@ -109,22 +107,21 @@ function buyPlant(p) {
     p.count++;
     p.cost = Math.floor(p.cost * 1.2); // 가격 상승
     animatePurchase(p.name);
-    updateUI();
     playSound("buy");
+    updateUI();
   }
 }
 
-// --- 애니메이션 ---
-function animatePlant(div) {
-  div.style.transform = "scale(1.2)";
-  div.style.transition = "transform 0.2s";
-  setTimeout(() => div.style.transform = "scale(1)", 200);
-}
-
+// --- 구매 애니메이션 ---
 function animatePurchase(name) {
   const effect = document.createElement("div");
-  effect.textContent = `+1 ${name}!`;
   effect.className = "purchase-effect";
+  effect.textContent = `+1 ${name}!`;
+
+  const rect = farmEl.getBoundingClientRect();
+  effect.style.left = `${rect.left + rect.width/2}px`;
+  effect.style.top = `${rect.top + rect.height/2}px`;
+
   document.body.appendChild(effect);
   setTimeout(() => effect.remove(), 1000);
 }
@@ -132,8 +129,8 @@ function animatePurchase(name) {
 // --- 효과음 ---
 function playSound(type) {
   const audio = new Audio();
-  if (type === "buy") audio.src = "https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg";
-  else if (type === "coin") audio.src = "https://actions.google.com/sounds/v1/cartoon/pop.ogg";
+  if(type === "buy") audio.src = "https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg";
+  else if(type === "coin") audio.src = "https://actions.google.com/sounds/v1/cartoon/pop.ogg";
   audio.play();
 }
 
@@ -146,7 +143,7 @@ setInterval(() => {
 setInterval(() => {
   totalPlaytime = Math.floor((Date.now() - startTime) / 60000);
   playtimeEl.textContent = totalPlaytime;
-}, 5000);
+}, 1000);
 
 // --- 이벤트 ---
 document.getElementById("saveBtn").onclick = saveGame;
