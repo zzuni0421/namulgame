@@ -4,7 +4,7 @@ let plants = [];
 let startTime = Date.now();
 let totalPlaytime = 0;
 
-// --- 나물 목록 ---
+// --- 나물 목록 (가격·CPS 조정) ---
 const plantTypes = [
   { name: "콩나물", baseCost: 50, baseCps: 1 },
   { name: "시금치", baseCost: 200, baseCps: 5 },
@@ -51,10 +51,11 @@ function loadGame() {
   }
 }
 
+// --- CPS 계산 (초반 2분 제한 적용) ---
 function getTotalCps() {
-  const elapsed = (Date.now() - startTime) / 60000; // 분
+  const elapsed = (Date.now() - startTime) / 60000; // 분 단위
   let multiplier = 1;
-  if(elapsed < 2) multiplier = 0.3; // 처음 2분은 30%만 적용
+  if(elapsed < 2) multiplier = 0.3; // 첫 2분은 30%만 적용
   return plants.reduce((sum, p) => sum + (p.cps * p.count * multiplier), 0);
 }
 
@@ -91,9 +92,9 @@ function updateUI() {
 
   // 업적
   achievementsEl.innerHTML = "";
-  if (coins >= 1000) addAchievement("천 코인 돌파!");
-  if (getTotalCps() >= 100) addAchievement("초당 100 CPS 달성!");
-  if (totalPlaytime >= 10) addAchievement("10분 이상 플레이!");
+  if (coins>=1000) addAchievement("천 코인 돌파!");
+  if (getTotalCps()>=100) addAchievement("초당 100 CPS 달성!");
+  if (totalPlaytime>=10) addAchievement("10분 이상 플레이!");
 }
 
 function addAchievement(text){
