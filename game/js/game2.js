@@ -129,6 +129,42 @@ function animatePurchase(name) {
   setTimeout(() => effect.remove(), 1000);
 }
 
+// 코인 애니메이션 함수
+function animateCoins(current, target, duration = 500) {
+  const start = performance.now();
+
+  function update(now) {
+    const progress = Math.min((now - start) / duration, 1);
+    const value = current + (target - current) * progress;
+    document.getElementById("coinDisplay").textContent = value.toFixed(2);
+
+    if (progress < 1) {
+      requestAnimationFrame(update);
+    }
+  }
+
+  requestAnimationFrame(update);
+}
+
+let coins = 0;
+function addCoins(amount) {
+  const oldCoins = coins;
+  coins += amount;
+  animateCoins(oldCoins, coins, 800); // 0.8초 동안 애니메이션
+  showFloatingText(`+${amount}`, "#coinDisplay");
+}
+
+// 플로팅 텍스트(파티클 느낌)
+function showFloatingText(text, selector) {
+  const el = document.querySelector(selector);
+  const float = document.createElement("span");
+  float.textContent = text;
+  float.classList.add("floating-text");
+  el.appendChild(float);
+
+  setTimeout(() => float.remove(), 1000);
+}
+
 // --- 효과음 ---
 function playSound(type) {
   const audio = new Audio();
