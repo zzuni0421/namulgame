@@ -16,13 +16,11 @@ body {
   box-shadow: 0 6px 15px rgba(0,0,0,0.15);
 }
 
-/* --- 제목 --- */
 h1 {
   color: #2b7a2b;
   text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
 }
 
-/* --- 통계 영역 --- */
 .stats {
   margin: 15px 0;
   font-size: 18px;
@@ -58,7 +56,6 @@ h1 {
   box-shadow: 0 6px 15px rgba(0,0,0,0.3);
 }
 
-/* --- 클릭 애니메이션 --- */
 .plant.clicked {
   animation: clickBounce 0.3s;
 }
