@@ -1,62 +1,141 @@
+/* --- 기본 스타일 --- */
 body {
   font-family: 'Comic Sans MS', sans-serif;
-  background: #f9f9f9;
+  background: linear-gradient(to bottom, #f9f9f9, #e0f7e0);
   text-align: center;
   margin: 0;
   padding: 20px;
 }
 
 .container {
-  max-width: 600px;
+  max-width: 700px;
   margin: auto;
   background: white;
-  padding: 20px;
-  border-radius: 15px;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+  padding: 25px;
+  border-radius: 20px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.15);
 }
 
+/* --- 제목 --- */
 h1 {
   color: #2b7a2b;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
 }
 
+/* --- 통계 영역 --- */
 .stats {
-  margin: 10px 0;
+  margin: 15px 0;
+  font-size: 18px;
+  color: #333;
 }
 
+/* --- 농장 --- */
 .farm {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  margin: 20px 0;
+  margin: 25px 0;
 }
 
 .plant {
   width: 100px;
   height: 100px;
-  background: #c6e5b1;
-  margin: 5px;
-  border-radius: 10px;
+  background: linear-gradient(to bottom, #c6e5b1, #a4d07f);
+  margin: 8px;
+  border-radius: 15px;
   line-height: 100px;
   font-weight: bold;
-  animation: grow 2s infinite alternate;
+  font-size: 14px;
+  cursor: pointer;
+  position: relative;
+  box-shadow: 0 3px 8px rgba(0,0,0,0.2);
+  transition: transform 0.2s, box-shadow 0.2s;
+  animation: gentleGrow 2s infinite alternate;
 }
 
-@keyframes grow {
-  from { transform: scale(0.9); }
-  to { transform: scale(1.1); }
+.plant:hover {
+  transform: scale(1.15);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.3);
 }
 
+/* --- 클릭 애니메이션 --- */
+.plant.clicked {
+  animation: clickBounce 0.3s;
+}
+
+@keyframes gentleGrow {
+  from { transform: scale(0.95); }
+  to { transform: scale(1.05); }
+}
+
+@keyframes clickBounce {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.25) rotate(-5deg); }
+  100% { transform: scale(1) rotate(0deg); }
+}
+
+/* --- 상점 버튼 --- */
 button {
   margin: 5px;
-  padding: 10px;
+  padding: 12px 15px;
   border: none;
-  background: #6ab04c;
+  background: linear-gradient(to bottom, #6ab04c, #4cd137);
   color: white;
-  border-radius: 8px;
+  font-weight: bold;
+  border-radius: 12px;
   cursor: pointer;
-  transition: 0.3s;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+  transition: all 0.3s ease;
 }
 
 button:hover {
-  background: #4cd137;
+  background: linear-gradient(to bottom, #4cd137, #27ae60);
+  transform: translateY(-3px);
+  box-shadow: 0 6px 15px rgba(0,0,0,0.25);
+}
+
+/* --- 구매 효과 --- */
+.purchase-effect {
+  position: absolute;
+  color: #ffdd59;
+  font-weight: bold;
+  font-size: 16px;
+  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+  animation: floatUp 1s ease-out forwards;
+}
+
+@keyframes floatUp {
+  0% { opacity: 1; transform: translateY(0px) scale(1); }
+  50% { transform: translateY(-30px) scale(1.2); }
+  100% { opacity: 0; transform: translateY(-50px) scale(1); }
+}
+
+/* --- 업적 --- */
+#achievements {
+  margin-top: 20px;
+  list-style-type: none;
+  padding: 0;
+  color: #2d3436;
+  font-weight: bold;
+}
+
+#achievements li {
+  margin: 5px 0;
+  padding: 5px 10px;
+  background: #dff9fb;
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  animation: fadeIn 1s;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* --- 플레이타임 --- */
+#playtime {
+  margin-top: 10px;
+  font-size: 16px;
+  color: #333;
 }
