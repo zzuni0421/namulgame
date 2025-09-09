@@ -6,15 +6,15 @@ let totalPlaytime = 0;
 
 // --- 나물 목록 ---
 const plantTypes = [
-  { name: "콩나물", baseCost: 10, baseCps: 1 },
-  { name: "시금치", baseCost: 50, baseCps: 5 },
-  { name: "고사리", baseCost: 200, baseCps: 20 },
-  { name: "두릅", baseCost: 1000, baseCps: 100 },
-  { name: "도라지", baseCost: 5000, baseCps: 300 },
-  { name: "취나물", baseCost: 20000, baseCps: 1000 },
-  { name: "냉이", baseCost: 100000, baseCps: 1500 },
-  { name: "달래", baseCost: 250000, baseCps: 2000 },
-  { name: "명이나물", baseCost: 500000, baseCps: 2500 }
+  { name: "콩나물", baseCost: 50, baseCps: 1 },
+  { name: "시금치", baseCost: 200, baseCps: 5 },
+  { name: "고사리", baseCost: 1000, baseCps: 20 },
+  { name: "두릅", baseCost: 5000, baseCps: 100 },
+  { name: "도라지", baseCost: 20000, baseCps: 400 },
+  { name: "취나물", baseCost: 100000, baseCps: 1200 },
+  { name: "냉이", baseCost: 500000, baseCps: 3000 },
+  { name: "달래", baseCost: 2000000, baseCps: 8000 },
+  { name: "명이나물", baseCost: 10000000, baseCps: 20000 }
 ];
 
 // --- DOM 요소 ---
