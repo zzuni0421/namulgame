@@ -1,98 +1,134 @@
-const plantsData = [
-  { name: '냉이', cost: 0, income: 1, interval: 1000 },
-  { name: '씀바귀', cost: 100, income: 2, interval: 1000 },
-  { name: '두릅', cost: 300, income: 4, interval: 1000 },
-  { name: '고사리', cost: 800, income: 8, interval: 1000 },
-  { name: '취나물', cost: 1500, income: 15, interval: 1000 },
+/ --- 게임 상태 ---
+let coins = 0;
+let plants = []; // {id, name, level, count, cps, cost}
+let startTime = Date.now();
+let totalPlaytime = 0;
+
+// --- 나물 목록 ---
+const plantTypes = [
+  { name: "콩나물", baseCost: 10, baseCps: 1 },
+  { name: "시금치", baseCost: 50, baseCps: 5 },
+  { name: "고사리", baseCost: 200, baseCps: 20 },
+  { name: "두릅", baseCost: 1000, baseCps: 100 },
+  { name: "도라지", baseCost: 5000, baseCps: 300 },
+  { name: "취나물", baseCost: 20000, baseCps: 1000 },
+  { name: "냉이", baseCost: 100000, baseCps: 1500 },
+  { name: "달래", baseCost: 250000, baseCps: 2000 },
+  { name: "명이나물", baseCost: 500000, baseCps: 2500 }
 ];
 
-let unlockedPlants = [];
-let score = 0;
-let scoreEl = document.getElementById('score');
-const plantsContainer = document.getElementById('plants');
-const shopPopup = document.getElementById('shopPopup');
-const shopItems = document.getElementById('shopItems');
+// --- DOM 요소 ---
+const coinsEl = document.getElementById("coins");
+const farmEl = document.getElementById("farm");
+const shopEl = document.getElementById("shop");
+const achievementsEl = document.getElementById("achievements");
+const playtimeEl = document.getElementById("playtime");
 
-function updateScore(amount) {
-  score += amount;
-  scoreEl.textContent = `점수: ${score}`;
-}
-
-function unlockPlant(index) {
-  const data = plantsData[index];
-  const plant = {
-    ...data,
-    level: 1,
-    intervalId: setInterval(() => {
-      updateScore(plant.income * plant.level);
-    }, data.interval)
+// --- 저장/불러오기 ---
+function saveGame() {
+  const data = {
+    coins, plants, startTime, totalPlaytime, lastSave: Date.now(),
   };
-  unlockedPlants.push(plant);
-  renderPlants();
+  localStorage.setItem("grownamul", JSON.stringify(data));
+  alert("게임이 저장되었습니다!");
 }
 
-function renderPlants() {
-  plantsContainer.innerHTML = '';
-  unlockedPlants.forEach((plant, i) => {
-    const div = document.createElement('div');
-    div.className = 'plant';
-    div.innerHTML = `
-      <div><strong>${plant.name}</strong></div>
-      <div>수익: +${plant.income * plant.level}점/초</div>
-      <div>레벨: ${plant.level}</div>
-      <button onclick="upgradePlant(${i})">업그레이드 (비용: ${plant.level * 100})</button>
-    `;
-    plantsContainer.appendChild(div);
-  });
-}
+function loadGame() {
+  const saved = JSON.parse(localStorage.getItem("grownamul"));
+  if (saved) {
+    coins = saved.coins || 0;
+    plants = saved.plants || [];
+    startTime = saved.startTime || Date.now();
+    totalPlaytime = saved.totalPlaytime || 0;
 
-function upgradePlant(i) {
-  const plant = unlockedPlants[i];
-  const cost = plant.level * 100;
-  if (score >= cost) {
-    score -= cost;
-    plant.level++;
-    renderPlants();
-    updateScore(0);
+    // 오프라인 보상
+    const elapsed = Math.floor((Date.now() - saved.lastSave) / 1000);
+    const offlineCoins = getTotalCps() * elapsed;
+    coins += offlineCoins;
+    alert(`오프라인 보상으로 ${offlineCoins}코인을 받았습니다!`);
+  } else {
+    // 초기화
+    plantTypes.forEach((p, i) => {
+      plants.push({ id: i, name: p.name, level: 1, count: 0, cps: p.baseCps, cost: p.baseCost });
+    });
   }
 }
 
-function openShop() {
-  shopItems.innerHTML = '';
-  plantsData.forEach((plant, i) => {
-    if (!unlockedPlants.find(p => p.name === plant.name) &&
-        (i === 0 || unlockedPlants.find(p => p.name === plantsData[i - 1].name))) {
-      const div = document.createElement('div');
-      div.className = 'shop-item';
-      div.innerHTML = `
-        ${plant.name} (비용: ${plant.cost})
-        <button ${score < plant.cost ? 'disabled' : ''} onclick="buyPlant(${i})">구매</button>
-      `;
-      shopItems.appendChild(div);
+// --- CPS 계산 ---
+function getTotalCps() {
+  return plants.reduce((sum, p) => sum + (p.cps * p.count), 0);
+}
+
+// --- UI 갱신 ---
+function updateUI() {
+  coinsEl.textContent = Math.floor(coins);
+
+  // 농장
+  farmEl.innerHTML = "";
+  plants.forEach(p => {
+    if (p.count > 0) {
+      const div = document.createElement("div");
+      div.className = "plant";
+      div.textContent = `${p.name} x${p.count}`;
+      farmEl.appendChild(div);
     }
   });
-  shopPopup.style.display = 'block';
+
+  // 상점
+  shopEl.innerHTML = "";
+  plants.forEach(p => {
+    const btn = document.createElement("button");
+    btn.textContent = `${p.name} (보유:${p.count}) | 가격: ${p.cost} | CPS:${p.cps}`;
+    btn.onclick = () => buyPlant(p);
+    shopEl.appendChild(btn);
+  });
+
+  // 업적
+  achievementsEl.innerHTML = "";
+  if (coins >= 1000) addAchievement("천 코인 돌파!");
+  if (getTotalCps() >= 100) addAchievement("초당 100 CPS 달성!");
+  if (totalPlaytime >= 10) addAchievement("10분 이상 플레이!");
 }
 
-function buyPlant(i) {
-  const plant = plantsData[i];
-  if (score >= plant.cost) {
-    score -= plant.cost;
-    unlockPlant(i);
-    updateScore(0);
-    openShop(); // 새로고침
+function addAchievement(text) {
+  const li = document.createElement("li");
+  li.textContent = text;
+  achievementsEl.appendChild(li);
+}
+
+// --- 나물 구매 ---
+function buyPlant(p) {
+  if (coins >= p.cost) {
+    coins -= p.cost;
+    p.count++;
+    p.cost = Math.floor(p.cost * 1.2); // 가격 상승
+    updateUI();
+    playSound("buy");
   }
 }
 
-function closeShop() {
-  shopPopup.style.display = 'none';
+// --- 효과음 ---
+function playSound(type) {
+  const audio = new Audio();
+  if (type === "buy") audio.src = "https://actions.google.com/sounds/v1/cartoon/wood_plank_flicks.ogg";
+  else if (type === "coin") audio.src = "https://actions.google.com/sounds/v1/cartoon/pop.ogg";
+  audio.play();
 }
 
-document.getElementById('buyBtn').addEventListener('click', openShop);
+// --- 루프 ---
+setInterval(() => {
+  coins += getTotalCps();
+  updateUI();
+}, 1000);
 
-// 기본 냉이 unlock
-unlockPlant(0);
+setInterval(() => {
+  totalPlaytime = Math.floor((Date.now() - startTime) / 60000);
+  playtimeEl.textContent = totalPlaytime;
+}, 5000);
 
-document.getElementById("goLobbyBtn").addEventListener("click", () => {
-  window.location.href = "../../index.html";
-});
+// --- 이벤트 ---
+document.getElementById("saveBtn").onclick = saveGame;
+
+// --- 시작 ---
+loadGame();
+updateUI();
