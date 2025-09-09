@@ -1,4 +1,4 @@
-/ --- 게임 상태 ---
+// --- 게임 상태 ---
 let coins = 0;
 let plants = []; // {id, name, level, count, cps, cost}
 let startTime = Date.now();
