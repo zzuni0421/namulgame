@@ -51,9 +51,11 @@ function loadGame() {
   }
 }
 
-// --- CPS 계산 ---
 function getTotalCps() {
-  return plants.reduce((sum, p) => sum + (p.cps * p.count), 0);
+  const elapsed = (Date.now() - startTime) / 60000; // 분
+  let multiplier = 1;
+  if(elapsed < 2) multiplier = 0.3; // 처음 2분은 30%만 적용
+  return plants.reduce((sum, p) => sum + (p.cps * p.count * multiplier), 0);
 }
 
 // --- UI 갱신 ---
