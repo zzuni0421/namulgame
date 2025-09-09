@@ -1,85 +1,62 @@
 body {
-  font-family: 'Noto Sans KR', sans-serif;
-  background: #f0f8e0;
-  margin: 0; padding: 0;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-header {
+  font-family: 'Comic Sans MS', sans-serif;
+  background: #f9f9f9;
+  text-align: center;
+  margin: 0;
   padding: 20px;
-  font-size: 1.5rem;
-  font-weight: bold;
 }
-#score {
-  margin: 10px;
-  font-size: 1.2rem;
+
+.container {
+  max-width: 600px;
+  margin: auto;
+  background: white;
+  padding: 20px;
+  border-radius: 15px;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.1);
 }
-#plants {
+
+h1 {
+  color: #2b7a2b;
+}
+
+.stats {
+  margin: 10px 0;
+}
+
+.farm {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
-  gap: 16px;
-  margin: 20px;
+  margin: 20px 0;
 }
+
 .plant {
-  border: 2px solid #8bc34a;
-  border-radius: 8px;
-  background: #ffffff;
-  padding: 10px;
-  width: 180px;
-  text-align: center;
-}
-#buyBtn {
-  background: #4caf50;
-  color: white;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 20px;
-  cursor: pointer;
-  font-size: 1rem;
-}
-#shopPopup {
-  position: fixed;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  background: white;
-  padding: 20px;
-  border: 2px solid #4caf50;
+  width: 100px;
+  height: 100px;
+  background: #c6e5b1;
+  margin: 5px;
   border-radius: 10px;
-  display: none;
-  z-index: 999;
-}
-#shopPopup h2 {
-  margin-bottom: 10px;
-}
-.shop-item {
-  margin: 10px 0;
-}
-.shop-item button {
-  margin-left: 10px;
-}
-
-#goLobbyBtn {
-  position: fixed;
-  bottom: 20px;
-  right: 20px;
-  background: linear-gradient(135deg, #7fc97f, #beaed4);
-  color: white;
-  border: none;
-  border-radius: 50px;
-  padding: 14px 20px;
-  font-size: 16px;
+  line-height: 100px;
   font-weight: bold;
-  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s ease;
-  z-index: 999;
-  cursor: pointer;
+  animation: grow 2s infinite alternate;
 }
 
-#goLobbyBtn:hover {
-  transform: scale(1.1) rotate(2deg);
-  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.25);
-  background: linear-gradient(135deg, #66c2a5, #8da0cb);
+@keyframes grow {
+  from { transform: scale(0.9); }
+  to { transform: scale(1.1); }
+}
+
+button {
+  margin: 5px;
+  padding: 10px;
+  border: none;
+  background: #6ab04c;
+  color: white;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+button:hover {
+  background: #4cd137;
 }
