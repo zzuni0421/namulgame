@@ -26,9 +26,7 @@ const playtimeEl = document.getElementById("playtime");
 
 // --- 저장/불러오기 ---
 function saveGame() {
-  const data = {
-    coins, plants, startTime, totalPlaytime, lastSave: Date.now(),
-  };
+  const data = { coins, plants, startTime, totalPlaytime, lastSave: Date.now() };
   localStorage.setItem("grownamul", JSON.stringify(data));
   alert("게임이 저장되었습니다!");
 }
@@ -45,9 +43,8 @@ function loadGame() {
     const elapsed = Math.floor((Date.now() - saved.lastSave) / 1000);
     const offlineCoins = getTotalCps() * elapsed;
     coins += offlineCoins;
-    alert(`오프라인 보상으로 ${offlineCoins}코인을 받았습니다!`);
+    if (offlineCoins > 0) alert(`오프라인 보상으로 ${offlineCoins}코인을 받았습니다!`);
   } else {
-    // 초기화
     plantTypes.forEach((p, i) => {
       plants.push({ id: i, name: p.name, level: 1, count: 0, cps: p.baseCps, cost: p.baseCost });
     });
@@ -70,6 +67,15 @@ function updateUI() {
       const div = document.createElement("div");
       div.className = "plant";
       div.textContent = `${p.name} x${p.count}`;
+      
+      // 클릭 애니메이션
+      div.onclick = () => {
+        coins += p.cps; // 클릭 보상
+        animatePlant(div);
+        playSound("coin");
+        updateUI();
+      };
+
       farmEl.appendChild(div);
     }
   });
@@ -102,9 +108,25 @@ function buyPlant(p) {
     coins -= p.cost;
     p.count++;
     p.cost = Math.floor(p.cost * 1.2); // 가격 상승
+    animatePurchase(p.name);
     updateUI();
     playSound("buy");
   }
+}
+
+// --- 애니메이션 ---
+function animatePlant(div) {
+  div.style.transform = "scale(1.2)";
+  div.style.transition = "transform 0.2s";
+  setTimeout(() => div.style.transform = "scale(1)", 200);
+}
+
+function animatePurchase(name) {
+  const effect = document.createElement("div");
+  effect.textContent = `+1 ${name}!`;
+  effect.className = "purchase-effect";
+  document.body.appendChild(effect);
+  setTimeout(() => effect.remove(), 1000);
 }
 
 // --- 효과음 ---
