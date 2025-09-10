@@ -146,7 +146,6 @@ function animateCoins(current, target, duration = 500) {
   requestAnimationFrame(update);
 }
 
-let coins = 0;
 function addCoins(amount) {
   const oldCoins = coins;
   coins += amount;
