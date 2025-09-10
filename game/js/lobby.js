@@ -24,6 +24,10 @@ const gameModal = document.getElementById("gameModal");
 const gameList = document.getElementById("gameList");
 const btnCloseGameModal = document.getElementById("btnCloseGameModal");
 
+const modal = document.getElementById("extraMenuModal");
+const btn = document.getElementById("extraMenuBtn");
+const span = document.querySelector(".close");
+
 // 유저 처리
 function saveUser(username){ localStorage.setItem("namulUser", username); }
 function getUser(){ return localStorage.getItem("namulUser") || "(게스트)"; }
@@ -157,7 +161,19 @@ document.querySelector(".event-banner").onclick=()=>{ window.location.href="../.
 // 초기 UI
 document.addEventListener("DOMContentLoaded", updateUI);
 
-function togglePopup(id) {
-  const popup = document.getElementById(id);
-  popup.style.display = (popup.style.display === "block") ? "none" : "block";
-}
+// 열기
+btn.onclick = () => {
+  modal.style.display = "block";
+};
+
+// 닫기 (X 버튼)
+span.onclick = () => {
+  modal.style.display = "none";
+};
+
+// 닫기 (배경 클릭)
+window.onclick = (e) => {
+  if (e.target == modal) {
+    modal.style.display = "none";
+  }
+};
