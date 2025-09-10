@@ -156,3 +156,8 @@ document.querySelector(".event-banner").onclick=()=>{ window.location.href="../.
 
 // 초기 UI
 document.addEventListener("DOMContentLoaded", updateUI);
+
+function togglePopup(id) {
+  const popup = document.getElementById(id);
+  popup.style.display = (popup.style.display === "block") ? "none" : "block";
+}
