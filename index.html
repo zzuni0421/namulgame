@@ -27,6 +27,8 @@
     <button id="btnGame" class="btn genre-btn">Game</button>
   </div>
 </div>
+
+<!-- LOGIN MODAL -->
 <div id="loginModal" class="modal">
   <div class="modal-content">
     <span class="close" id="closeLogin">&times;</span>
@@ -37,40 +39,46 @@
   </div>
 </div>
 
+<!-- REGISTER MODAL -->
 <div id="registerModal" class="modal">
   <div class="modal-content">
     <span class="close" id="closeRegister">&times;</span>
     <h2>회원가입</h2>
     <input type="text" id="registerUsername" placeholder="아이디 (영문+숫자 3~15자)" oninput="validateUserId()">
-    <button type="button" onclick="checkDuplicate()">중복 확인</button>
+    <button type="button" onclick="checkDuplicate(registerUsername.value)">중복 확인</button>
     <div id="idFeedback" style="font-size: 0.9rem; margin-top: 4px;"></div>
     <input type="password" id="registerPassword" placeholder="비밀번호">
     <button id="btnRegister" class="btn">회원가입</button>
   </div>
 </div>
 
+<!-- GAME LIST MODAL -->
 <div id="gameModal" class="modal">
   <div class="modal-content">
     <span class="close" id="btnCloseGameModal">&times;</span>
     <div id="gameList" class="game-list"></div>
   </div>
+</div>
 
-    <button id="extraMenuBtn">📌 추가 메뉴</button>
-  </div>
+<!-- EXTRA MENU BUTTON (항상 로비에 보이도록 모달 밖에 둠) -->
+<button id="extraMenuBtn" class="btn">📌 추가 메뉴</button>
 
-  <div id="extraMenuModal" class="modal">
-    <div class="modal-content">
-      <span class="close">&times;</span>
-      <h2>📋 추가 메뉴</h2>
+<!-- EXTRA MENU MODAL -->
+<div id="extraMenuModal" class="modal">
+  <div class="modal-content">
+    <span class="close" id="closeExtraMenu">&times;</span>
+    <h2>📋 추가 메뉴</h2>
+    <div class="popup-buttons">
       <button onclick="location.href='license.html'">📜 라이선스 보기</button>
-      <button onclick="window.open('https://youtube.com')">▶️ 나물게임 유튜브</button>
-      <button onclick="window.open('https://youtube.com')">▶️ 나물이 유튜브</button>
+      <button onclick="window.open('https://www.youtube.com/@namulgame','_blank')">▶️ 나물게임 유튜브</button>
+      <button onclick="window.open('https://www.youtube.com/@namuli','_blank')">▶️ 나물이 유튜브</button>
       <button onclick="location.href='mailto:zzuni0421@naver.com'">📧 네이버 메일</button>
       <button onclick="location.href='mailto:zzuni0421@gmail.com'">📧 구글 메일</button>
-      <button onclick="window.open('https://forms.gle/bEL2EeMexCVw4MXWA')">📝 설문조사</button>
+      <button onclick="window.open('https://forms.gle/bEL2EeMexCVw4MXWA','_blank')">📝 설문조사</button>
     </div>
   </div>
-  
+</div>
+
 <script src="game/js/lobby.js"></script>
 </body>
 </html>
