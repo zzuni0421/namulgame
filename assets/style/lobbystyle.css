@@ -1,3 +1,4 @@
+/* 기본 폰트 / 배경 */
 body {
   font-family: 'Nanum Gothic', sans-serif;
   background: #f8f4f0;
@@ -5,10 +6,12 @@ body {
   margin:0; padding:0;
 }
 
+/* 컨테이너 */
 .container {
   max-width: 500px;
   margin: 30px auto;
   text-align: center;
+  padding: 16px;
 }
 
 /* 이벤트 배너 */
@@ -20,10 +23,9 @@ body {
   margin-bottom: 20px;
   cursor: pointer;
 }
-
 .event-banner:hover { background:#ffd899; }
 
-/* 버튼 */
+/* 공통 버튼 스타일 (.btn) */
 .btn {
   padding: 8px 16px;
   margin: 5px;
@@ -32,10 +34,11 @@ body {
   background: #a3d9a5;
   color: #fff;
   cursor: pointer;
-  transition: 0.2s;
+  transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.18s;
+  box-shadow: 0 4px 10px rgba(0,0,0,0.06);
 }
-
-.btn:hover { background: #8bc98b; }
+.btn:hover { transform: translateY(-3px); background: #8bc98b; }
+.btn:active { transform: translateY(0); box-shadow: 0 2px 6px rgba(0,0,0,0.08); }
 
 /* 장르 버튼 */
 .genre-buttons { margin: 20px 0; }
@@ -49,134 +52,90 @@ body {
 /* 유저 정보 */
 .user-info { font-weight: bold; margin: 10px 0; }
 
-/* 추가 메뉴 버튼 위치 */
+/* 추가 메뉴 버튼 */
 #extraMenuBtn {
   position: fixed;
-  bottom: 20px;
-  right: 20px;
+  bottom: 26px;
+  right: 26px;
+  z-index: 1500;
+  padding: 12px 14px;
+  border-radius: 12px;
+  font-size: 16px;
 }
 
 /* 모달 */
 .modal {
   display: none;
   position: fixed;
-  z-index: 1000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.4);
+  z-index: 1400;
+  left: 0; top: 0;
+  width: 100%; height: 100%;
+  background: rgba(0, 0, 0, 0.45);
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  box-sizing: border-box;
 }
 
+/* 실제 팝업 박스 */
 .modal-content {
   background: #fff;
-  margin: 10% auto;
-  padding: 20px;
   border-radius: 12px;
-  width: 320px;
+  width: 100%;
+  max-width: 420px;
+  padding: 18px 18px 24px;
   text-align: center;
-  box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-  animation: fadeIn 0.3s ease-in-out;
+  box-shadow: 0 8px 30px rgba(0,0,0,0.18);
+  position: relative;
+  animation: fadeInScale 220ms ease-out;
 }
 
+/* 닫기 버튼 (우상단) */
+.modal-content .close {
+  position: absolute;
+  top: 10px;
+  right: 14px;
+  font-size: 22px;
+  color: #555;
+  cursor: pointer;
+}
+.modal-content .close:hover { color: #ff5252; }
+
+/* 내부 버튼들(모달 안) */
 .modal-content button {
   width: 100%;
   margin: 8px 0;
-}
-
-.close {
-  color: #555;
-  float: right;
-  font-size: 28px;
-  font-weight: bold;
-  cursor: pointer;
-}
-
-.close:hover {
-  color: red;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: scale(0.9); }
-  to { opacity: 1; transform: scale(1); }
-}
-
-/* 게임 리스트 */
-.game-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  align-items: center;
-}
-
-.game-list button {
-  width: 200px;
   padding: 10px;
   border-radius: 10px;
   background: #a3d9a5;
   color: #fff;
   border: none;
   cursor: pointer;
+  font-weight: bold;
 }
+.modal-content button:hover { background: #8bc98b; transform: translateY(-3px); }
 
-.game-list button:hover { background: #8bc98b; }
-
-/* 팝업 배경 */
-.popup {
-  display: none;
-  position: fixed;
-  z-index: 1000;
-  left: 0; top: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.5);
-}
-
-/* 팝업 본체 */
-.popup-content {
-  background: #fff;
-  margin: 10% auto;
-  padding: 20px;
-  border-radius: 15px;
-  width: 90%;
-  max-width: 400px;
-  text-align: center;
-  box-shadow: 0 5px 20px rgba(0,0,0,0.25);
-  animation: fadeIn 0.3s ease;
-}
-
-/* 닫기 버튼 */
-.close {
-  float: right;
-  font-size: 24px;
-  cursor: pointer;
-}
-
-/* 팝업 버튼들 */
-.popup-buttons {
+/* 게임 리스트 스타일 */
+.game-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  margin-top: 20px;
+  gap: 10px;
+  align-items: center;
+}
+.game-list button { width: 200px; }
+
+/* popup-buttons (추가메뉴 내부) */
+.popup-buttons { display:flex; flex-direction:column; gap:12px; margin-top:10px; }
+
+/* 애니메이션 */
+@keyframes fadeInScale {
+  from { opacity: 0; transform: scale(0.97); }
+  to { opacity: 1; transform: scale(1); }
 }
 
-.popup-buttons button {
-  padding: 12px;
-  font-size: 15px;
-  border: none;
-  border-radius: 10px;
-  cursor: pointer;
-  background: linear-gradient(45deg, #6ab04c, #badc58);
-  color: white;
-  font-weight: bold;
-  transition: transform 0.2s, background 0.3s;
-}
-
-.popup-buttons button:hover {
-  transform: scale(1.05);
-  background: linear-gradient(45deg, #4cd137, #44bd32);
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-20px); }
-  to { opacity: 1; transform: translateY(0); }
+/* 반응형(작은 화면) */
+@media (max-width:480px){
+  #extraMenuBtn { right: 12px; bottom: 12px; padding: 10px; }
+  .modal-content { padding: 14px; width: 95%; }
+  .game-list button { width: 100%; }
 }
