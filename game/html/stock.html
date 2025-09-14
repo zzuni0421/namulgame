@@ -6,7 +6,6 @@
     <title>📈 주식왕 시뮬레이터</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
-        // Tailwind 설정
         tailwind.config = {
             theme: {
                 extend: {
@@ -74,7 +73,6 @@
     </style>
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 min-h-screen text-white">
-    <!-- 헤더 -->
     <div class="bg-black/20 backdrop-blur-lg border-b border-white/10 p-4">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-4">
@@ -106,7 +104,7 @@
         <div class="lg:col-span-2 space-y-4">
             <h2 class="text-xl font-bold mb-4">🏆 인기 종목 (30개)</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4" id="stockList">
-                <곳 -->
+
             </div>
         </div>
 
@@ -150,7 +148,27 @@
                     </div>
                     <div class="flex justify-between items-center p-2 bg-orange-500/20 rounded-lg">
                         <span class="text-sm">🥉 초보투자자</span>
-                        <span class="text-green-400 font-bold">+곳 -->
+                        <span class="text-green-400 font-bold">+45%</span>
+                    </div>
+                    <div class="flex justify-between items-center p-2 bg-blue-500/20 rounded-lg border-2 border-blue-400">
+                        <span class="text-sm">👤 나</span>
+                        <span class="text-gray-400 font-bold" id="myReturn">0%</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 포트폴리오 상세 모달 -->
+    <div id="portfolioDetailModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50">
+        <div class="bg-slate-800 rounded-2xl p-6 m-4 max-w-2xl w-full border border-white/20 max-h-[80vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold" id="detailModalTitle">거래 내역</h3>
+                <button onclick="closePortfolioDetail()" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+            </div>
+            
+            <div id="portfolioDetailContent" class="space-y-4">
+
             </div>
         </div>
     </div>
