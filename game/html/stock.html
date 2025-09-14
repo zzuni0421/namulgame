@@ -5,11 +5,21 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>📈 주식왕 시뮬레이터</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        // Tailwind 설정
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        'korean': ['Noto Sans KR', 'sans-serif']
+                    }
+                }
+            }
+        }
+    </script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;500;600;700&display=swap');
-        
         body {
-            font-family: 'Noto Sans KR', sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
         }
         
         .stock-card {
@@ -87,16 +97,16 @@
     <!-- 뉴스 티커 -->
     <div class="bg-red-600/20 border-y border-red-500/30 py-2 overflow-hidden">
         <div class="news-ticker text-sm font-medium">
-            🔥 속보: 테슬라 주가 급등! • 💰 비트코인 신고점 돌파 • 📱 애플 신제품 발표 임박 • 🚀 우주항공 관련주 상승세 • ⚡ 전기차 배터리 기술 혁신
+            🔥 속보: 테슬라 주가 급등! • 💰 비트코인 신고점 돌파 • 📱 애플 신제품 발표 임박 • 🚀 우주항공 관련주 상승세 • ⚡ 전기차 배터리 기술 혁신 • 🏦 금융주 강세 지속 • 🎮 게임주 반등 신호
         </div>
     </div>
 
     <div class="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-6">
         <!-- 주식 목록 -->
         <div class="lg:col-span-2 space-y-4">
-            <h2 class="text-xl font-bold mb-4">🏆 인기 종목</h2>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="stockList">
-                <!-- 주식 카드들 생성되는 곳 -->
+            <h2 class="text-xl font-bold mb-4">🏆 인기 종목 (30개)</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4" id="stockList">
+                <곳 -->
             </div>
         </div>
 
@@ -140,27 +150,7 @@
                     </div>
                     <div class="flex justify-between items-center p-2 bg-orange-500/20 rounded-lg">
                         <span class="text-sm">🥉 초보투자자</span>
-                        <span class="text-green-400 font-bold">+45%</span>
-                    </div>
-                    <div class="flex justify-between items-center p-2 bg-blue-500/20 rounded-lg border-2 border-blue-400">
-                        <span class="text-sm">👤 나</span>
-                        <span class="text-gray-400 font-bold" id="myReturn">0%</span>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
-    <!-- 포트폴리오 상세 모달 -->
-    <div id="portfolioDetailModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50">
-        <div class="bg-slate-800 rounded-2xl p-6 m-4 max-w-2xl w-full border border-white/20 max-h-[80vh] overflow-y-auto">
-            <div class="flex justify-between items-center mb-4">
-                <h3 class="text-xl font-bold" id="detailModalTitle">거래 내역</h3>
-                <button onclick="closePortfolioDetail()" class="text-gray-400 hover:text-white text-2xl">&times;</button>
-            </div>
-            
-            <div id="portfolioDetailContent" class="space-y-4">
-                <!-- 상세 내용 들어가는 곳 -->
+                        <span class="text-green-400 font-bold">+곳 -->
             </div>
         </div>
     </div>
@@ -222,14 +212,55 @@
             tradeType: 'buy'
         };
 
-        // 주식 데이터
+        // 주식 데이터 (30개)
         const stocks = [
+            // 테크 대장주
             { id: 'tesla', name: '테슬라', emoji: '🚀', price: 250000, change: 0, history: [] },
             { id: 'apple', name: '애플', emoji: '🍎', price: 180000, change: 0, history: [] },
-            { id: 'samsung', name: '삼성전자', emoji: '📱', price: 75000, change: 0, history: [] },
-            { id: 'bitcoin', name: '비트코인', emoji: '₿', price: 45000000, change: 0, history: [] },
+            { id: 'microsoft', name: '마이크로소프트', emoji: '💻', price: 340000, change: 0, history: [] },
             { id: 'nvidia', name: '엔비디아', emoji: '🎮', price: 420000, change: 0, history: [] },
-            { id: 'amazon', name: '아마존', emoji: '📦', price: 150000, change: 0, history: [] }
+            { id: 'amazon', name: '아마존', emoji: '📦', price: 150000, change: 0, history: [] },
+            { id: 'google', name: '구글', emoji: '🔍', price: 135000, change: 0, history: [] },
+            { id: 'meta', name: '메타', emoji: '📘', price: 320000, change: 0, history: [] },
+            { id: 'netflix', name: '넷플릭스', emoji: '🎬', price: 450000, change: 0, history: [] },
+            
+            // 한국 주식
+            { id: 'samsung', name: '삼성전자', emoji: '📱', price: 75000, change: 0, history: [] },
+            { id: 'sk_hynix', name: 'SK하이닉스', emoji: '💾', price: 125000, change: 0, history: [] },
+            { id: 'lg_energy', name: 'LG에너지솔루션', emoji: '🔋', price: 480000, change: 0, history: [] },
+            { id: 'kakao', name: '카카오', emoji: '💬', price: 58000, change: 0, history: [] },
+            { id: 'naver', name: '네이버', emoji: '🟢', price: 195000, change: 0, history: [] },
+            
+            // 금융
+            { id: 'jpmorgan', name: 'JP모건', emoji: '🏦', price: 145000, change: 0, history: [] },
+            { id: 'visa', name: '비자', emoji: '💳', price: 240000, change: 0, history: [] },
+            { id: 'mastercard', name: '마스터카드', emoji: '💰', price: 380000, change: 0, history: [] },
+            
+            // 소비재
+            { id: 'coca_cola', name: '코카콜라', emoji: '🥤', price: 62000, change: 0, history: [] },
+            { id: 'nike', name: '나이키', emoji: '👟', price: 105000, change: 0, history: [] },
+            { id: 'mcdonalds', name: '맥도날드', emoji: '🍟', price: 280000, change: 0, history: [] },
+            { id: 'starbucks', name: '스타벅스', emoji: '☕', price: 95000, change: 0, history: [] },
+            
+            // 에너지/자원
+            { id: 'exxon', name: '엑손모빌', emoji: '⛽', price: 110000, change: 0, history: [] },
+            { id: 'chevron', name: '셰브론', emoji: '🛢️', price: 155000, change: 0, history: [] },
+            
+            // 항공/운송
+            { id: 'boeing', name: '보잉', emoji: '✈️', price: 210000, change: 0, history: [] },
+            { id: 'fedex', name: '페덱스', emoji: '📮', price: 250000, change: 0, history: [] },
+            
+            // 헬스케어
+            { id: 'johnson', name: '존슨앤존슨', emoji: '🏥', price: 165000, change: 0, history: [] },
+            { id: 'pfizer', name: '화이자', emoji: '💊', price: 32000, change: 0, history: [] },
+            
+            // 엔터테인먼트
+            { id: 'disney', name: '디즈니', emoji: '🏰', price: 95000, change: 0, history: [] },
+            { id: 'spotify', name: '스포티파이', emoji: '🎵', price: 150000, change: 0, history: [] },
+            
+            // 암호화폐
+            { id: 'bitcoin', name: '비트코인', emoji: '₿', price: 45000000, change: 0, history: [] },
+            { id: 'ethereum', name: '이더리움', emoji: '💎', price: 2800000, change: 0, history: [] }
         ];
 
         // 주식 가격 업데이트
@@ -260,30 +291,30 @@
                 const animationClass = stock.change >= 0 ? 'price-up' : 'price-down';
                 
                 return `
-                    <div class="stock-card bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20 cursor-pointer hover:bg-white/20 transition-all"
+                    <div class="stock-card bg-white/10 backdrop-blur-lg rounded-xl p-4 border border-white/20 cursor-pointer hover:bg-white/20 transition-all"
                          onclick="openTradeModal('${stock.id}')">
-                        <div class="flex justify-between items-start mb-4">
+                        <div class="flex justify-between items-start mb-3">
                             <div>
-                                <div class="text-2xl mb-1">${stock.emoji}</div>
-                                <div class="font-bold text-lg">${stock.name}</div>
+                                <div class="text-xl mb-1">${stock.emoji}</div>
+                                <div class="font-bold text-sm">${stock.name}</div>
                             </div>
                             <div class="text-right">
-                                <div class="text-2xl font-bold ${animationClass}">₩${stock.price.toLocaleString()}</div>
-                                <div class="flex items-center ${changeColor} text-sm font-medium">
+                                <div class="text-lg font-bold ${animationClass}">₩${stock.price.toLocaleString()}</div>
+                                <div class="flex items-center ${changeColor} text-xs font-medium">
                                     ${changeIcon} ${stock.change >= 0 ? '+' : ''}${stock.change.toFixed(2)}%
                                 </div>
                             </div>
                         </div>
                         
                         <!-- 미니 차트 -->
-                        <div class="h-16 relative">
+                        <div class="h-12 relative mb-3">
                             <svg class="w-full h-full">
                                 ${generateMiniChart(stock.history)}
                             </svg>
                         </div>
                         
-                        <div class="mt-4 text-center">
-                            <button class="bg-blue-600 hover:bg-blue-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors">
+                        <div class="text-center">
+                            <button class="bg-blue-600 hover:bg-blue-700 px-3 py-1 rounded-lg text-xs font-medium transition-colors">
                                 거래하기
                             </button>
                         </div>
@@ -723,5 +754,5 @@
         // 게임 시작
         initGame();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97ef824ae514ea13',t:'MTc1Nzg0ODk3Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97efbbd400ccea2b',t:'MTc1Nzg1MTMyOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
