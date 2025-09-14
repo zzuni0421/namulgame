@@ -64,6 +64,7 @@
     </style>
 </head>
 <body class="bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 min-h-screen text-white">
+    <!-- 헤더 -->
     <div class="bg-black/20 backdrop-blur-lg border-b border-white/10 p-4">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
             <div class="flex items-center space-x-4">
@@ -95,7 +96,7 @@
         <div class="lg:col-span-2 space-y-4">
             <h2 class="text-xl font-bold mb-4">🏆 인기 종목</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4" id="stockList">
-            <!-- 주식 생성되는 데 -->
+                <!-- 주식 카드들 생성되는 곳 -->
             </div>
         </div>
 
@@ -146,6 +147,20 @@
                         <span class="text-gray-400 font-bold" id="myReturn">0%</span>
                     </div>
                 </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 포트폴리오 상세 모달 -->
+    <div id="portfolioDetailModal" class="fixed inset-0 bg-black/50 backdrop-blur-sm hidden items-center justify-center z-50">
+        <div class="bg-slate-800 rounded-2xl p-6 m-4 max-w-2xl w-full border border-white/20 max-h-[80vh] overflow-y-auto">
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xl font-bold" id="detailModalTitle">거래 내역</h3>
+                <button onclick="closePortfolioDetail()" class="text-gray-400 hover:text-white text-2xl">&times;</button>
+            </div>
+            
+            <div id="portfolioDetailContent" class="space-y-4">
+                <!-- 상세 내용 들어가는 곳 -->
             </div>
         </div>
     </div>
@@ -201,6 +216,7 @@
         let gameState = {
             cash: 1000000,
             portfolio: {},
+            portfolioDetails: {}, // 매수가격 정보 저장
             tradeHistory: [],
             currentStock: null,
             tradeType: 'buy'
@@ -370,6 +386,29 @@
                     gameState.cash -= totalAmount;
                     gameState.portfolio[stock.id] = (gameState.portfolio[stock.id] || 0) + quantity;
                     
+                    // 매수가격 정보 저장 (평균단가 계산)
+                    if (!gameState.portfolioDetails[stock.id]) {
+                        gameState.portfolioDetails[stock.id] = {
+                            totalShares: quantity,
+                            totalCost: totalAmount,
+                            avgPrice: stock.price,
+                            trades: []
+                        };
+                    } else {
+                        const details = gameState.portfolioDetails[stock.id];
+                        details.totalCost += totalAmount;
+                        details.totalShares += quantity;
+                        details.avgPrice = Math.round(details.totalCost / details.totalShares);
+                    }
+                    
+                    // 개별 거래 기록
+                    gameState.portfolioDetails[stock.id].trades.push({
+                        type: 'buy',
+                        quantity: quantity,
+                        price: stock.price,
+                        time: new Date().toLocaleTimeString()
+                    });
+                    
                     addTradeHistory('매수', stock, quantity, stock.price);
                     showNotification(`${stock.emoji} ${stock.name} ${quantity}주 매수 완료!`, 'success');
                 } else {
@@ -382,11 +421,40 @@
                     gameState.cash += totalAmount;
                     gameState.portfolio[stock.id] -= quantity;
                     
+                    // 매도 시 평균단가 정보 저장 (삭제 전에)
+                    let avgPrice = stock.price;
+                    let profit = 0;
+                    
+                    if (gameState.portfolioDetails[stock.id]) {
+                        const details = gameState.portfolioDetails[stock.id];
+                        avgPrice = details.avgPrice; // 매도 전 평균단가 저장
+                        profit = (stock.price - avgPrice) * quantity;
+                        
+                        // 개별 거래 기록
+                        details.trades.push({
+                            type: 'sell',
+                            quantity: quantity,
+                            price: stock.price,
+                            avgPrice: avgPrice,
+                            profit: profit,
+                            time: new Date().toLocaleTimeString()
+                        });
+                        
+                        // 매도 후 포트폴리오 업데이트
+                        const soldCost = avgPrice * quantity;
+                        details.totalCost -= soldCost;
+                        details.totalShares -= quantity;
+                        
+                        if (details.totalShares === 0) {
+                            delete gameState.portfolioDetails[stock.id];
+                        }
+                    }
+                    
                     if (gameState.portfolio[stock.id] === 0) {
                         delete gameState.portfolio[stock.id];
                     }
                     
-                    addTradeHistory('매도', stock, quantity, stock.price);
+                    addTradeHistory('매도', stock, quantity, stock.price, { avgPrice, profit });
                     showNotification(`${stock.emoji} ${stock.name} ${quantity}주 매도 완료!`, 'success');
                 } else {
                     showNotification('보유 수량이 부족합니다!', 'error');
@@ -399,18 +467,19 @@
         }
 
         // 거래 내역 추가
-        function addTradeHistory(type, stock, quantity, price) {
+        function addTradeHistory(type, stock, quantity, price, additionalInfo = {}) {
             gameState.tradeHistory.unshift({
                 type,
                 stock: stock.name,
                 emoji: stock.emoji,
                 quantity,
                 price,
-                time: new Date().toLocaleTimeString()
+                time: new Date().toLocaleTimeString(),
+                ...additionalInfo
             });
             
-            // 최근 10개만 유지
-            if (gameState.tradeHistory.length > 10) {
+            // 최근 15개로 확장
+            if (gameState.tradeHistory.length > 15) {
                 gameState.tradeHistory.pop();
             }
         }
@@ -428,17 +497,28 @@
             portfolio.innerHTML = portfolioEntries.map(([stockId, quantity]) => {
                 const stock = stocks.find(s => s.id === stockId);
                 const currentValue = stock.price * quantity;
+                const details = gameState.portfolioDetails[stockId];
+                const avgPrice = details ? details.avgPrice : stock.price;
+                const profit = (stock.price - avgPrice) * quantity;
+                const profitPercent = ((stock.price - avgPrice) / avgPrice * 100).toFixed(1);
+                const profitColor = profit >= 0 ? 'text-green-400' : 'text-red-400';
+                const profitIcon = profit >= 0 ? '📈' : '📉';
                 
                 return `
-                    <div class="portfolio-item rounded-xl p-4 text-white">
-                        <div class="flex justify-between items-center">
+                    <div class="portfolio-item rounded-xl p-4 text-white cursor-pointer hover:bg-white/10 transition-colors"
+                         onclick="showPortfolioDetail('${stockId}')">
+                        <div class="flex justify-between items-start">
                             <div>
                                 <div class="font-bold">${stock.emoji} ${stock.name}</div>
                                 <div class="text-sm opacity-80">${quantity}주 보유</div>
+                                <div class="text-xs opacity-60">평균 ₩${avgPrice.toLocaleString()}</div>
                             </div>
                             <div class="text-right">
                                 <div class="font-bold">₩${currentValue.toLocaleString()}</div>
                                 <div class="text-sm opacity-80">₩${stock.price.toLocaleString()}/주</div>
+                                <div class="text-xs ${profitColor} font-medium">
+                                    ${profitIcon} ${profit >= 0 ? '+' : ''}₩${Math.abs(profit).toLocaleString()} (${profitPercent >= 0 ? '+' : ''}${profitPercent}%)
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -485,17 +565,35 @@
                 const typeColor = trade.type === '매수' ? 'text-green-400' : 'text-red-400';
                 const typeIcon = trade.type === '매수' ? '📈' : '📉';
                 
+                let profitInfo = '';
+                if (trade.type === '매도' && trade.avgPrice && trade.profit !== undefined) {
+                    const profitColor = trade.profit >= 0 ? 'text-green-400' : 'text-red-400';
+                    profitInfo = `
+                        <div class="text-xs text-gray-400 mt-1">
+                            매수가: ₩${trade.avgPrice.toLocaleString()} → 매도가: ₩${trade.price.toLocaleString()}
+                        </div>
+                        <div class="text-xs ${profitColor} font-medium">
+                            손익: ${trade.profit >= 0 ? '+' : ''}₩${Math.abs(trade.profit).toLocaleString()}
+                        </div>
+                    `;
+                }
+                
                 return `
                     <div class="bg-slate-700/50 rounded-lg p-3">
-                        <div class="flex justify-between items-center">
-                            <div class="flex items-center space-x-2">
-                                <span>${typeIcon}</span>
-                                <span class="${typeColor} font-medium">${trade.type}</span>
-                                <span class="text-sm">${trade.emoji} ${trade.stock}</span>
+                        <div class="flex justify-between items-start">
+                            <div class="flex-1">
+                                <div class="flex items-center space-x-2 mb-1">
+                                    <span>${typeIcon}</span>
+                                    <span class="${typeColor} font-medium">${trade.type}</span>
+                                    <span class="text-sm">${trade.emoji} ${trade.stock}</span>
+                                </div>
+                                <div class="text-sm text-gray-300">
+                                    ${trade.quantity}주 × ₩${trade.price.toLocaleString()}
+                                </div>
+                                ${profitInfo}
                             </div>
-                            <div class="text-right text-sm">
-                                <div>${trade.quantity}주</div>
-                                <div class="text-gray-400">${trade.time}</div>
+                            <div class="text-right text-xs text-gray-400 ml-2">
+                                ${trade.time}
                             </div>
                         </div>
                     </div>
@@ -539,8 +637,91 @@
             setInterval(updateStockPrices, 3000);
         }
 
+        // 포트폴리오 상세 보기
+        function showPortfolioDetail(stockId) {
+            const stock = stocks.find(s => s.id === stockId);
+            const details = gameState.portfolioDetails[stockId];
+            
+            if (!details) return;
+            
+            document.getElementById('detailModalTitle').textContent = `${stock.emoji} ${stock.name} 거래 내역`;
+            
+            const currentPrice = stock.price;
+            const avgPrice = details.avgPrice;
+            const totalProfit = (currentPrice - avgPrice) * gameState.portfolio[stockId];
+            const profitPercent = ((currentPrice - avgPrice) / avgPrice * 100).toFixed(1);
+            
+            let content = `
+                <div class="bg-slate-700/50 rounded-xl p-4 mb-4">
+                    <div class="grid grid-cols-2 gap-4 text-sm">
+                        <div>
+                            <div class="text-gray-400">보유 수량</div>
+                            <div class="font-bold text-lg">${gameState.portfolio[stockId]}주</div>
+                        </div>
+                        <div>
+                            <div class="text-gray-400">평균 매수가</div>
+                            <div class="font-bold text-lg">₩${avgPrice.toLocaleString()}</div>
+                        </div>
+                        <div>
+                            <div class="text-gray-400">현재가</div>
+                            <div class="font-bold text-lg">₩${currentPrice.toLocaleString()}</div>
+                        </div>
+                        <div>
+                            <div class="text-gray-400">평가손익</div>
+                            <div class="font-bold text-lg ${totalProfit >= 0 ? 'text-green-400' : 'text-red-400'}">
+                                ${totalProfit >= 0 ? '+' : ''}₩${Math.abs(totalProfit).toLocaleString()} (${profitPercent >= 0 ? '+' : ''}${profitPercent}%)
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="space-y-2">
+                    <h4 class="font-bold text-lg mb-3">📋 전체 거래 내역</h4>
+            `;
+            
+            details.trades.forEach((trade, index) => {
+                const isProfit = trade.type === 'sell' && trade.profit > 0;
+                const profitColor = trade.type === 'sell' ? (trade.profit >= 0 ? 'text-green-400' : 'text-red-400') : '';
+                
+                content += `
+                    <div class="bg-slate-600/30 rounded-lg p-3 border-l-4 ${trade.type === 'buy' ? 'border-blue-400' : 'border-orange-400'}">
+                        <div class="flex justify-between items-start">
+                            <div>
+                                <div class="flex items-center space-x-2">
+                                    <span class="font-bold ${trade.type === 'buy' ? 'text-blue-400' : 'text-orange-400'}">
+                                        ${trade.type === 'buy' ? '📈 매수' : '📉 매도'}
+                                    </span>
+                                    <span class="text-sm text-gray-400">${trade.time}</span>
+                                </div>
+                                <div class="text-sm mt-1">
+                                    ${trade.quantity}주 × ₩${trade.price.toLocaleString()} = ₩${(trade.quantity * trade.price).toLocaleString()}
+                                </div>
+                                ${trade.type === 'sell' ? `
+                                    <div class="text-xs text-gray-400 mt-1">
+                                        매수가: ₩${trade.avgPrice.toLocaleString()} | 손익: <span class="${profitColor}">₩${Math.abs(trade.profit).toLocaleString()}</span>
+                                    </div>
+                                ` : ''}
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            content += '</div>';
+            
+            document.getElementById('portfolioDetailContent').innerHTML = content;
+            document.getElementById('portfolioDetailModal').classList.remove('hidden');
+            document.getElementById('portfolioDetailModal').classList.add('flex');
+        }
+
+        // 포트폴리오 상세 모달 닫기
+        function closePortfolioDetail() {
+            document.getElementById('portfolioDetailModal').classList.add('hidden');
+            document.getElementById('portfolioDetailModal').classList.remove('flex');
+        }
+
         // 게임 시작
         initGame();
     </script>
-<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97ef6b8115fde9f7',t:'MTc1Nzg0ODAzOC4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'97ef824ae514ea13',t:'MTc1Nzg0ODk3Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
