@@ -3,27 +3,28 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>면접 시뮬레이터: 나를 뽑아줘!</title>
+  <title>인터뷰 시뮬레이터</title>
   <link rel="stylesheet" href="../../assets/style/style5.css">
 </head>
 <body>
   <div id="game">
-    <h1>💼 면접 시뮬레이터: 나를 뽑아줘!</h1>
-    <div id="ui">
-      <div id="interviewer">
-        <img id="face" src="../../assets/neutral.png" alt="면접관">
-      </div>
-      <div id="chat"></div>
-      <div id="stats">
-        <div>호감도 ❤️ <progress id="like" max="100" value="50"></progress></div>
-        <div>스트레스 😡 <progress id="stress" max="100" value="0"></progress></div>
-      </div>
+    <div id="intro" class="screen active">
+      <h1>🌱 나물게임 인터뷰 시뮬레이터 🌱</h1>
+      <button id="startBtn" class="btn">시작하기</button>
     </div>
-    <div id="input">
-      <input type="text" id="answer" placeholder="답변을 입력하세요...">
-      <button onclick="submitAnswer()">제출</button>
+
+    <div id="question" class="screen">
+      <img id="face" src="../../assets/neutral.png" alt="면접관" class="face">
+      <h2 id="qText">질문이 여기에 표시됩니다</h2>
+      <div id="options" class="options"></div>
+    </div>
+
+    <div id="result" class="screen">
+      <h2 id="rText"></h2>
+      <button id="retryBtn" class="btn">다시하기</button>
     </div>
   </div>
+
   <script src="../js/interview.js"></script>
 </body>
 </html>
