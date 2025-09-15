@@ -1,88 +1,89 @@
-let questions = [
-  "자기소개를 해주세요.",
-  "우리 회사에 지원한 이유는?",
-  "본인의 장점은 무엇인가요?",
-  "팀 프로젝트에서 갈등이 생기면 어떻게 하시나요?",
-  "스트레스를 어떻게 해소하시나요?",
-  "마지막으로 하고 싶은 말은?"
+const questions = [
+  {
+    text: "첫 번째 질문! 🌱 점심 메뉴로 뭘 고를래?",
+    options: [
+      { text: "나물 비빔밥", mood: "happy" },
+      { text: "햄버거", mood: "angry" },
+      { text: "라면", mood: "neutral" },
+      { text: "초밥", mood: "crying" }
+    ]
+  },
+  {
+    text: "두 번째 질문! 😎 나물이 제일 좋아하는 계절은?",
+    options: [
+      { text: "봄 (쑥, 냉이 파티)", mood: "happy" },
+      { text: "여름 (더워 죽겠음)", mood: "angry" },
+      { text: "가을 (고사리 국밥 ㄱㄱ)", mood: "neutral" },
+      { text: "겨울 (동치미 나물)", mood: "crying" }
+    ]
+  },
+  {
+    text: "마지막 질문! 🔥 면접에 임하는 각오는?",
+    options: [
+      { text: "나물왕 되겠습니다!", mood: "happy" },
+      { text: "집에 가고 싶습니다", mood: "crying" },
+      { text: "밥 먹으러 왔는데요", mood: "angry" },
+      { text: "저 그냥 게스트인데요?", mood: "neutral" }
+    ]
+  }
 ];
 
-let like = 50;
-let stress = 0;
 let currentQ = 0;
+const intro = document.getElementById("intro");
+const questionScreen = document.getElementById("question");
+const resultScreen = document.getElementById("result");
+
+const qText = document.getElementById("qText");
+const options = document.getElementById("options");
+const face = document.getElementById("face");
+const rText = document.getElementById("rText");
+
+const startBtn = document.getElementById("startBtn");
+const retryBtn = document.getElementById("retryBtn");
+
+startBtn.onclick = () => {
+  intro.classList.remove("active");
+  questionScreen.classList.add("active");
+  showQuestion();
+};
+
+retryBtn.onclick = () => {
+  currentQ = 0;
+  resultScreen.classList.remove("active");
+  questionScreen.classList.add("active");
+  showQuestion();
+};
 
 function showQuestion() {
-  if (currentQ >= questions.length) {
-    endGame();
-    return;
-  }
-  const chat = document.getElementById("chat");
-  chat.innerHTML += `<p class="typewriter">👔 면접관: ${questions[currentQ]}</p>`;
+  const q = questions[currentQ];
+  qText.textContent = q.text;
+  options.innerHTML = "";
+
+  q.options.forEach(opt => {
+    const btn = document.createElement("button");
+    btn.textContent = opt.text;
+    btn.onclick = () => handleAnswer(opt.mood);
+    options.appendChild(btn);
+  });
 }
 
-function submitAnswer() {
-  const ans = document.getElementById("answer").value.trim();
-  if (!ans) return;
+function handleAnswer(mood) {
+  // 표정 바꾸기
+  face.src = `assets/img/${mood}.png`;
 
-  const chat = document.getElementById("chat");
-  chat.innerHTML += `<p>🧑 나: ${ans}</p>`;
-  document.getElementById("answer").value = "";
+  // 애니메이션
+  face.style.animation = "popIn 0.5s ease";
+  setTimeout(() => (face.style.animation = ""), 500);
 
-  // 랜덤 반응
-  const face = document.getElementById("face");
-  let reaction = Math.random();
-
-  if (ans.includes("나물")) {
-    chat.innerHTML += `<p class="typewriter">👔 면접관: ...나물을 좋아한다고요? 저도요! 감동입니다 😭</p>`;
-    face.src = "assets/img/crying.png";
-    like += 20;
-  } else if (reaction > 0.6) {
-    chat.innerHTML += `<p class="typewriter">👔 면접관: 좋습니다. 계속 이야기해보죠.</p>`;
-    face.src = "assets/img/happy.png";
-    like += 10;
-  } else if (reaction > 0.3) {
-    chat.innerHTML += `<p class="typewriter">👔 면접관: 음... 조금 아쉽군요.</p>`;
-    face.src = "assets/img/neutral.png";
-    stress += 5;
-  } else {
-    chat.innerHTML += `<p class="typewriter">👔 면접관: 이런 답변은 별로군요.</p>`;
-    face.src = "assets/img/angry.png";
-    stress += 15;
-    face.classList.add("shake");
-    setTimeout(() => face.classList.remove("shake"), 300);
-  }
-
-  updateStats();
+  // 다음 질문 or 결과
   currentQ++;
-  setTimeout(showQuestion, 1500);
-}
-
-function updateStats() {
-  document.getElementById("like").value = like;
-  document.getElementById("stress").value = stress;
-
-  if (like >= 100) {
-    endGame("pass");
-  } else if (stress >= 100) {
-    endGame("fail");
-  }
-}
-
-function endGame(result) {
-  const chat = document.getElementById("chat");
-  const face = document.getElementById("face");
-
-  if (result === "pass") {
-    chat.innerHTML += `<h2>🎉 합격! 면접관이 당신을 뽑았습니다!</h2>`;
-    face.src = "assets/img/happy.png";
-  } else if (result === "fail") {
-    chat.innerHTML += `<h2>💀 불합격... 면접관이 화나서 퇴장했습니다.</h2>`;
-    face.src = "assets/img/angry.png";
+  if (currentQ < questions.length) {
+    setTimeout(showQuestion, 800);
   } else {
-    chat.innerHTML += `<h2>📝 면접이 종료되었습니다. 수고하셨습니다!</h2>`;
-    face.src = "assets/img/neutral.png";
+    setTimeout(() => {
+      questionScreen.classList.remove("active");
+      resultScreen.classList.add("active");
+      rText.textContent = "🎉 합격입니다! 나물 회사에 어서 오세요 🌱";
+    }, 1000);
   }
-  document.getElementById("input").style.display = "none";
 }
-
-window.onload = showQuestion;
