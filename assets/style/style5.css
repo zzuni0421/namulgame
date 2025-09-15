@@ -1,120 +1,62 @@
 body {
-  font-family: 'Comic Sans MS', sans-serif;
-  background: linear-gradient(135deg, #e0f7fa, #f1f8e9);
-  text-align: center;
   margin: 0;
-  padding: 20px;
-}
-
-#game {
-  max-width: 700px;
-  margin: auto;
-  background: white;
-  padding: 20px;
-  border-radius: 20px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.2);
-  animation: fadeIn 1s ease-in;
-}
-
-#ui {
+  font-family: 'Nanum Gothic', sans-serif;
+  background: linear-gradient(135deg, #f9f9f9, #e0f7fa);
+  color: #333;
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   align-items: center;
+  height: 100vh;
 }
 
-#interviewer img {
+.screen {
+  display: none;
+  text-align: center;
+  animation: fadeIn 0.5s ease;
+}
+
+.screen.active { display: block; }
+
+h1, h2 { margin-bottom: 20px; }
+
+.face {
   width: 150px;
-  border-radius: 15px;
-  animation: bounce 3s infinite;
+  margin: 10px auto;
+  display: block;
+  animation: popIn 0.5s ease;
 }
 
-#chat {
-  flex: 1;
-  margin-left: 20px;
-  text-align: left;
-  min-height: 120px;
-  padding: 10px;
-  border: 2px solid #ddd;
-  border-radius: 10px;
-  background: #fafafa;
-  font-size: 16px;
-  overflow-y: auto;
+.options {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 300px;
+  margin: 0 auto;
 }
 
-#stats {
-  margin-top: 20px;
-  font-weight: bold;
-}
-
-progress {
-  width: 200px;
-  height: 20px;
-  margin: 5px 0;
-}
-
-#input {
-  margin-top: 20px;
-}
-
-input {
-  width: 70%;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1px solid #bbb;
-}
-
-button {
-  padding: 10px 20px;
-  margin-left: 5px;
+.btn, .options button {
+  padding: 12px 20px;
   border: none;
-  background: #00796b;
-  color: white;
-  border-radius: 8px;
+  border-radius: 25px;
+  font-size: 16px;
+  font-weight: bold;
   cursor: pointer;
-  transition: 0.3s;
+  background: linear-gradient(45deg, #6ab04c, #badc58);
+  color: white;
+  transition: transform 0.2s, background 0.3s;
 }
 
-button:hover {
-  background: #004d40;
+.btn:hover, .options button:hover {
+  transform: scale(1.05);
+  background: linear-gradient(45deg, #4cd137, #44bd32);
 }
 
-/* 애니메이션 */
 @keyframes fadeIn {
   from { opacity: 0; transform: translateY(20px); }
   to { opacity: 1; transform: translateY(0); }
 }
 
-@keyframes bounce {
-  0%, 100% { transform: translateY(0); }
-  50% { transform: translateY(-8px); }
-}
-
-.shake {
-  animation: shake 0.3s;
-}
-
-@keyframes shake {
-  0% { transform: translateX(0); }
-  25% { transform: translateX(-5px); }
-  50% { transform: translateX(5px); }
-  75% { transform: translateX(-5px); }
-  100% { transform: translateX(0); }
-}
-
-.typewriter {
-  display: inline-block;
-  overflow: hidden;
-  border-right: .15em solid orange;
-  white-space: nowrap;
-  animation: typing 2s steps(30, end), blink-caret .7s step-end infinite;
-}
-
-@keyframes typing {
-  from { width: 0 }
-  to { width: 100% }
-}
-
-@keyframes blink-caret {
-  from, to { border-color: transparent }
-  50% { border-color: orange; }
+@keyframes popIn {
+  from { transform: scale(0.8); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
 }
