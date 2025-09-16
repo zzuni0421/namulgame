@@ -3,17 +3,23 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>인터뷰 시뮬레이터</title>
-  <link rel="stylesheet" href="../../assets/style/style5.css">
+  <title>인터뷰? 시뮬레이터</title>
+  <link rel="stylesheet" href="../../assets/sylte/style5.css">
 </head>
 <body>
-  <div class="game-container">
-    <h1 class="title">🎤 인터뷰 시뮬레이터</h1>
-    <div id="question-container" class="card">
-      <p id="question">시작 버튼을 눌러주세요!</p>
-      <div id="options" class="options"></div>
+  <audio id="bgm" src="funny-music.mp3" loop></audio>
+  
+  <div class="container">
+    <h1>🎤 인터뷰? 시뮬레이터</h1>
+    <button id="startBtn">면접 시작하기!</button>
+
+    <div id="gameArea" class="hidden">
+      <div id="interviewer"></div>
+      <p id="question"></p>
+      <div id="answers"></div>
     </div>
-    <button id="start-btn" class="btn">🚀 인터뷰 시작하기</button>
+
+    <div id="result" class="hidden"></div>
   </div>
 
   <script src="../js/interview.js"></script>
