@@ -1,3 +1,9 @@
+const startBtn = document.getElementById("start-btn");
+const questionEl = document.getElementById("question");
+const optionsEl = document.getElementById("options");
+
+let currentQuestion = 0;
+
 const questions = [
   {
     q: "🧐 면접관: 자기소개 좀 해보세요!",
@@ -49,62 +55,54 @@ const questions = [
   }
 ];
 
-let currentQ = 0;
-const intro = document.getElementById("intro");
-const questionScreen = document.getElementById("question");
-const resultScreen = document.getElementById("result");
-
-const qText = document.getElementById("qText");
-const options = document.getElementById("options");
-const face = document.getElementById("face");
-const rText = document.getElementById("rText");
-
-const startBtn = document.getElementById("startBtn");
-const retryBtn = document.getElementById("retryBtn");
-
-startBtn.onclick = () => {
-  intro.classList.remove("active");
-  questionScreen.classList.add("active");
-  showQuestion();
-};
-
-retryBtn.onclick = () => {
-  currentQ = 0;
-  resultScreen.classList.remove("active");
-  questionScreen.classList.add("active");
-  showQuestion();
-};
-
 function showQuestion() {
-  const q = questions[currentQ];
-  qText.textContent = q.text;
-  options.innerHTML = "";
+  let q = questions[currentQuestion];
+  questionEl.textContent = q.q;
+  optionsEl.innerHTML = "";
 
-  q.options.forEach(opt => {
-    const btn = document.createElement("button");
-    btn.textContent = opt.text;
-    btn.onclick = () => handleAnswer(opt.mood);
-    options.appendChild(btn);
+  q.a.forEach(answer => {
+    let btn = document.createElement("button");
+    btn.textContent = answer;
+    btn.classList.add("btn");
+    btn.onclick = () => nextQuestion(answer);
+    optionsEl.appendChild(btn);
   });
 }
 
-function handleAnswer(mood) {
-  // 표정 바꾸기
-  face.src = `../../assets/${mood}.png`;
+function nextQuestion(answer) {
+  console.log("선택됨:", answer);
 
-  // 애니메이션
-  face.style.animation = "popIn 0.5s ease";
-  setTimeout(() => (face.style.animation = ""), 500);
-
-  // 다음 질문 or 결과
-  currentQ++;
-  if (currentQ < questions.length) {
-    setTimeout(showQuestion, 800);
+  currentQuestion++;
+  if (currentQuestion < questions.length) {
+    showQuestion();
   } else {
-    setTimeout(() => {
-      questionScreen.classList.remove("active");
-      resultScreen.classList.add("active");
-      rText.textContent = "🎉 합격입니다! 나물 회사에 어서 오세요 🌱";
-    }, 1000);
+    endGame(answer);
   }
 }
+
+function endGame(lastAnswer) {
+  questionEl.textContent = "🎉 인터뷰 끝!";
+  optionsEl.innerHTML = `
+    <p>당신의 마지막 멘트: <b>${lastAnswer}</b></p>
+    <p>👉 결과: <b>${getFunnyResult()}</b></p>
+  `;
+  startBtn.style.display = "block";
+  startBtn.textContent = "🔄 다시하기";
+  currentQuestion = 0;
+}
+
+function getFunnyResult() {
+  const results = [
+    "축하합니다! 합격인데 출근은 내일 새벽 3시부터예요 ⏰",
+    "불합격입니다! 하지만 저희 밴드 동아리 들어오실래요? 🎸",
+    "합격 여부는 면접관이 점심 뭐 먹는지에 달렸습니다 🍔",
+    "사실 이건 면접이 아니라 몰래카메라였습니다 📹",
+    "합격! 근데 월급은 '밈 코인'으로 드립니다 💰😂"
+  ];
+  return results[Math.floor(Math.random() * results.length)];
+}
+
+startBtn.addEventListener("click", () => {
+  startBtn.style.display = "none";
+  showQuestion();
+});
