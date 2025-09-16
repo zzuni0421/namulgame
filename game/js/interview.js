@@ -1,108 +1,71 @@
-const startBtn = document.getElementById("start-btn");
-const questionEl = document.getElementById("question");
-const optionsEl = document.getElementById("options");
+const startBtn = document.getElementById("startBtn");
+const gameArea = document.getElementById("gameArea");
+const interviewerDiv = document.getElementById("interviewer");
+const questionP = document.getElementById("question");
+const answersDiv = document.getElementById("answers");
+const resultDiv = document.getElementById("result");
+const bgm = document.getElementById("bgm");
 
-let currentQuestion = 0;
-
-const questions = [
-  {
-    q: "🧐 면접관: 자기소개 좀 해보세요!",
-    a: [
-      "저는 맨날 라면만 먹는 라면 학자입니다 🍜",
-      "저는 하루 25시간 일하는 노예형 인간입니다 😭",
-      "저는 사실 이 자리에 올 줄 몰랐습니다 😅"
-    ]
-  },
-  {
-    q: "💼 면접관: 우리 회사 지원 이유는?",
-    a: [
-      "솔직히 월급 때문이죠 💸",
-      "저희 엄마가 하라고 했습니다 🙃",
-      "제가 여기 CEO 될 거거든요 😎"
-    ]
-  },
-  {
-    q: "🔥 면접관: 스트레스는 어떻게 푸나요?",
-    a: [
-      "벽보고 소리 지릅니다 🧱",
-      "게임에서 9999콤보를 찍습니다 🎮",
-      "면접관님께 지금 풀고 있습니다 😏"
-    ]
-  },
-  {
-    q: "🥗 면접관: 점심 메뉴는 뭘 좋아하시나요?",
-    a: [
-      "사실 점심보다 야식이 더 중요합니다 🌙",
-      "치킨 없인 못 삽니다 🍗",
-      "밥 말고 나물 주세요 🌿"
-    ]
-  },
-  {
-    q: "⏰ 면접관: 지각을 하면 뭐라고 변명하시나요?",
-    a: [
-      "지구 자전이 빨라졌습니다 🌍",
-      "버스랑 저랑 숨바꼭질 중이었습니다 🚌",
-      "면접관님도 늦으셨잖아요? 😏"
-    ]
-  },
-  {
-    q: "📱 면접관: 스마트폰 배터리 1% 남았다면?",
-    a: [
-      "밈 저장하고 꺼집니다 😂",
-      "배터리보다 제 인생이 먼저 꺼져요 🔋",
-      "충전기 찾다가 면접 늦습니다 🤯"
-    ]
-  }
+const interviewers = [
+  { name: "짜장면 철학자 🍜", normal: "인생은 면발과 같지… 길고 꼬불꼬불하다.", cute: "삐약삐약 🐤 귀엽지?" },
+  { name: "파워포인트 광신도 📊", normal: "이 답변은… 슬라이드 32쪽에 있습니다.", cute: "냐옹~ 🐱 PPT 테마 어때용?" },
+  { name: "헬창 면접관 🏋️", normal: "그 답변은 근손실이다!", cute: "사실 초코우유 좋아해요 ☺️" },
+  { name: "미니멀리스트 🎨", normal: "…(말없이 응시한다)", cute: "꾸잉💕 낙서 그려왔어!" },
+  { name: "개발자 밈 장인 👨‍💻", normal: "그건 버그다. 리팩토링 필요.", cute: ">_< 고생했어여~ ✨✨" }
 ];
 
-function showQuestion() {
-  let q = questions[currentQuestion];
-  questionEl.textContent = q.q;
-  optionsEl.innerHTML = "";
+const questions = [
+  "자기소개를 해보세요!",
+  "당신의 장점은 무엇인가요?",
+  "이 회사에 지원한 이유는?",
+  "팀워크에서 가장 중요한 건?",
+  "마지막으로 하고 싶은 말은?"
+];
 
-  q.a.forEach(answer => {
-    let btn = document.createElement("button");
-    btn.textContent = answer;
-    btn.classList.add("btn");
-    btn.onclick = () => nextQuestion(answer);
-    optionsEl.appendChild(btn);
+const options = [
+  "진심을 담아 대답한다 😎",
+  "허세를 부린다 🤔",
+  "웃긴 농담을 한다 🤡",
+  "귀여운 척을 한다 🐰"
+];
+
+let currentInterviewer;
+
+startBtn.addEventListener("click", () => {
+  startBtn.classList.add("hidden");
+  gameArea.classList.remove("hidden");
+  bgm.play();
+  nextQuestion();
+});
+
+function nextQuestion() {
+  currentInterviewer = interviewers[Math.floor(Math.random() * interviewers.length)];
+  interviewerDiv.textContent = currentInterviewer.name;
+
+  questionP.textContent = questions[Math.floor(Math.random() * questions.length)];
+
+  answersDiv.innerHTML = "";
+  options.forEach(option => {
+    const btn = document.createElement("button");
+    btn.textContent = option;
+    btn.onclick = () => handleAnswer(option);
+    answersDiv.appendChild(btn);
   });
 }
 
-function nextQuestion(answer) {
-  console.log("선택됨:", answer);
+function handleAnswer(option) {
+  resultDiv.classList.remove("hidden");
 
-  currentQuestion++;
-  if (currentQuestion < questions.length) {
-    showQuestion();
+  if (option.includes("귀여운")) {
+    resultDiv.textContent = `${currentInterviewer.cute}`;
+    document.body.style.background = "linear-gradient(120deg, #ffe1ff, #cafffb)";
   } else {
-    endGame(answer);
+    resultDiv.textContent = `${currentInterviewer.normal}`;
+    document.body.style.background = "linear-gradient(120deg, #ffd6e0, #ffe8a1)";
   }
-}
 
-function endGame(lastAnswer) {
-  questionEl.textContent = "🎉 인터뷰 끝!";
-  optionsEl.innerHTML = `
-    <p>당신의 마지막 멘트: <b>${lastAnswer}</b></p>
-    <p>👉 결과: <b>${getFunnyResult()}</b></p>
-  `;
-  startBtn.style.display = "block";
-  startBtn.textContent = "🔄 다시하기";
-  currentQuestion = 0;
+  setTimeout(() => {
+    resultDiv.classList.add("hidden");
+    nextQuestion();
+  }, 2500);
 }
-
-function getFunnyResult() {
-  const results = [
-    "축하합니다! 합격인데 출근은 내일 새벽 3시부터예요 ⏰",
-    "불합격입니다! 하지만 저희 밴드 동아리 들어오실래요? 🎸",
-    "합격 여부는 면접관이 점심 뭐 먹는지에 달렸습니다 🍔",
-    "사실 이건 면접이 아니라 몰래카메라였습니다 📹",
-    "합격! 근데 월급은 '밈 코인'으로 드립니다 💰😂"
-  ];
-  return results[Math.floor(Math.random() * results.length)];
-}
-
-startBtn.addEventListener("click", () => {
-  startBtn.style.display = "none";
-  showQuestion();
-});
