@@ -7,22 +7,13 @@
   <link rel="stylesheet" href="../../assets/style/style5.css">
 </head>
 <body>
-  <div id="game">
-    <div id="intro" class="screen active">
-      <h1>🌱 나물게임 인터뷰 시뮬레이터 🌱</h1>
-      <button id="startBtn" class="btn">시작하기</button>
-    </div>
-
-    <div id="question" class="screen">
-      <img id="face" src="../../assets/neutral.png" alt="면접관" class="face">
-      <h2 id="qText">질문이 여기에 표시됩니다</h2>
+  <div class="game-container">
+    <h1 class="title">🎤 인터뷰 시뮬레이터</h1>
+    <div id="question-container" class="card">
+      <p id="question">시작 버튼을 눌러주세요!</p>
       <div id="options" class="options"></div>
     </div>
-
-    <div id="result" class="screen">
-      <h2 id="rText"></h2>
-      <button id="retryBtn" class="btn">다시하기</button>
-    </div>
+    <button id="start-btn" class="btn">🚀 인터뷰 시작하기</button>
   </div>
 
   <script src="../js/interview.js"></script>
