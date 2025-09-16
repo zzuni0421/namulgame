@@ -69,7 +69,7 @@ function showQuestion() {
 
 function handleAnswer(mood) {
   // 표정 바꾸기
-  face.src = `assets/${mood}.png`;
+  face.src = `../../assets/${mood}.png`;
 
   // 애니메이션
   face.style.animation = "popIn 0.5s ease";
