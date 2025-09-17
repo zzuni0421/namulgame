@@ -5,38 +5,37 @@
 <meta name="viewport" content="width=device-width,initial-scale=1" />
 <title>나물게임 인터뷰 시뮬레이터</title>
 <style>
-:root{--bg:#0f1724;--card:#0b1220;--accent:#9ae6b4;--soft:#94a3b8}
+:root{--bg:#f8fafc;--card:#ffffff;--accent:#2b6cb0;--soft:#64748b;--text:#1e293b}
 *{box-sizing:border-box;font-family:Inter,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial}
-html,body{height:100%;margin:0;background:linear-gradient(180deg,#041024 0%,#07152a 60%);color:#e6eef6}
-.app{max-width:980px;margin:28px auto;padding:22px;border-radius:16px;background:linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.01));box-shadow:0 10px 40px rgba(2,6,23,0.7)}
+html,body{height:100%;margin:0;background:linear-gradient(180deg,#e0f2fe 0%,#f8fafc 60%);color:var(--text)}
+.app{max-width:980px;margin:28px auto;padding:22px;border-radius:16px;background:#fff;box-shadow:0 10px 40px rgba(0,0,0,0.1)}
 .header{display:flex;gap:16px;align-items:center}
-.logo{width:84px;height:84px;border-radius:18px;background:linear-gradient(135deg,#c6f6d5,#68d391);display:flex;align-items:center;justify-content:center;color:#012;font-weight:800;font-size:26px}
+.logo{width:84px;height:84px;border-radius:18px;background:linear-gradient(135deg,#90cdf4,#4299e1);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:26px}
 .title{font-size:22px;font-weight:700}
 .desc{color:var(--soft);font-size:13px}
 .grid{display:grid;grid-template-columns:1fr 340px;gap:18px;margin-top:18px}
-.card{background:var(--card);padding:16px;border-radius:12px}
+.card{background:var(--card);padding:16px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.05)}
 .stage{min-height:360px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:18px}
-.namul{width:220px;height:220px;border-radius:24px;background:linear-gradient(180deg,#fff 0%, #e6ffe9 60%);display:flex;align-items:center;justify-content:center;color:#063;font-size:28px;font-weight:800;box-shadow:0 8px 30px rgba(3,7,11,0.5)}
+.namul{width:220px;height:220px;border-radius:24px;background:linear-gradient(180deg,#e0f2fe 0%, #bee3f8 60%);display:flex;align-items:center;justify-content:center;color:#2b6cb0;font-size:28px;font-weight:800;box-shadow:0 8px 30px rgba(0,0,0,0.15)}
 .namul.sassy{transform:rotate(-6deg) scale(1.04);transition:transform .25s}
 .q{margin-top:18px;font-size:18px;font-weight:700}
 .opts{display:flex;flex-direction:column;gap:10px;margin-top:14px;width:100%}
-.btn{background:linear-gradient(180deg,rgba(255,255,255,0.03),rgba(255,255,255,0.01));border:1px solid rgba(255,255,255,0.04);padding:12px;border-radius:10px;cursor:pointer}
-.btn:hover{transform:translateY(-3px)}
+.btn{background:#ebf8ff;border:1px solid #cbd5e0;padding:12px;border-radius:10px;cursor:pointer;color:var(--text)}
+.btn:hover{background:#bee3f8;transform:translateY(-3px)}
 .stat{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-top:12px}
-.stat .bar{flex:1;height:10px;background:rgba(255,255,255,0.04);border-radius:8px;overflow:hidden;margin-left:8px}
-.fill{height:100%;background:linear-gradient(90deg,var(--accent),#3ddc97)}
+.stat .bar{flex:1;height:10px;background:#edf2f7;border-radius:8px;overflow:hidden;margin-left:8px}
+.fill{height:100%;background:linear-gradient(90deg,var(--accent),#63b3ed)}
 .right{position:relative}
 .score{font-size:48px;font-weight:800;color:var(--accent)}
 .small{font-size:12px;color:var(--soft)}
 .controls{display:flex;gap:10px;margin-top:12px}
-.input{width:100%;padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:inherit}
-.ghost{background:transparent;border:1px dashed rgba(255,255,255,0.06)}
+.input{width:100%;padding:10px;border-radius:10px;border:1px solid #cbd5e0;background:transparent;color:inherit}
+.ghost{background:transparent;border:1px dashed #cbd5e0}
 .leader{max-height:300px;overflow:auto;margin-top:10px}
 .row{display:flex;justify-content:space-between;padding:8px;border-radius:8px}
 .footer{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-top:14px}
-.badge{font-size:12px;padding:6px 8px;border-radius:999px;background:rgba(255,255,255,0.03)}
+.badge{font-size:12px;padding:6px 8px;border-radius:999px;background:#ebf8ff;color:#2b6cb0}
 @media(max-width:860px){.grid{grid-template-columns:1fr;}.right{order:-1}}
-</style>
 </head>
 <body>
 <div class="app">
