@@ -1,158 +1,151 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1" />
-<title>나물게임 인터뷰 시뮬레이터</title>
-<style>
-:root{--bg:#f8fafc;--card:#ffffff;--accent:#2b6cb0;--soft:#64748b;--text:#1e293b}
-*{box-sizing:border-box;font-family:Inter,system-ui,Segoe UI,Roboto,'Helvetica Neue',Arial}
-html,body{height:100%;margin:0;background:linear-gradient(180deg,#e0f2fe 0%,#f8fafc 60%);color:var(--text)}
-.app{max-width:980px;margin:28px auto;padding:22px;border-radius:16px;background:#fff;box-shadow:0 10px 40px rgba(0,0,0,0.1)}
-.header{display:flex;gap:16px;align-items:center}
-.logo{width:84px;height:84px;border-radius:18px;background:linear-gradient(135deg,#90cdf4,#4299e1);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:26px}
-.title{font-size:22px;font-weight:700}
-.desc{color:var(--soft);font-size:13px}
-.grid{display:grid;grid-template-columns:1fr 340px;gap:18px;margin-top:18px}
-.card{background:var(--card);padding:16px;border-radius:12px;box-shadow:0 4px 12px rgba(0,0,0,0.05)}
-.stage{min-height:360px;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:18px}
-.namul{width:220px;height:220px;border-radius:24px;background:linear-gradient(180deg,#e0f2fe 0%, #bee3f8 60%);display:flex;align-items:center;justify-content:center;color:#2b6cb0;font-size:28px;font-weight:800;box-shadow:0 8px 30px rgba(0,0,0,0.15)}
-.namul.sassy{transform:rotate(-6deg) scale(1.04);transition:transform .25s}
-.q{margin-top:18px;font-size:18px;font-weight:700}
-.opts{display:flex;flex-direction:column;gap:10px;margin-top:14px;width:100%}
-.btn{background:#ebf8ff;border:1px solid #cbd5e0;padding:12px;border-radius:10px;cursor:pointer;color:var(--text)}
-.btn:hover{background:#bee3f8;transform:translateY(-3px)}
-.stat{display:flex;gap:10px;align-items:center;justify-content:space-between;margin-top:12px}
-.stat .bar{flex:1;height:10px;background:#edf2f7;border-radius:8px;overflow:hidden;margin-left:8px}
-.fill{height:100%;background:linear-gradient(90deg,var(--accent),#63b3ed)}
-.right{position:relative}
-.score{font-size:48px;font-weight:800;color:var(--accent)}
-.small{font-size:12px;color:var(--soft)}
-.controls{display:flex;gap:10px;margin-top:12px}
-.input{width:100%;padding:10px;border-radius:10px;border:1px solid #cbd5e0;background:transparent;color:inherit}
-.ghost{background:transparent;border:1px dashed #cbd5e0}
-.leader{max-height:300px;overflow:auto;margin-top:10px}
-.row{display:flex;justify-content:space-between;padding:8px;border-radius:8px}
-.footer{display:flex;gap:8px;align-items:center;justify-content:space-between;margin-top:14px}
-.badge{font-size:12px;padding:6px 8px;border-radius:999px;background:#ebf8ff;color:#2b6cb0}
-@media(max-width:860px){.grid{grid-template-columns:1fr;}.right{order:-1}}
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🌱 나물이 인터뷰 시뮬레이터 🎤</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: "Pretendard", sans-serif;
+      background: linear-gradient(180deg, #ffffff, #f0fdf4);
+      color: #222;
+      text-align: center;
+      padding: 20px;
+    }
+
+    h1 {
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+
+    .interview-container {
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      gap: 20px;
+      margin-top: 20px;
+    }
+
+    .namuli-img {
+      width: 160px;
+      height: auto;
+      animation: bounce 1.5s infinite;
+    }
+
+    @keyframes bounce {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-10px); }
+    }
+
+    .interview-box {
+      background: #ffffffcc;
+      padding: 20px;
+      border-radius: 20px;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      flex: 1;
+      max-width: 500px;
+    }
+
+    #question {
+      font-size: 1.2rem;
+      margin-bottom: 15px;
+    }
+
+    #answer {
+      padding: 10px;
+      width: 80%;
+      border-radius: 10px;
+      border: 2px solid #a7f3d0;
+      margin-bottom: 10px;
+    }
+
+    button {
+      background: #34d399;
+      color: white;
+      border: none;
+      border-radius: 12px;
+      padding: 10px 20px;
+      cursor: pointer;
+      font-size: 1rem;
+      transition: 0.2s;
+    }
+
+    button:hover {
+      background: #059669;
+    }
+
+    #result {
+      margin-top: 20px;
+      font-weight: bold;
+      font-size: 1.1rem;
+    }
+
+    /* 개그콘서트급 연출 */
+    .punchline {
+      font-size: 1.3rem;
+      color: #ef4444;
+      margin-top: 15px;
+      animation: shake 0.4s infinite alternate;
+    }
+
+    @keyframes shake {
+      from { transform: rotate(-2deg); }
+      to { transform: rotate(2deg); }
+    }
+  </style>
 </head>
 <body>
-<div class="app">
-  <div class="header">
-    <div class="logo">나물</div>
-    <div>
-      <div class="title">나물게임 인터뷰 시뮬레이터</div>
-      <div class="desc">귀엽다가 갑자기 찌릿 — 반전 매력으로 합격을 노려라. 선택에 따라 나물이 리액션이 달라지고 결과가 바뀝니다!</div>
+  <h1>🌱 나물이 인터뷰 시뮬레이터 🎤</h1>
+  <p>면접관: "귀여운 척만 하면 다 좋아하잖아~" 😂</p>
+
+  <div class="interview-container">
+    <img src="assets/나물이.png" alt="나물이 면접관" class="namuli-img">
+    <div class="interview-box">
+      <p id="question">첫 질문: 당신은 왜 나물게임에 지원했나요?</p>
+      <input type="text" id="answer" placeholder="답변 입력하기...">
+      <br>
+      <button onclick="nextQuestion()">다음 질문</button>
+      <div id="result"></div>
     </div>
   </div>
-  <div class="grid">
-    <div class="card">
-      <div class="stage" id="stage">
-        <div class="namul" id="namul">나물이</div>
-        <div class="q" id="question">시작하려면 닉네임을 입력하고 '면접 시작'을 눌러봐.</div>
-        <div class="opts" id="options"></div>
-      </div>
-      <div class="footer">
-        <div class="small">각 선택은 매력·실력·창의성에 가중치를 줘. 최종 점수로 결과가 결정돼.</div>
-        <div class="badge" id="roundBadge">Round 0 / 0</div>
-      </div>
-    </div>
-    <div class="card right">
-      <div>
-        <div style="display:flex;gap:8px;align-items:center;margin-bottom:10px">
-          <input id="nameInput" class="input" placeholder="닉네임 입력 (예: 홍길동(실명을 사용하지 마세요.)" />
-          <button id="startBtn" class="btn">면접 시작</button>
-        </div>
-        <div style="display:flex;gap:8px;align-items:center">
-          <div>
-            <div class="small">점수</div>
-            <div class="score" id="score">0</div>
-          </div>
-          <div style="flex:1">
-            <div class="small">매력</div>
-            <div class="stat"><div class="small">0</div><div class="bar"><div class="fill" id="charmFill" style="width:0%"></div></div></div>
-            <div class="small">실력</div>
-            <div class="stat"><div class="small">0</div><div class="bar"><div class="fill" id="skillFill" style="width:0%"></div></div></div>
-            <div class="small">창의성</div>
-            <div class="stat"><div class="small">0</div><div class="bar"><div class="fill" id="creaFill" style="width:0%"></div></div></div>
-          </div>
-        </div>
-      </div>
-      <div style="margin-top:12px">
-        <div class="small">리더보드</div>
-        <div class="leader card" id="leaderboard"></div>
-        <div style="display:flex;gap:8px;margin-top:8px">
-          <button id="saveBtn" class="btn ghost">스코어 저장</button>
-          <button id="resetBtn" class="btn ghost">리셋</button>
-        </div>
-      </div>
-    </div>
-  </div>
-</div>
-<script>
-const QUESTIONS=[
-  {q:'자기소개 한 줄만 해봐.',
-   o:[{t:'귀엽고 성실합니다!','w':[6,2,1],r:'귀여움으로 점수 획득! 하지만 깊이가...'},
-      {t:'문제를 풀 때 논리적으로 접근합니다.','w':[2,6,2],r:'똑똑한 인상! 나물이 눈이 반짝인다.'},
-      {t:'재밌는 일화를 하나 얘기할게요.','w':[3,1,6],r:'유머와 창의성 보너스!'}]
-  },
-  {q:'우리 팀에 합류하면 가장 먼저 하고 싶은 일은?',
-   o:[{t:'팀 분위기 활성화 이벤트 기획','w':[5,2,5],r:'파티 좋아하는 나물이 미소 짓는다.'},
-      {t:'코드 품질 개선 및 문서화','w':[1,7,1],r:'차분한 실력파에 나물이 고개를 끄덕인다.'},
-      {t:'사용자 피드백 분석으로 기능 우선순위 정하기','w':[3,4,3],r:'균형 잡힌 답변, 나물 눈이 빛나.'}]
-  },
-  {q:'어려운 상황에서 팀원과 의견이 엇갈리면?',
-   o:[{t:'내 방법을 설득한다','w':[2,5,2],r:'자신감 있는 모습, 실력 점수 상승.'},
-      {t:'우선 듣고 공감을 먼저 한다','w':[6,2,2],r:'매너 좋은 나물! 매력 점수+'},
-      {t:'투표로 빠르게 결정한다','w':[2,3,5],r:'결단력 있는 선택, 창의성+실력 소폭+'}]
-  },
-  {q:'프로젝트 마감이 코앞인데 버그가 터졌어. 너는?',
-   o:[{t:'핫픽스 적용하고 릴리즈','w':[1,6,2],r:'실전형! 실력 점수 대폭+'},
-      {t:'원인 분석 후 근본적 해결 시도','w':[2,5,4],r:'근본 해결, 창의성+실력.'},
-      {t:'먼저 사용자 피해 최소화 조치','w':[5,3,2],r:'책임감 있는 선택, 매력+'}]
-  },
-  {q:'마지막으로 한 마디?',
-   o:[{t:'저는 팀의 귀여운 연료입니다','w':[7,1,1],r:'귀여움 대폭, 그러나...'},
-      {t:'결과로 말하겠습니다. 준비되어 있어요','w':[1,6,2],r:'실력으로 승부하는 타입.'},
-      {t:'가끔 이상한 아이디어로 빵 터뜨려요','w':[2,2,6],r:'창의력 폭발!'}]
-  }
-];
-let state={round:0,charm:0,skill:0,crea:0,score:0,name:'',history:[]};
-const namulEl=document.getElementById('namul');
-const qEl=document.getElementById('question');
-const optsEl=document.getElementById('options');
-const startBtn=document.getElementById('startBtn');
-const nameInput=document.getElementById('nameInput');
-const scoreEl=document.getElementById('score');
-const charmFill=document.getElementById('charmFill');
-const skillFill=document.getElementById('skillFill');
-const creaFill=document.getElementById('creaFill');
-const roundBadge=document.getElementById('roundBadge');
-const leaderboardEL=document.getElementById('leaderboard');
-const saveBtn=document.getElementById('saveBtn');
-const resetBtn=document.getElementById('resetBtn');
-function beep(){const a=new (window.AudioContext||window.webkitAudioContext)();const o=a.createOscillator();const g=a.createGain();o.type='sine';o.frequency.value=420;o.connect(g);g.connect(a.destination);g.gain.value=0.02;o.start();setTimeout(()=>{o.stop();a.close()},120)}
-function renderRound(){roundBadge.textContent=`Round ${state.round+1} / ${QUESTIONS.length}`;const cur=QUESTIONS[state.round];qEl.textContent=cur.q;optsEl.innerHTML='';cur.o.forEach((opt,i)=>{const b=document.createElement('button');b.className='btn';b.innerHTML=`<div style="font-weight:700">${String.fromCharCode(65+i)}. ${opt.t}</div>`;b.onclick=()=>choose(i);optsEl.appendChild(b)});namulEl.classList.remove('sassy')}
-function choose(i){const cur=QUESTIONS[state.round];const opt=cur.o[i];state.charm+=opt.w[0];state.skill+=opt.w[1];state.crea+=opt.w[2];state.score+=opt.w.reduce((a,b)=>a+b,0);state.history.push({q:cur.q,choice:opt.t,resp:opt.r});flashFeedback(opt.r);updateStats();state.round++;if(state.round<QUESTIONS.length){setTimeout(()=>renderRound(),700)}else{setTimeout(()=>finish(),700)}}
-function flashFeedback(msg){qEl.textContent=msg;namulEl.classList.add('sassy');beep()}
-function updateStats(){scoreEl.textContent=state.score;charmFill.style.width=Math.min(100,Math.floor(state.charm/ (QUESTIONS.length*7) *100))+'%';skillFill.style.width=Math.min(100,Math.floor(state.skill/(QUESTIONS.length*7)*100))+'%';creaFill.style.width=Math.min(100,Math.floor(state.crea/(QUESTIONS.length*7)*100))+'%'}
-function finish(){namulEl.classList.remove('sassy');qEl.textContent='면접 종료! 결과를 확인해보자.';optsEl.innerHTML='';renderResult();}
-function renderResult(){const box=document.createElement('div');box.style.textAlign='left';box.innerHTML=`<div style="font-weight:800;font-size:18px;margin-bottom:8px">${state.name} 님의 결과</div>`;
-const percent=Math.round((state.score/(QUESTIONS.length* (7+7+7)/3))*100);
-let verdict='합격';if(percent<45)verdict='불합격';else if(percent<70)verdict='보류';
-box.innerHTML+=`<div style="font-weight:700;font-size:22px;color:var(--accent)">${verdict} — ${percent}%</div>`;
-box.innerHTML+=`<div style="margin-top:8px">${state.history.map(h=>`<div style="margin:6px 0"><b>${h.choice}</b><div class="small">${h.resp}</div></div>`).join('')}</div>`;
-box.innerHTML+=`<div style="display:flex;gap:8px;margin-top:12px"><button id="again" class="btn">다시 보기</button><button id="saveScore" class="btn ghost">스코어 저장</button></div>`;
-optsEl.appendChild(box);
-document.getElementById('again').onclick=()=>startInterview();document.getElementById('saveScore').onclick=()=>saveScore();}
-function startInterview(){state={round:0,charm:0,skill:0,crea:0,score:0,name:nameInput.value||'익명',history:[]};updateStats();renderRound();}
-startBtn.addEventListener('click',()=>{if(!nameInput.value)nameInput.value='익명';startInterview()});
-saveBtn.addEventListener('click',saveScore);resetBtn.addEventListener('click',()=>{localStorage.removeItem('namul_leader');loadLeader();alert('리더보드 초기화 완료')});
-function saveScore(){const data=JSON.parse(localStorage.getItem('namul_leader')||'[]');data.push({name:state.name,score:state.score,t:Date.now()});data.sort((a,b)=>b.score-a.score);localStorage.setItem('namul_leader',JSON.stringify(data.slice(0,20)));loadLeader();alert('스코어 저장 완료')}
-function loadLeader(){const data=JSON.parse(localStorage.getItem('namul_leader')||'[]');leaderboardEL.innerHTML='';if(!data.length){leaderboardEL.innerHTML='<div class="small">아직 기록이 없습니다. 면접 보고 스코어를 저장해봐!</div>';return}data.forEach((d,i)=>{const r=document.createElement('div');r.className='row';r.innerHTML=`<div style="font-weight:700">${i+1}. ${escapeHtml(d.name)}</div><div>${d.score}</div>`;leaderboardEL.appendChild(r)})}
-function escapeHtml(s){return s.replace(/[&<>"']/g,function(c){return{'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":"&#39;"}[c]})}
-loadLeader();
-</script>
+
+  <script>
+    const questions = [
+      "나물이와 함께 일하고 싶은 이유는?",
+      "귀여움이란 무엇이라 생각하나요?",
+      "개그콘서트 시절 최애 코너는?",
+      "마지막으로 하고 싶은 말은?"
+    ];
+    let current = 0;
+
+    function nextQuestion() {
+      const ans = document.getElementById("answer").value.trim();
+      const result = document.getElementById("result");
+
+      if (ans === "") {
+        result.innerHTML = "👉 대답을 입력해 주세요!";
+        return;
+      }
+
+      // 개그 타이밍으로 랜덤 멘트
+      const punchlines = [
+        "ㅋㅋㅋㅋ 이건 합격 각",
+        "아니 이 대답 뭐냐고 🤣",
+        "면접관 나물이: '귀여워~!'",
+        "👏👏👏 기립박수 나왔다"
+      ];
+      result.innerHTML = `<div class="punchline">${punchlines[Math.floor(Math.random()*punchlines.length)]}</div>`;
+
+      current++;
+      if (current < questions.length) {
+        document.getElementById("question").textContent = questions[current];
+        document.getElementById("answer").value = "";
+      } else {
+        document.getElementById("question").textContent = "면접 종료! 수고하셨습니다. 🌱";
+        document.getElementById("answer").style.display = "none";
+      }
+    }
+  </script>
 </body>
 </html>
