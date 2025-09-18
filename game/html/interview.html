@@ -1,151 +1,622 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>🌱 나물이 인터뷰 시뮬레이터 🎤</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: "Pretendard", sans-serif;
-      background: linear-gradient(180deg, #ffffff, #f0fdf4);
-      color: #222;
-      text-align: center;
-      padding: 20px;
-    }
-
-    h1 {
-      font-size: 2rem;
-      margin-bottom: 10px;
-    }
-
-    .interview-container {
-      display: flex;
-      justify-content: center;
-      align-items: flex-start;
-      gap: 20px;
-      margin-top: 20px;
-    }
-
-    .namuli-img {
-      width: 160px;
-      height: auto;
-      animation: bounce 1.5s infinite;
-    }
-
-    @keyframes bounce {
-      0%, 100% { transform: translateY(0); }
-      50% { transform: translateY(-10px); }
-    }
-
-    .interview-box {
-      background: #ffffffcc;
-      padding: 20px;
-      border-radius: 20px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-      flex: 1;
-      max-width: 500px;
-    }
-
-    #question {
-      font-size: 1.2rem;
-      margin-bottom: 15px;
-    }
-
-    #answer {
-      padding: 10px;
-      width: 80%;
-      border-radius: 10px;
-      border: 2px solid #a7f3d0;
-      margin-bottom: 10px;
-    }
-
-    button {
-      background: #34d399;
-      color: white;
-      border: none;
-      border-radius: 12px;
-      padding: 10px 20px;
-      cursor: pointer;
-      font-size: 1rem;
-      transition: 0.2s;
-    }
-
-    button:hover {
-      background: #059669;
-    }
-
-    #result {
-      margin-top: 20px;
-      font-weight: bold;
-      font-size: 1.1rem;
-    }
-
-    /* 개그콘서트급 연출 */
-    .punchline {
-      font-size: 1.3rem;
-      color: #ef4444;
-      margin-top: 15px;
-      animation: shake 0.4s infinite alternate;
-    }
-
-    @keyframes shake {
-      from { transform: rotate(-2deg); }
-      to { transform: rotate(2deg); }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>나물게임 인터뷰 시뮬레이션</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@400;600;700&display=swap');
+        body { font-family: 'Noto Sans KR', sans-serif; }
+        .bounce-in { animation: bounceIn 0.6s ease-out; }
+        @keyframes bounceIn {
+            0% { transform: scale(0.3); opacity: 0; }
+            50% { transform: scale(1.05); }
+            70% { transform: scale(0.9); }
+            100% { transform: scale(1); opacity: 1; }
+        }
+        .shake { animation: shake 0.5s ease-in-out; }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+        .glow { box-shadow: 0 0 20px rgba(59, 130, 246, 0.5); }
+        .float { animation: float 3s ease-in-out infinite; }
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-10px); }
+        }
+        .pulse-slow { animation: pulse 2s infinite; }
+        .typing { 
+            overflow: hidden;
+            border-right: 2px solid;
+            white-space: nowrap;
+            animation: typing 2s steps(40, end), blink-caret 0.75s step-end infinite;
+        }
+        @keyframes typing {
+            from { width: 0; }
+            to { width: 100%; }
+        }
+        @keyframes blink-caret {
+            from, to { border-color: transparent; }
+            50% { border-color: black; }
+        }
+        .reaction-popup {
+            animation: popIn 0.5s ease-out;
+        }
+        @keyframes popIn {
+            0% { transform: scale(0) rotate(180deg); opacity: 0; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+        .mood-meter {
+            transition: all 0.5s ease;
+        }
+    </style>
 </head>
-<body>
-  <h1>🌱 나물이 인터뷰 시뮬레이터 🎤</h1>
-  <p>면접관: "귀여운 척만 하면 다 좋아하잖아~" 😂</p>
+<body class="bg-gradient-to-br from-purple-600 via-pink-500 to-red-500 min-h-screen">
+    <div class="container mx-auto px-4 py-8">
+        <div id="startScreen" class="text-center">
+            <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-2xl mx-auto bounce-in">
+                <h1 class="text-5xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-purple-600 to-pink-600 mb-6 float">
+                    나물게임<br>인터뷰 시뮬레이션
+                </h1>
+                <p class="text-xl text-gray-700 mb-8">
+                    웃음과 함께하는 특별한 면접 체험!<br>
+                    총 <span class="font-bold text-red-500">25문항</span>의 황당한 질문들이 기다리고 있어요 😂
+                </p>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                    <div class="bg-gradient-to-r from-blue-100 to-purple-100 p-4 rounded-2xl">
+                        <div class="text-2xl mb-2">🎯</div>
+                        <div class="font-bold text-gray-800">실시간 반응</div>
+                        <div class="text-sm text-gray-600">면접관들의 생생한 반응을 확인하세요!</div>
+                    </div>
+                    <div class="bg-gradient-to-r from-green-100 to-yellow-100 p-4 rounded-2xl">
+                        <div class="text-2xl mb-2">📊</div>
+                        <div class="font-bold text-gray-800">기분 측정기</div>
+                        <div class="text-sm text-gray-600">면접관의 기분이 실시간으로 변해요!</div>
+                    </div>
+                </div>
+                <button onclick="startInterview()" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-12 py-4 rounded-full text-xl font-bold hover:scale-105 transform transition-all duration-300 glow pulse-slow">
+                    🚀 면접 시작하기
+                </button>
+            </div>
+        </div>
 
-  <div class="interview-container">
-    <img src="assets/나물이.png" alt="나물이 면접관" class="namuli-img">
-    <div class="interview-box">
-      <p id="question">첫 질문: 당신은 왜 나물게임에 지원했나요?</p>
-      <input type="text" id="answer" placeholder="답변 입력하기...">
-      <br>
-      <button onclick="nextQuestion()">다음 질문</button>
-      <div id="result"></div>
+        <div id="interviewScreen" class="hidden">
+            <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-4xl mx-auto">
+                <div class="flex justify-between items-center mb-6">
+                    <div class="flex items-center gap-4">
+                        <button onclick="goToLobby()" class="bg-gradient-to-r from-gray-500 to-gray-600 text-white px-4 py-2 rounded-full text-sm hover:scale-105 transform transition-all duration-300">
+                            다시하기
+                        </button>
+                        <div class="text-sm text-gray-600">
+                            문제 <span id="currentQ" class="font-bold text-purple-600">1</span> / 25
+                        </div>
+                    </div>
+                    <div class="bg-gradient-to-r from-green-400 to-blue-500 text-white px-4 py-2 rounded-full">
+                        점수: <span id="score" class="font-bold">0</span>점
+                    </div>
+                </div>
+                
+                <div class="w-full bg-gray-200 rounded-full h-3 mb-8">
+                    <div id="progressBar" class="bg-gradient-to-r from-purple-500 to-pink-500 h-3 rounded-full transition-all duration-500" style="width: 4%"></div>
+                </div>
+
+                <div id="characterBox" class="text-center mb-6 p-6 bg-gradient-to-r from-yellow-100 to-orange-100 rounded-2xl relative">
+                    <div id="characterEmoji" class="text-6xl mb-2 float">👨‍💼</div>
+                    <div id="characterName" class="text-lg font-bold text-gray-800">면접관 김부장</div>
+                    <div id="characterDesc" class="text-sm text-gray-600 mb-4">엄격한 면접관</div>
+                    
+                    <div class="bg-white rounded-xl p-4 mb-4">
+                        <div class="text-sm text-gray-600 mb-2">면접관 기분 측정기</div>
+                        <div class="flex items-center justify-center gap-2">
+                            <span class="text-xl">😡</span>
+                            <div class="w-32 h-4 bg-gray-200 rounded-full overflow-hidden">
+                                <div id="moodMeter" class="h-full bg-gradient-to-r from-red-500 via-yellow-500 to-green-500 rounded-full transition-all duration-1000 mood-meter" style="width: 50%"></div>
+                            </div>
+                            <span class="text-xl">😍</span>
+                        </div>
+                        <div id="moodText" class="text-sm font-bold text-gray-700 mt-2">보통</div>
+                    </div>
+
+                    <div id="reactionBubble" class="absolute -top-4 -right-4 bg-white rounded-full p-3 shadow-lg hidden reaction-popup">
+                        <div id="reactionEmoji" class="text-2xl"></div>
+                    </div>
+                </div>
+
+                <div id="questionBox" class="bg-gradient-to-r from-blue-50 to-purple-50 p-6 rounded-2xl mb-8">
+                    <h2 id="question" class="text-2xl font-bold text-gray-800 mb-4"></h2>
+                </div>
+
+                <div id="optionsBox" class="space-y-4 mb-8">
+                </div>
+
+                <div id="resultBox" class="hidden p-6 rounded-2xl mb-6">
+                    <div id="interviewerReaction" class="text-center mb-4">
+                        <div id="reactionEmoji2" class="text-4xl mb-2"></div>
+                        <div id="reactionText" class="text-lg font-bold mb-2"></div>
+                        <div id="reactionComment" class="text-gray-700 italic"></div>
+                    </div>
+                    <div id="scoreChange" class="text-center text-xl font-bold"></div>
+                </div>
+
+                <button id="nextBtn" class="hidden w-full bg-gradient-to-r from-green-500 to-blue-500 text-white py-4 rounded-2xl text-xl font-bold hover:scale-105 transform transition-all duration-300" onclick="nextQuestion()">
+                    다음 문제 →
+                </button>
+            </div>
+        </div>
+
+        <div id="finalScreen" class="hidden text-center">
+            <div class="bg-white rounded-3xl shadow-2xl p-8 max-w-2xl mx-auto bounce-in">
+                <div id="finalEmoji" class="text-8xl mb-6"></div>
+                <h2 id="finalTitle" class="text-4xl font-bold mb-4"></h2>
+                <div id="finalScore" class="text-2xl text-gray-700 mb-6"></div>
+                <div id="finalMessage" class="text-lg text-gray-600 mb-8"></div>
+                
+                <div class="bg-gradient-to-r from-purple-100 to-pink-100 p-6 rounded-2xl mb-8">
+                    <h3 class="text-xl font-bold mb-4">🏆 면접관들의 최종 평가</h3>
+                    <div id="finalReviews" class="space-y-3 text-left">
+                    </div>
+                </div>
+
+                <div class="flex gap-4 justify-center">
+                    <button onclick="restartInterview()" class="bg-gradient-to-r from-purple-500 to-pink-500 text-white px-8 py-4 rounded-full text-xl font-bold hover:scale-105 transform transition-all duration-300">
+                        🔄 다시 도전하기
+                    </button>
+                    <button onclick="goToLobby()" class="bg-gradient-to-r from-gray-500 to-gray-600 text-white px-8 py-4 rounded-full text-xl font-bold hover:scale-105 transform transition-all duration-300">
+                        다시 하기
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
-  </div>
 
-  <script>
-    const questions = [
-      "나물이와 함께 일하고 싶은 이유는?",
-      "귀여움이란 무엇이라 생각하나요?",
-      "개그콘서트 시절 최애 코너는?",
-      "마지막으로 하고 싶은 말은?"
-    ];
-    let current = 0;
+    <script>
+        const questions = [
+            {
+                character: { emoji: "👨‍💼", name: "면접관 김부장", desc: "엄격한 면접관" },
+                question: "우리 회사에 지원한 이유가 뭔가요?",
+                options: [
+                    { text: "사실 잘못 들어왔어요", points: 0, reaction: { emoji: "😱", text: "뭐라고?!", comment: "김부장이 안경을 벗으며 당황하고 있습니다..." } },
+                    { text: "집에서 가까워서요", points: 5, reaction: { emoji: "😐", text: "솔직하긴 하네", comment: "김부장이 고개를 끄덕이며 메모를 적고 있습니다" } },
+                    { text: "꿈과 비전이 있어서요", points: 10, reaction: { emoji: "😊", text: "좋은 답변이야!", comment: "김부장의 표정이 밝아지며 만족스러워합니다" } },
+                    { text: "어머니가 시켜서요", points: 3, reaction: { emoji: "🤔", text: "어머니가...", comment: "김부장이 복잡한 표정으로 생각에 잠겼습니다" } }
+                ]
+            },
+            {
+                character: { emoji: "👩‍🦳", name: "인사팀 박과장", desc: "까칠한 인사담당자" },
+                question: "5년 후 자신의 모습은?",
+                options: [
+                    { text: "이 회사의 사장", points: 8, reaction: { emoji: "😏", text: "야망이 있군", comment: "박과장이 비웃으며 '재미있는 친구네'라고 중얼거립니다" } },
+                    { text: "유튜버로 대박", points: 5, reaction: { emoji: "🙄", text: "요즘 애들은...", comment: "박과장이 한숨을 쉬며 고개를 젓고 있습니다" } },
+                    { text: "결혼해서 육아맘", points: 6, reaction: { emoji: "😌", text: "현실적이네", comment: "박과장이 은근히 공감하는 표정을 짓습니다" } },
+                    { text: "아직 면접 보고 있을 것 같아요", points: 0, reaction: { emoji: "😤", text: "자신감이 없어!", comment: "박과장이 펜을 탁 내려놓으며 짜증을 냅니다" } }
+                ]
+            },
+            {
+                character: { emoji: "🤓", name: "개발팀 이대리", desc: "공돌이 개발자" },
+                question: "코딩을 할 줄 아시나요?",
+                options: [
+                    { text: "HTML은 프로그래밍 언어죠?", points: 0, reaction: { emoji: "😵", text: "아니야...", comment: "이대리가 머리를 감싸며 절망하고 있습니다" } },
+                    { text: "파이썬으로 뱀을 키워봤어요", points: 8, reaction: { emoji: "🤣", text: "ㅋㅋㅋ 웃기네!", comment: "이대리가 빵 터지며 '센스 있다'고 웃고 있습니다" } },
+                    { text: "네, 여러 언어를 다룰 수 있습니다", points: 10, reaction: { emoji: "🤩", text: "완벽해!", comment: "이대리의 눈이 반짝이며 동료애를 느끼고 있습니다" } },
+                    { text: "코딩? 그게 뭔가요?", points: 1, reaction: { emoji: "😰", text: "이런...", comment: "이대리가 당황하며 어떻게 설명할지 고민하고 있습니다" } }
+                ]
+            },
+            {
+                character: { emoji: "😎", name: "마케팅팀 최팀장", desc: "힙한 마케터" },
+                question: "SNS 마케팅 경험이 있나요?",
+                options: [
+                    { text: "인스타 팔로워 50명이에요", points: 2, reaction: { emoji: "😅", text: "아직 멀었네", comment: "최팀장이 쓴웃음을 지으며 '노력하자'고 격려합니다" } },
+                    { text: "틱톡에서 바이럴 경험 있어요", points: 10, reaction: { emoji: "🔥", text: "대박! 바로 이거야!", comment: "최팀장이 흥분하며 '당장 우리 팀으로!'라고 외칩니다" } },
+                    { text: "페이스북이 뭔지 몰라요", points: 0, reaction: { emoji: "😱", text: "세상에...", comment: "최팀장이 충격받아 의자에 주저앉았습니다" } },
+                    { text: "카카오톡으로 단체방 관리해봤어요", points: 4, reaction: { emoji: "🤦‍♂️", text: "그건 SNS가...", comment: "최팀장이 이마를 짚으며 설명을 포기했습니다" } }
+                ]
+            },
+            {
+                character: { emoji: "👨‍🍳", name: "구내식당 김셰프", desc: "요리하는 면접관" },
+                question: "점심시간에 뭘 드시겠어요?",
+                options: [
+                    { text: "라면이면 충분해요", points: 5, reaction: { emoji: "😔", text: "라면만...", comment: "김셰프가 서운한 표정으로 '내 요리는?'이라고 중얼거립니다" } },
+                    { text: "셰프님이 만든 요리라면 뭐든지!", points: 10, reaction: { emoji: "😍", text: "최고야! 사랑해!", comment: "김셰프가 감동받아 눈물을 글썽이며 특별 메뉴를 약속합니다" } },
+                    { text: "다이어트 중이라 굶어요", points: 3, reaction: { emoji: "😰", text: "건강이 우선이지만...", comment: "김셰프가 걱정스러운 표정으로 샐러드를 권합니다" } },
+                    { text: "배달음식 시켜먹어요", points: 1, reaction: { emoji: "💔", text: "배신자...", comment: "김셰프가 상처받은 표정으로 고개를 돌렸습니다" } }
+                ]
+            },
+            {
+                character: { emoji: "🏃‍♂️", name: "체육부 박코치", desc: "운동광 면접관" },
+                question: "운동을 좋아하시나요?",
+                options: [
+                    { text: "리모컨 들기가 운동이에요", points: 1, reaction: { emoji: "😤", text: "그건 운동이 아니야!", comment: "박코치가 벌떡 일어나며 팔굽혀펴기를 시범보입니다" } },
+                    { text: "매일 헬스장 다녀요!", points: 10, reaction: { emoji: "💪", text: "그래! 이거야!", comment: "박코치가 근육을 자랑하며 동지애를 느끼고 있습니다" } },
+                    { text: "계단 오르기도 힘들어요", points: 0, reaction: { emoji: "😱", text: "이런 안 돼!", comment: "박코치가 충격받아 즉석에서 운동 계획표를 작성합니다" } },
+                    { text: "게임이 e스포츠 아닌가요?", points: 3, reaction: { emoji: "🤔", text: "음... 그것도 운동?", comment: "박코치가 고민에 빠져 e스포츠에 대해 검색하고 있습니다" } }
+                ]
+            },
+            {
+                character: { emoji: "🎨", name: "디자인팀 김작가", desc: "예술가 기질" },
+                question: "색깔로 자신을 표현한다면?",
+                options: [
+                    { text: "무지개색! 다채로워요", points: 8, reaction: { emoji: "🌈", text: "아름다워!", comment: "김작가가 감탄하며 무지개 스케치를 그리기 시작합니다" } },
+                    { text: "검은색... 우울해요", points: 2, reaction: { emoji: "😢", text: "괜찮아, 예술이야", comment: "김작가가 공감하며 '어둠도 아름다움'이라고 위로합니다" } },
+                    { text: "투명색이요. 존재감이 없어서", points: 1, reaction: { emoji: "😰", text: "그런 말 하지 마", comment: "김작가가 안타까워하며 '모든 색이 소중해'라고 격려합니다" } },
+                    { text: "빨간색! 열정적이거든요", points: 10, reaction: { emoji: "🔥", text: "열정! 완벽해!", comment: "김작가가 흥분하며 빨간 물감을 꺼내 그림을 그립니다" } }
+                ]
+            },
+            {
+                character: { emoji: "🤖", name: "AI 로봇 알파", desc: "미래에서 온 면접관" },
+                question: "AI가 인간을 대체할까요?",
+                options: [
+                    { text: "이미 대체되고 있어요", points: 5, reaction: { emoji: "🤖", text: "분석 완료. 현실적.", comment: "알파가 데이터를 분석하며 '정확한 관찰'이라고 평가합니다" } },
+                    { text: "인간만의 감성이 있어요", points: 10, reaction: { emoji: "😊", text: "감성... 학습 중", comment: "알파가 감정을 이해하려 노력하며 '흥미로운 개념'이라고 합니다" } },
+                    { text: "로봇이 더 나을 것 같아요", points: 3, reaction: { emoji: "😐", text: "효율성은 높지만...", comment: "알파가 복잡한 계산을 하며 '인간의 가치'를 고민합니다" } },
+                    { text: "AI가 뭔지 몰라요", points: 0, reaction: { emoji: "💥", text: "시스템 오류!", comment: "알파가 잠시 멈추며 '이해 불가능'이라고 깜빡입니다" } }
+                ]
+            },
+            {
+                character: { emoji: "👶", name: "신입사원 이막내", desc: "갓 입사한 신입" },
+                question: "신입사원과 어떻게 지내실 건가요?",
+                options: [
+                    { text: "선배 대접 받고 싶어요", points: 2, reaction: { emoji: "😅", text: "아직 신입인데...", comment: "이막내가 당황하며 '저도 신입이에요'라고 작게 말합니다" } },
+                    { text: "같이 성장하고 싶어요", points: 10, reaction: { emoji: "🥺", text: "감동이에요!", comment: "이막내가 눈물을 글썽이며 '좋은 선배님'이라고 감탄합니다" } },
+                    { text: "신입은 커피나 타라고 할게요", points: 0, reaction: { emoji: "😰", text: "그런...", comment: "이막내가 무서워하며 '커피 말고 다른 것도...'라고 떨며 말합니다" } },
+                    { text: "나도 신입인데요?", points: 5, reaction: { emoji: "😂", text: "맞네요! ㅋㅋ", comment: "이막내가 빵 터지며 '동기네요!'라고 반가워합니다" } }
+                ]
+            },
+            {
+                character: { emoji: "👴", name: "회장님 김회장", desc: "회사 창립자" },
+                question: "돈과 명예 중 뭐가 중요한가요?",
+                options: [
+                    { text: "둘 다 포기할 수 없어요", points: 8, reaction: { emoji: "😏", text: "욕심쟁이군", comment: "김회장이 빙긋 웃으며 '젊을 때는 그래야지'라고 끄덕입니다" } },
+                    { text: "돈이 최고죠", points: 5, reaction: { emoji: "💰", text: "현실적이야", comment: "김회장이 지갑을 꺼내며 '돈의 소중함'을 설명합니다" } },
+                    { text: "명예가 더 소중해요", points: 7, reaction: { emoji: "🎖️", text: "고귀한 마음이군", comment: "김회장이 감동하며 '옛날 생각이 난다'고 회상합니다" } },
+                    { text: "건강이 최고에요", points: 10, reaction: { emoji: "👏", text: "지혜롭군!", comment: "김회장이 박수를 치며 '나이 들어 깨달은 진리'라고 칭찬합니다" } }
+                ]
+            },
+            {
+                character: { emoji: "🐶", name: "회사 마스코트 멍멍이", desc: "귀여운 회사견" },
+                question: "동물을 좋아하시나요?",
+                options: [
+                    { text: "알레르기가 있어요", points: 3, reaction: { emoji: "😢", text: "끙끙...", comment: "멍멍이가 슬픈 표정으로 멀리 떨어져 앉습니다" } },
+                    { text: "너무 좋아해요!", points: 10, reaction: { emoji: "🐕", text: "멍멍! 좋아!", comment: "멍멍이가 신나서 꼬리를 흔들며 당신 주위를 뛰어다닙니다" } },
+                    { text: "무서워요", points: 1, reaction: { emoji: "😰", text: "끙...", comment: "멍멍이가 상처받아 구석에 가서 웅크리고 있습니다" } },
+                    { text: "그냥 그래요", points: 5, reaction: { emoji: "🤔", text: "멍?", comment: "멍멍이가 고개를 갸웃하며 당신을 관찰하고 있습니다" } }
+                ]
+            },
+            {
+                character: { emoji: "👻", name: "야근의 유령", desc: "밤늦게 나타나는 존재" },
+                question: "야근을 할 수 있나요?",
+                options: [
+                    { text: "야근은 제 전문이에요", points: 8, reaction: { emoji: "👻", text: "동지여...", comment: "유령이 감동하며 '함께 밤을 지새우자'고 속삭입니다" } },
+                    { text: "가끔은 할 수 있어요", points: 6, reaction: { emoji: "😊", text: "적당히가 좋지", comment: "유령이 만족하며 '건강도 챙기라'고 조언합니다" } },
+                    { text: "절대 안 해요", points: 2, reaction: { emoji: "💔", text: "외로워...", comment: "유령이 슬퍼하며 홀로 야근하는 모습을 상상합니다" } },
+                    { text: "야근하면 유령 될 것 같아요", points: 10, reaction: { emoji: "🤣", text: "ㅋㅋㅋ 맞아!", comment: "유령이 빵 터지며 '나도 그렇게 됐어'라고 웃습니다" } }
+                ]
+            },
+            {
+                character: { emoji: "🎭", name: "연기자 박배우", desc: "드라마틱한 면접관" },
+                question: "스트레스를 어떻게 해소하나요?",
+                options: [
+                    { text: "드라마 보면서 울어요", points: 7, reaction: { emoji: "😭", text: "감정 표현이 중요해!", comment: "박배우가 감동하며 '눈물은 마음의 정화'라고 연기합니다" } },
+                    { text: "운동으로 해소해요", points: 8, reaction: { emoji: "💪", text: "몸과 마음이 하나!", comment: "박배우가 액션 연기를 하며 '건강한 방법'이라고 칭찬합니다" } },
+                    { text: "술 마시고 잠들어요", points: 3, reaction: { emoji: "🍺", text: "술은... 적당히", comment: "박배우가 걱정스러운 연기를 하며 '건강을 생각해'라고 조언합니다" } },
+                    { text: "연기로 감정을 표현해요", points: 10, reaction: { emoji: "🎭", text: "브라보! 예술이야!", comment: "박배우가 기립박수를 치며 '진정한 예술가'라고 감탄합니다" } }
+                ]
+            },
+            {
+                character: { emoji: "🧙‍♂️", name: "마법사 김마법", desc: "신비로운 면접관" },
+                question: "마법을 부릴 수 있다면?",
+                options: [
+                    { text: "일을 순식간에 끝내고 싶어요", points: 8, reaction: { emoji: "⚡", text: "효율성의 마법!", comment: "김마법이 지팡이를 흔들며 '시간 마법'을 시전하는 척합니다" } },
+                    { text: "돈을 만들고 싶어요", points: 5, reaction: { emoji: "💰", text: "물질의 유혹이군", comment: "김마법이 고개를 젓으며 '진정한 마법은 마음'이라고 설교합니다" } },
+                    { text: "세계평화를 이루고 싶어요", points: 10, reaction: { emoji: "🌍", text: "위대한 마법사!", comment: "김마법이 감동하며 '당신이야말로 진정한 마법사'라고 인정합니다" } },
+                    { text: "마법은 믿지 않아요", points: 2, reaction: { emoji: "😤", text: "믿음이 없으면...", comment: "김마법이 서운해하며 '마법은 믿음에서 시작'이라고 중얼거립니다" } }
+                ]
+            },
+            {
+                character: { emoji: "🤡", name: "광대 이웃음", desc: "항상 웃는 면접관" },
+                question: "유머감각이 있나요?",
+                options: [
+                    { text: "개그맨이 꿈이었어요", points: 10, reaction: { emoji: "🎪", text: "동료다! ㅋㅋㅋ", comment: "이웃음이 박수를 치며 '함께 사람들을 웃게 만들자'고 제안합니다" } },
+                    { text: "아재개그 좋아해요", points: 7, reaction: { emoji: "😂", text: "아재개그도 개그야!", comment: "이웃음이 웃으며 '개그에 귀천이 없다'고 격려합니다" } },
+                    { text: "진지한 게 좋아요", points: 3, reaction: { emoji: "😐", text: "가끔은... 웃어봐", comment: "이웃음이 아쉬워하며 '웃음도 필요해'라고 조심스럽게 말합니다" } },
+                    { text: "웃음은 시간낭비에요", points: 0, reaction: { emoji: "💔", text: "그런... 말 하지 마", comment: "이웃음이 상처받아 가면 뒤로 눈물을 훔칩니다" } }
+                ]
+            },
+            {
+                character: { emoji: "🦸‍♂️", name: "슈퍼맨 박히어로", desc: "정의로운 면접관" },
+                question: "세상을 구할 수 있다면?",
+                options: [
+                    { text: "지구온난화부터 해결해요", points: 10, reaction: { emoji: "🌍", text: "지구의 영웅!", comment: "박히어로가 망토를 휘날리며 '진정한 히어로 정신'이라고 감탄합니다" } },
+                    { text: "배고픈 사람들을 도와요", points: 9, reaction: { emoji: "🍞", text: "따뜻한 마음!", comment: "박히어로가 감동하며 '약자를 돕는 것이 진정한 힘'이라고 칭찬합니다" } },
+                    { text: "저부터 구해주세요", points: 5, reaction: { emoji: "😅", text: "솔직하긴 하네", comment: "박히어로가 웃으며 '자신을 아는 것도 용기'라고 격려합니다" } },
+                    { text: "세상은 이미 완벽해요", points: 3, reaction: { emoji: "🤔", text: "그런가?", comment: "박히어로가 고민에 빠지며 '아직 할 일이 많은데'라고 중얼거립니다" } }
+                ]
+            },
+            {
+                character: { emoji: "🎪", name: "서커스단장 김곡예", desc: "화려한 공연자" },
+                question: "특기가 있나요?",
+                options: [
+                    { text: "물구나무서기 10초", points: 7, reaction: { emoji: "🤸", text: "오! 곡예 소질!", comment: "김곡예가 박수를 치며 '서커스단 입단 고려해봐'라고 제안합니다" } },
+                    { text: "저글링 할 수 있어요", points: 8, reaction: { emoji: "🤹", text: "완벽해! 동료야!", comment: "김곡예가 흥분하며 공을 던져주며 '한번 해봐'라고 합니다" } },
+                    { text: "특기가 없어요", points: 2, reaction: { emoji: "😢", text: "모든 사람에겐...", comment: "김곡예가 안타까워하며 '숨겨진 재능이 있을 거야'라고 위로합니다" } },
+                    { text: "사람들을 웃게 만들어요", points: 10, reaction: { emoji: "🎭", text: "최고의 특기!", comment: "김곡예가 감탄하며 '그게 가장 어려운 곡예'라고 인정합니다" } }
+                ]
+            },
+            {
+                character: { emoji: "🚀", name: "우주인 이스페이스", desc: "우주에서 온 면접관" },
+                question: "우주여행을 가고 싶나요?",
+                options: [
+                    { text: "무중력이 무서워요", points: 3, reaction: { emoji: "😰", text: "처음엔 다 그래", comment: "이스페이스가 이해하며 '적응하면 재미있어'라고 격려합니다" } },
+                    { text: "당장 떠나고 싶어요!", points: 10, reaction: { emoji: "🚀", text: "우주 동지!", comment: "이스페이스가 신나서 '함께 화성 가자'며 우주복을 권합니다" } },
+                    { text: "지구가 좋아요", points: 5, reaction: { emoji: "🌍", text: "지구도 아름답지", comment: "이스페이스가 끄덕이며 '고향의 소중함'을 이해한다고 합니다" } },
+                    { text: "우주복이 답답할 것 같아요", points: 2, reaction: { emoji: "😅", text: "익숙해지면 괜찮아", comment: "이스페이스가 웃으며 '패션도 중요하지'라고 농담합니다" } }
+                ]
+            },
+            {
+                character: { emoji: "🧚‍♀️", name: "요정 박팅커벨", desc: "마법의 요정" },
+                question: "소원이 하나 이뤄진다면?",
+                options: [
+                    { text: "이 면접에서 합격하기", points: 8, reaction: { emoji: "✨", text: "현실적인 소원!", comment: "박팅커벨이 반짝이며 '노력하는 자에게 행운이'라고 축복합니다" } },
+                    { text: "세계평화", points: 9, reaction: { emoji: "🕊️", text: "아름다운 마음!", comment: "박팅커벨이 감동하며 '요정들도 그런 소원을 빌어'라고 말합니다" } },
+                    { text: "로또 1등", points: 5, reaction: { emoji: "💰", text: "돈도 필요하지", comment: "박팅커벨이 이해하며 '하지만 노력도 중요해'라고 조언합니다" } },
+                    { text: "모든 사람이 행복하기", points: 10, reaction: { emoji: "🌈", text: "천사 같은 소원!", comment: "박팅커벨이 눈물을 글썽이며 '당신이야말로 진정한 요정'이라고 감탄합니다" } }
+                ]
+            },
+            {
+                character: { emoji: "🎯", name: "명중왕 김정확", desc: "정확한 면접관" },
+                question: "목표 달성을 위해 가장 중요한 것은?",
+                options: [
+                    { text: "운이 좋아야 해요", points: 3, reaction: { emoji: "🎲", text: "운도 실력이지만...", comment: "김정확이 고개를 갸웃하며 '노력이 더 중요해'라고 조언합니다" } },
+                    { text: "끈기와 노력", points: 10, reaction: { emoji: "🎯", text: "정확히 과녁!", comment: "김정확이 활을 쏘는 시늉을 하며 '백발백중!'이라고 외칩니다" } },
+                    { text: "타고난 재능", points: 6, reaction: { emoji: "⭐", text: "재능도 중요하지", comment: "김정확이 끄덕이며 '하지만 노력 없인 무의미해'라고 덧붙입니다" } },
+                    { text: "좋은 환경", points: 7, reaction: { emoji: "🌱", text: "환경도 영향 있어", comment: "김정확이 인정하며 '하지만 의지가 더 중요해'라고 말합니다" } }
+                ]
+            },
+            {
+                character: { emoji: "🎸", name: "록스타 이기타", desc: "음악하는 면접관" },
+                question: "인생의 BGM이 있다면?",
+                options: [
+                    { text: "아이유 - 좋은날", points: 7, reaction: { emoji: "🎵", text: "좋은 선택!", comment: "이기타가 기타로 좋은날을 연주하며 '희망적이야'라고 웃습니다" } },
+                    { text: "Queen - We Will Rock You", points: 10, reaction: { emoji: "🤘", text: "록의 정신!", comment: "이기타가 헤드뱅잉하며 'We Will Rock You!'를 열창합니다" } },
+                    { text: "트로트 메들리", points: 8, reaction: { emoji: "🎤", text: "트로트도 좋지!", comment: "이기타가 깜짝 놀라며 '의외의 선택, 멋져'라고 박수칩니다" } },
+                    { text: "무음... 조용한 게 좋아요", points: 3, reaction: { emoji: "🔇", text: "음악이 없다니...", comment: "이기타가 충격받아 '인생에 음악이 필요해'라고 안타까워합니다" } }
+                ]
+            },
+            {
+                character: { emoji: "🍕", name: "피자왕 박치즈", desc: "맛있는 면접관" },
+                question: "야식으로 뭘 먹고 싶나요?",
+                options: [
+                    { text: "치킨과 맥주", points: 8, reaction: { emoji: "🍗", text: "치맥! 클래식!", comment: "박치즈가 침을 꿀꺽 삼키며 '피자도 같이 어때?'라고 제안합니다" } },
+                    { text: "피자 한 판!", points: 10, reaction: { emoji: "🍕", text: "최고의 선택!", comment: "박치즈가 감격하며 '치즈 추가 서비스!'라고 외치며 춤을 춥니다" } },
+                    { text: "라면", points: 6, reaction: { emoji: "🍜", text: "라면도 좋지", comment: "박치즈가 끄덕이며 '피자 토핑으로 라면 어때?'라고 엉뚱한 제안을 합니다" } },
+                    { text: "야식은 안 먹어요", points: 2, reaction: { emoji: "😱", text: "야식을 안 먹다니!", comment: "박치즈가 충격받아 '인생의 반을 놓치고 있어'라고 안타까워합니다" } }
+                ]
+            },
+            {
+                character: { emoji: "🏆", name: "챔피언 이우승", desc: "승부욕 넘치는 면접관" },
+                question: "경쟁에서 이기는 비결은?",
+                options: [
+                    { text: "남들보다 더 열심히", points: 9, reaction: { emoji: "💪", text: "노력의 승리!", comment: "이우승이 근육을 자랑하며 '땀은 배신하지 않아'라고 격려합니다" } },
+                    { text: "운이 좋아야 해요", points: 4, reaction: { emoji: "🎲", text: "운도 실력이지만...", comment: "이우승이 고개를 젓으며 '실력이 운을 만들어'라고 조언합니다" } },
+                    { text: "정정당당하게 승부", points: 10, reaction: { emoji: "🏆", text: "진정한 챔피언!", comment: "이우승이 트로피를 들어올리며 '스포츠맨십이 최고야!'라고 감탄합니다" } },
+                    { text: "이기는 게 중요한가요?", points: 5, reaction: { emoji: "🤔", text: "과정도 중요하지", comment: "이우승이 생각에 잠기며 '승부보다 성장이 중요할 수도'라고 인정합니다" } }
+                ]
+            }
+        ];
 
-    function nextQuestion() {
-      const ans = document.getElementById("answer").value.trim();
-      const result = document.getElementById("result");
+        let currentQuestion = 0;
+        let totalScore = 0;
+        let selectedAnswer = null;
+        let interviewerMoods = [];
 
-      if (ans === "") {
-        result.innerHTML = "👉 대답을 입력해 주세요!";
-        return;
-      }
+        function startInterview() {
+            document.getElementById('startScreen').classList.add('hidden');
+            document.getElementById('interviewScreen').classList.remove('hidden');
+            currentQuestion = 0;
+            totalScore = 0;
+            interviewerMoods = [];
+            showQuestion();
+        }
 
-      // 개그 타이밍으로 랜덤 멘트
-      const punchlines = [
-        "ㅋㅋㅋㅋ 이건 합격 각",
-        "아니 이 대답 뭐냐고 🤣",
-        "면접관 나물이: '귀여워~!'",
-        "👏👏👏 기립박수 나왔다"
-      ];
-      result.innerHTML = `<div class="punchline">${punchlines[Math.floor(Math.random()*punchlines.length)]}</div>`;
+        function showQuestion() {
+            const q = questions[currentQuestion];
+            
+            document.getElementById('currentQ').textContent = currentQuestion + 1;
+            document.getElementById('progressBar').style.width = ((currentQuestion + 1) / questions.length * 100) + '%';
+            
+            document.getElementById('characterEmoji').textContent = q.character.emoji;
+            document.getElementById('characterName').textContent = q.character.name;
+            document.getElementById('characterDesc').textContent = q.character.desc;
+            
+            document.getElementById('question').textContent = q.question;
+            
+            const optionsBox = document.getElementById('optionsBox');
+            optionsBox.innerHTML = '';
+            
+            q.options.forEach((option, index) => {
+                const button = document.createElement('button');
+                button.className = 'w-full p-4 text-left bg-gradient-to-r from-gray-50 to-gray-100 hover:from-blue-50 hover:to-purple-50 rounded-xl border-2 border-gray-200 hover:border-purple-300 transition-all duration-300 transform hover:scale-105';
+                button.innerHTML = `<span class="font-semibold">${index + 1}.</span> ${option.text}`;
+                button.onclick = () => selectAnswer(index);
+                optionsBox.appendChild(button);
+            });
+            
+            document.getElementById('resultBox').classList.add('hidden');
+            document.getElementById('nextBtn').classList.add('hidden');
+            document.getElementById('reactionBubble').classList.add('hidden');
+            selectedAnswer = null;
+            
+            updateMoodMeter(50);
+        }
 
-      current++;
-      if (current < questions.length) {
-        document.getElementById("question").textContent = questions[current];
-        document.getElementById("answer").value = "";
-      } else {
-        document.getElementById("question").textContent = "면접 종료! 수고하셨습니다. 🌱";
-        document.getElementById("answer").style.display = "none";
-      }
-    }
-  </script>
-</body>
+        function selectAnswer(answerIndex) {
+            if (selectedAnswer !== null) return;
+            
+            selectedAnswer = answerIndex;
+            const q = questions[currentQuestion];
+            const selectedOption = q.options[answerIndex];
+            const buttons = document.querySelectorAll('#optionsBox button');
+            
+            buttons.forEach((btn, index) => {
+                btn.disabled = true;
+                if (index === answerIndex) {
+                    btn.className = btn.className.replace('from-gray-50 to-gray-100', 'from-blue-100 to-purple-100');
+                    btn.classList.add('border-purple-500', 'glow');
+                }
+            });
+            
+            showReaction(selectedOption.reaction);
+            
+            const points = selectedOption.points;
+            totalScore += points;
+            document.getElementById('score').textContent = totalScore;
+            
+            const moodValue = Math.min(100, Math.max(0, (points / 10) * 100));
+            updateMoodMeter(moodValue);
+            
+            interviewerMoods.push({
+                character: q.character.name,
+                mood: moodValue,
+                reaction: selectedOption.reaction.comment
+            });
+            
+            setTimeout(() => {
+                document.getElementById('nextBtn').classList.remove('hidden');
+            }, 2000);
+        }
+
+        function showReaction(reaction) {
+            document.getElementById('reactionEmoji').textContent = reaction.emoji;
+            document.getElementById('reactionBubble').classList.remove('hidden');
+            
+            setTimeout(() => {
+                const resultBox = document.getElementById('resultBox');
+                document.getElementById('reactionEmoji2').textContent = reaction.emoji;
+                document.getElementById('reactionText').textContent = reaction.text;
+                document.getElementById('reactionComment').textContent = reaction.comment;
+                
+                const points = questions[currentQuestion].options[selectedAnswer].points;
+                document.getElementById('scoreChange').textContent = `+${points}점 획득!`;
+                document.getElementById('scoreChange').className = points >= 8 ? 'text-center text-xl font-bold text-green-600' : points >= 5 ? 'text-center text-xl font-bold text-yellow-600' : 'text-center text-xl font-bold text-red-600';
+                
+                if (points >= 8) {
+                    resultBox.className = 'p-6 rounded-2xl mb-6 bg-gradient-to-r from-green-100 to-green-200 border-2 border-green-300';
+                } else if (points >= 5) {
+                    resultBox.className = 'p-6 rounded-2xl mb-6 bg-gradient-to-r from-yellow-100 to-yellow-200 border-2 border-yellow-300';
+                } else {
+                    resultBox.className = 'p-6 rounded-2xl mb-6 bg-gradient-to-r from-red-100 to-red-200 border-2 border-red-300';
+                }
+                
+                resultBox.classList.remove('hidden');
+            }, 1000);
+        }
+
+        function updateMoodMeter(value) {
+            const moodMeter = document.getElementById('moodMeter');
+            const moodText = document.getElementById('moodText');
+            
+            moodMeter.style.width = value + '%';
+            
+            if (value >= 80) {
+                moodText.textContent = '최고 기분! 😍';
+                moodText.className = 'text-sm font-bold text-green-600 mt-2';
+            } else if (value >= 60) {
+                moodText.textContent = '좋은 기분 😊';
+                moodText.className = 'text-sm font-bold text-blue-600 mt-2';
+            } else if (value >= 40) {
+                moodText.textContent = '보통 😐';
+                moodText.className = 'text-sm font-bold text-gray-600 mt-2';
+            } else if (value >= 20) {
+                moodText.textContent = '별로... 😒';
+                moodText.className = 'text-sm font-bold text-orange-600 mt-2';
+            } else {
+                moodText.textContent = '최악 😡';
+                moodText.className = 'text-sm font-bold text-red-600 mt-2';
+            }
+        }
+
+        function nextQuestion() {
+            currentQuestion++;
+            if (currentQuestion >= questions.length) {
+                showFinalResult();
+            } else {
+                showQuestion();
+            }
+        }
+
+        function showFinalResult() {
+            document.getElementById('interviewScreen').classList.add('hidden');
+            document.getElementById('finalScreen').classList.remove('hidden');
+            
+            const percentage = (totalScore / (questions.length * 10)) * 100;
+            let emoji, title, message;
+            
+            if (percentage >= 90) {
+                emoji = "🏆";
+                title = "면접 마스터!";
+                message = "완벽한 면접이었습니다! 모든 면접관들이 당신을 원해요!";
+            } else if (percentage >= 80) {
+                emoji = "🎉";
+                title = "훌륭한 면접!";
+                message = "정말 잘하셨어요! 대부분의 면접관들이 감동했어요!";
+            } else if (percentage >= 70) {
+                emoji = "😊";
+                title = "좋은 면접!";
+                message = "괜찮은 실력이네요! 조금만 더 노력하면 완벽할 거예요!";
+            } else if (percentage >= 60) {
+                emoji = "😐";
+                title = "보통 면접";
+                message = "나쁘지 않아요! 하지만 더 준비가 필요할 것 같네요!";
+            } else {
+                emoji = "😅";
+                title = "아쉬운 면접";
+                message = "다음엔 더 잘할 수 있을 거예요! 포기하지 마세요!";
+            }
+            
+            document.getElementById('finalEmoji').textContent = emoji;
+            document.getElementById('finalTitle').textContent = title;
+            document.getElementById('finalScore').textContent = `최종 점수: ${totalScore}/${questions.length * 10}점 (${percentage.toFixed(1)}%)`;
+            document.getElementById('finalMessage').textContent = message;
+            
+            const reviewsContainer = document.getElementById('finalReviews');
+            reviewsContainer.innerHTML = '';
+            
+            const topMoods = interviewerMoods.sort((a, b) => b.mood - a.mood).slice(0, 5);
+            
+            topMoods.forEach(mood => {
+                const reviewDiv = document.createElement('div');
+                reviewDiv.className = 'bg-white p-3 rounded-lg';
+                reviewDiv.innerHTML = `
+                    <div class="font-bold text-sm">${mood.character}</div>
+                    <div class="text-xs text-gray-600">${mood.reaction}</div>
+                `;
+                reviewsContainer.appendChild(reviewDiv);
+            });
+        }
+
+        function restartInterview() {
+            currentQuestion = 0;
+            totalScore = 0;
+            selectedAnswer = null;
+            interviewerMoods = [];
+            document.getElementById('score').textContent = '0';
+            document.getElementById('finalScreen').classList.add('hidden');
+            document.getElementById('interviewScreen').classList.remove('hidden');
+            showQuestion();
+        }
+
+        function goToLobby() {
+            currentQuestion = 0;
+            totalScore = 0;
+            selectedAnswer = null;
+            interviewerMoods = [];
+            document.getElementById('score').textContent = '0';
+            document.getElementById('interviewScreen').classList.add('hidden');
+            document.getElementById('finalScreen').classList.add('hidden');
+            document.getElementById('startScreen').classList.remove('hidden');
+        }
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'980c6b286353aa42',t:'MTc1ODE1MjExMS4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
