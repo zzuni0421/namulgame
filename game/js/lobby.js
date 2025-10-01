@@ -179,10 +179,6 @@ document.addEventListener("DOMContentLoaded", () => {
     showModal(gameModal);
   }
 
-  // --- 이벤트 배너 클릭 이동 ---
-  const banner = document.querySelector(".event-banner");
-  banner && (banner.onclick = () => { window.location.href = "../../event"; });
-
   // --- 초기화 ---
   updateUI();
 
