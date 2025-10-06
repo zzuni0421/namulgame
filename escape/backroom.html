@@ -1,0 +1,630 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>백룸 탈출 게임</title>
+    <style>
+        body {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: 'Courier New', monospace;
+            background: #000;
+            color: #fff;
+            overflow: hidden;
+            cursor: none;
+        }
+
+        #gameContainer {
+            position: relative;
+            width: 100vw;
+            height: 100vh;
+            background: linear-gradient(180deg, #d4d4aa 0%, #d4d4aa 50%, #8b8b5a 100%);
+            perspective: 1000px;
+            overflow: hidden;
+        }
+
+        #gameWorld {
+            position: absolute;
+            width: 200%;
+            height: 200%;
+            transform-style: preserve-3d;
+            transition: transform 0.1s ease-out;
+        }
+
+        .wall {
+            position: absolute;
+            background: repeating-linear-gradient(
+                0deg,
+                #d4d4aa 0px,
+                #d4d4aa 10px,
+                #c4c49a 10px,
+                #c4c49a 20px
+            );
+            border: 2px solid #8b8b5a;
+            box-shadow: inset 0 0 50px rgba(0,0,0,0.3);
+        }
+
+        .floor {
+            position: absolute;
+            background: repeating-linear-gradient(
+                45deg,
+                #8b8b5a 0px,
+                #8b8b5a 20px,
+                #7a7a4a 20px,
+                #7a7a4a 40px
+            );
+            transform: rotateX(90deg);
+        }
+
+        .ceiling {
+            position: absolute;
+            background: #6a6a3a;
+            transform: rotateX(-90deg);
+            box-shadow: 0 0 100px rgba(0,0,0,0.8);
+        }
+
+        .light {
+            position: absolute;
+            width: 100px;
+            height: 20px;
+            background: linear-gradient(90deg, #fff 0%, #ffff99 50%, #fff 100%);
+            border-radius: 10px;
+            box-shadow: 0 0 200px rgba(255,255,153,0.3);
+            animation: flicker 3s infinite;
+        }
+
+        @keyframes flicker {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+            75% { opacity: 0.9; }
+        }
+
+        #monster {
+            position: absolute;
+            width: 60px;
+            height: 120px;
+            background: #000;
+            border-radius: 30px 30px 0 0;
+            transition: all 0.3s ease;
+            z-index: 100;
+            box-shadow: 0 0 50px rgba(255,0,0,0.5);
+        }
+
+        #monster::before {
+            content: '👁️👁️';
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 20px;
+            animation: blink 2s infinite;
+        }
+
+        @keyframes blink {
+            0%, 90%, 100% { opacity: 1; }
+            95% { opacity: 0; }
+        }
+
+        #player {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 20px;
+            height: 40px;
+            background: #4a90e2;
+            border-radius: 10px;
+            transform: translate(-50%, -50%);
+            z-index: 50;
+            transition: height 0.3s ease;
+        }
+
+        #player.crouching {
+            height: 20px;
+            background: #2a70c2;
+        }
+
+        #ui {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background: rgba(0,0,0,0.8);
+            padding: 20px;
+            border-radius: 10px;
+            border: 2px solid #333;
+        }
+
+        #timer {
+            font-size: 24px;
+            color: #ff4444;
+            margin-bottom: 10px;
+        }
+
+        #status {
+            font-size: 16px;
+            color: #44ff44;
+        }
+
+        #instructions {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            background: rgba(0,0,0,0.8);
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 14px;
+            z-index: 1000;
+        }
+
+        #gameOver {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.9);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            z-index: 2000;
+        }
+
+        #gameOver h1 {
+            font-size: 48px;
+            color: #ff4444;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px #ff4444;
+        }
+
+        #gameOver button {
+            padding: 15px 30px;
+            font-size: 18px;
+            background: #4a90e2;
+            color: white;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            margin: 10px;
+        }
+
+        #gameOver button:hover {
+            background: #357abd;
+        }
+
+        #multiplayer {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: rgba(0,0,0,0.8);
+            padding: 15px;
+            border-radius: 10px;
+            z-index: 1000;
+        }
+
+        .otherPlayer {
+            position: absolute;
+            width: 20px;
+            height: 40px;
+            background: #e24a4a;
+            border-radius: 10px;
+            z-index: 45;
+        }
+
+        #exit {
+            position: absolute;
+            width: 80px;
+            height: 120px;
+            background: linear-gradient(180deg, #44ff44 0%, #228822 100%);
+            border: 3px solid #fff;
+            border-radius: 10px;
+            box-shadow: 0 0 100px rgba(68,255,68,0.5);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        #ambientSound {
+            position: fixed;
+            top: -1000px;
+            opacity: 0;
+        }
+
+        .scary-text {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-size: 36px;
+            color: #ff0000;
+            text-shadow: 0 0 20px #ff0000;
+            z-index: 1500;
+            opacity: 0;
+            animation: scaryAppear 0.5s ease-in-out;
+        }
+
+        @keyframes scaryAppear {
+            0% { opacity: 0; transform: translate(-50%, -50%) scale(0.5); }
+            50% { opacity: 1; transform: translate(-50%, -50%) scale(1.2); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(1); }
+        }
+    </style>
+</head>
+<body>
+    <div id="gameContainer">
+        <div id="gameWorld">
+            <!-- 벽들 -->
+            <div class="wall" style="width: 2000px; height: 300px; top: 0; left: 0; transform: translateZ(0px);"></div>
+            <div class="wall" style="width: 2000px; height: 300px; top: 0; left: 0; transform: translateZ(-500px);"></div>
+            <div class="wall" style="width: 500px; height: 300px; top: 0; left: 0; transform: rotateY(90deg) translateZ(0px);"></div>
+            <div class="wall" style="width: 500px; height: 300px; top: 0; right: 0; transform: rotateY(-90deg) translateZ(0px);"></div>
+            
+            <!-- 바닥과 천장 -->
+            <div class="floor" style="width: 2000px; height: 500px; top: 300px; left: 0;"></div>
+            <div class="ceiling" style="width: 2000px; height: 500px; top: 0; left: 0;"></div>
+            
+            <!-- 조명 -->
+            <div class="light" style="top: 50px; left: 200px;"></div>
+            <div class="light" style="top: 50px; left: 600px;"></div>
+            <div class="light" style="top: 50px; left: 1000px;"></div>
+            <div class="light" style="top: 50px; left: 1400px;"></div>
+            
+            <!-- 출구 -->
+            <div id="exit" style="top: 180px; left: 1800px;"></div>
+            
+            <!-- 몬스터 -->
+            <div id="monster" style="top: 180px; left: 800px;"></div>
+            
+            <!-- 플레이어 -->
+            <div id="player"></div>
+        </div>
+    </div>
+
+    <div id="ui">
+        <div id="timer">15:00</div>
+        <div id="status">생존 중...</div>
+        <div>점수: <span id="score">0</span></div>
+    </div>
+
+    <div id="instructions">
+        <strong>조작법:</strong><br>
+        WASD: 이동<br>
+        S 길게 누르기: 웅크리기 (몬스터가 못 봄)<br>
+        목표: 녹색 출구에 도달하세요!
+    </div>
+
+    <div id="multiplayer">
+        <div>온라인 플레이어: <span id="playerCount">1</span></div>
+        <div>방 코드: <span id="roomCode">ROOM-001</span></div>
+    </div>
+
+    <div id="gameOver">
+        <h1 id="gameOverTitle">게임 오버</h1>
+        <p id="gameOverMessage">몬스터에게 잡혔습니다...</p>
+        <button onclick="restartGame()">다시 시작</button>
+        <button onclick="shareRoom()">친구 초대</button>
+    </div>
+
+    <script>
+        // 게임 상태
+        let gameState = {
+            playerX: 100,
+            playerY: 200,
+            playerZ: 0,
+            rotation: 0,
+            isCrouching: false,
+            isAlive: true,
+            timeLeft: 900, // 15분
+            score: 0,
+            monsterX: 800,
+            monsterY: 180,
+            monsterSpeed: 1,
+            monsterDirection: 1,
+            lastMonsterMove: 0,
+            scareEvents: 0
+        };
+
+        // 다른 플레이어들 (시뮬레이션)
+        let otherPlayers = [
+            { id: 'player2', x: 150, y: 200, name: '친구1' },
+            { id: 'player3', x: 200, y: 200, name: '친구2' }
+        ];
+
+        // DOM 요소들
+        const gameWorld = document.getElementById('gameWorld');
+        const player = document.getElementById('player');
+        const monster = document.getElementById('monster');
+        const timer = document.getElementById('timer');
+        const status = document.getElementById('status');
+        const scoreElement = document.getElementById('score');
+        const gameOver = document.getElementById('gameOver');
+        const playerCount = document.getElementById('playerCount');
+
+        // 키 입력 상태
+        const keys = {};
+
+        // 이벤트 리스너
+        document.addEventListener('keydown', (e) => {
+            keys[e.key.toLowerCase()] = true;
+            
+            if (e.key.toLowerCase() === 's') {
+                gameState.isCrouching = true;
+                player.classList.add('crouching');
+            }
+        });
+
+        document.addEventListener('keyup', (e) => {
+            keys[e.key.toLowerCase()] = false;
+            
+            if (e.key.toLowerCase() === 's') {
+                gameState.isCrouching = false;
+                player.classList.remove('crouching');
+            }
+        });
+
+        // 플레이어 이동
+        function movePlayer() {
+            if (!gameState.isAlive) return;
+
+            const speed = gameState.isCrouching ? 0 : 3;
+            
+            if (keys['w'] || keys['arrowup']) {
+                gameState.playerY -= speed;
+            }
+            if (keys['s'] || keys['arrowdown']) {
+                if (!gameState.isCrouching) {
+                    gameState.playerY += speed;
+                }
+            }
+            if (keys['a'] || keys['arrowleft']) {
+                gameState.playerX -= speed;
+            }
+            if (keys['d'] || keys['arrowright']) {
+                gameState.playerX += speed;
+            }
+
+            // 경계 체크
+            gameState.playerX = Math.max(50, Math.min(1950, gameState.playerX));
+            gameState.playerY = Math.max(50, Math.min(450, gameState.playerY));
+
+            // 플레이어 위치 업데이트
+            player.style.left = gameState.playerX + 'px';
+            player.style.top = gameState.playerY + 'px';
+
+            // 카메라 따라가기
+            const translateX = -gameState.playerX + window.innerWidth / 2;
+            const translateY = -gameState.playerY + window.innerHeight / 2;
+            gameWorld.style.transform = `translate(${translateX}px, ${translateY}px)`;
+        }
+
+        // 몬스터 AI
+        function moveMonster() {
+            if (!gameState.isAlive) return;
+
+            const now = Date.now();
+            if (now - gameState.lastMonsterMove < 100) return;
+            
+            gameState.lastMonsterMove = now;
+
+            // 플레이어와의 거리 계산
+            const dx = gameState.playerX - gameState.monsterX;
+            const dy = gameState.playerY - gameState.monsterY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            // 웅크리고 있으면 몬스터가 못 봄
+            if (gameState.isCrouching && distance > 100) {
+                // 랜덤 이동
+                gameState.monsterX += (Math.random() - 0.5) * 2;
+                gameState.monsterY += (Math.random() - 0.5) * 2;
+            } else {
+                // 플레이어 추적
+                if (distance > 5) {
+                    gameState.monsterX += (dx / distance) * gameState.monsterSpeed;
+                    gameState.monsterY += (dy / distance) * gameState.monsterSpeed;
+                }
+            }
+
+            // 몬스터 위치 업데이트
+            monster.style.left = gameState.monsterX + 'px';
+            monster.style.top = gameState.monsterY + 'px';
+
+            // 충돌 검사
+            if (distance < 50 && !gameState.isCrouching) {
+                gameOver();
+            }
+
+            // 무서운 이벤트
+            if (distance < 200 && Math.random() < 0.01) {
+                createScareEvent();
+            }
+        }
+
+        // 무서운 이벤트 생성
+        function createScareEvent() {
+            const scaryTexts = ['뒤를 보지 마...', '너를 찾았다...', '도망칠 수 없어...', '이미 늦었어...'];
+            const text = scaryTexts[Math.floor(Math.random() * scaryTexts.length)];
+            
+            const scaryElement = document.createElement('div');
+            scaryElement.className = 'scary-text';
+            scaryElement.textContent = text;
+            document.body.appendChild(scaryElement);
+
+            setTimeout(() => {
+                document.body.removeChild(scaryElement);
+            }, 500);
+
+            // 화면 흔들기
+            document.body.style.animation = 'shake 0.5s ease-in-out';
+            setTimeout(() => {
+                document.body.style.animation = '';
+            }, 500);
+        }
+
+        // 다른 플레이어 업데이트 (시뮬레이션)
+        function updateOtherPlayers() {
+            otherPlayers.forEach((otherPlayer, index) => {
+                // 기존 요소 제거
+                const existing = document.getElementById(otherPlayer.id);
+                if (existing) existing.remove();
+
+                // 새 요소 생성
+                const playerElement = document.createElement('div');
+                playerElement.id = otherPlayer.id;
+                playerElement.className = 'otherPlayer';
+                playerElement.style.left = otherPlayer.x + 'px';
+                playerElement.style.top = otherPlayer.y + 'px';
+                gameWorld.appendChild(playerElement);
+
+                // 랜덤 이동 (시뮬레이션)
+                otherPlayer.x += (Math.random() - 0.5) * 4;
+                otherPlayer.y += (Math.random() - 0.5) * 4;
+                otherPlayer.x = Math.max(50, Math.min(1950, otherPlayer.x));
+                otherPlayer.y = Math.max(50, Math.min(450, otherPlayer.y));
+            });
+
+            playerCount.textContent = otherPlayers.length + 1;
+        }
+
+        // 출구 체크
+        function checkExit() {
+            const exitX = 1800;
+            const exitY = 180;
+            const dx = gameState.playerX - exitX;
+            const dy = gameState.playerY - exitY;
+            const distance = Math.sqrt(dx * dx + dy * dy);
+
+            if (distance < 60) {
+                winGame();
+            }
+        }
+
+        // 타이머 업데이트
+        function updateTimer() {
+            if (!gameState.isAlive) return;
+
+            gameState.timeLeft--;
+            const minutes = Math.floor(gameState.timeLeft / 60);
+            const seconds = gameState.timeLeft % 60;
+            timer.textContent = `${minutes}:${seconds.toString().padStart(2, '0')}`;
+
+            if (gameState.timeLeft <= 0) {
+                gameOver('시간 초과!');
+            }
+
+            // 점수 업데이트
+            gameState.score += 1;
+            scoreElement.textContent = gameState.score;
+
+            // 몬스터 속도 증가
+            if (gameState.timeLeft % 60 === 0) {
+                gameState.monsterSpeed += 0.2;
+            }
+        }
+
+        // 게임 오버
+        function gameOver(reason = '몬스터에게 잡혔습니다...') {
+            gameState.isAlive = false;
+            document.getElementById('gameOverTitle').textContent = '게임 오버';
+            document.getElementById('gameOverMessage').textContent = reason;
+            gameOver.style.display = 'flex';
+            status.textContent = '사망';
+            status.style.color = '#ff4444';
+        }
+
+        // 게임 승리
+        function winGame() {
+            gameState.isAlive = false;
+            document.getElementById('gameOverTitle').textContent = '탈출 성공!';
+            document.getElementById('gameOverTitle').style.color = '#44ff44';
+            document.getElementById('gameOverMessage').textContent = `축하합니다! ${Math.floor(gameState.timeLeft / 60)}분 ${gameState.timeLeft % 60}초 남기고 탈출했습니다!`;
+            gameOver.style.display = 'flex';
+            status.textContent = '탈출 성공!';
+            status.style.color = '#44ff44';
+        }
+
+        // 게임 재시작
+        function restartGame() {
+            gameState = {
+                playerX: 100,
+                playerY: 200,
+                playerZ: 0,
+                rotation: 0,
+                isCrouching: false,
+                isAlive: true,
+                timeLeft: 900,
+                score: 0,
+                monsterX: 800,
+                monsterY: 180,
+                monsterSpeed: 1,
+                monsterDirection: 1,
+                lastMonsterMove: 0,
+                scareEvents: 0
+            };
+
+            gameOver.style.display = 'none';
+            status.textContent = '생존 중...';
+            status.style.color = '#44ff44';
+            document.getElementById('gameOverTitle').style.color = '#ff4444';
+            player.classList.remove('crouching');
+        }
+
+        // 친구 초대
+        function shareRoom() {
+            const roomCode = document.getElementById('roomCode').textContent;
+            const shareText = `백룸 탈출 게임에 참여하세요! 방 코드: ${roomCode}`;
+            
+            if (navigator.share) {
+                navigator.share({
+                    title: '백룸 탈출 게임',
+                    text: shareText,
+                    url: window.location.href
+                });
+            } else {
+                navigator.clipboard.writeText(shareText).then(() => {
+                    alert('초대 링크가 클립보드에 복사되었습니다!');
+                });
+            }
+        }
+
+        // 화면 흔들기 애니메이션 추가
+        const shakeKeyframes = `
+            @keyframes shake {
+                0%, 100% { transform: translateX(0); }
+                25% { transform: translateX(-5px); }
+                75% { transform: translateX(5px); }
+            }
+        `;
+        const style = document.createElement('style');
+        style.textContent = shakeKeyframes;
+        document.head.appendChild(style);
+
+        // 게임 루프
+        function gameLoop() {
+            if (gameState.isAlive) {
+                movePlayer();
+                moveMonster();
+                updateOtherPlayers();
+                checkExit();
+            }
+            requestAnimationFrame(gameLoop);
+        }
+
+        // 타이머 시작
+        setInterval(updateTimer, 1000);
+
+        // 게임 시작
+        gameLoop();
+
+        // 초기 설정
+        player.style.left = gameState.playerX + 'px';
+        player.style.top = gameState.playerY + 'px';
+        monster.style.left = gameState.monsterX + 'px';
+        monster.style.top = gameState.monsterY + 'px';
+    </script>
+<script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'98a25c3307afeaa3',t:'MTc1OTcyNDM2My4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
