@@ -129,20 +129,19 @@ body {
   .game-list button { width: 100%; }
 }
 
-/* Google 로그인 버튼 스타일 */
-.btn.google {
-  background-color: #fff;
-  color: #444;
+/* 구글 로그인 버튼 스타일 */
+#btnOpenLogin {
+  background-color: #ffffff;
+  color: #333;
   border: 1px solid #ccc;
-  font-weight: bold;
   background-image: url('https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg');
   background-repeat: no-repeat;
-  background-position: 12px center;
+  background-position: 10px center;
+  background-size: 20px;
   padding-left: 40px;
-  transition: 0.2s;
+  transition: background-color 0.2s ease;
 }
 
-.btn.google:hover {
-  background-color: #f1f1f1;
-  transform: scale(1.02);
+#btnOpenLogin:hover {
+  background-color: #f0f0f0;
 }
