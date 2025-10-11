@@ -14,17 +14,6 @@ body {
   padding: 16px;
 }
 
-/* 이벤트 배너 */
-.event-banner {
-  background: #ffe4b5;
-  color: #333;
-  padding: 10px;
-  border-radius: 10px;
-  margin-bottom: 20px;
-  cursor: pointer;
-}
-.event-banner:hover { background:#ffd899; }
-
 /* 공통 버튼 스타일 (.btn) */
 .btn {
   padding: 8px 16px;
@@ -138,4 +127,22 @@ body {
   #extraMenuBtn { right: 12px; bottom: 12px; padding: 10px; }
   .modal-content { padding: 14px; width: 95%; }
   .game-list button { width: 100%; }
+}
+
+/* Google 로그인 버튼 스타일 */
+.btn.google {
+  background-color: #fff;
+  color: #444;
+  border: 1px solid #ccc;
+  font-weight: bold;
+  background-image: url('https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg');
+  background-repeat: no-repeat;
+  background-position: 12px center;
+  padding-left: 40px;
+  transition: 0.2s;
+}
+
+.btn.google:hover {
+  background-color: #f1f1f1;
+  transform: scale(1.02);
 }
