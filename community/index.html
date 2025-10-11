@@ -18,7 +18,7 @@ body { background:#f0fdf4; font-family:'Pretendard',sans-serif; }
 .badge { display:inline-block; background:#22c55e; color:white; font-size:.75rem; padding:.1rem .4rem; border-radius:.25rem; margin-left:.5rem; }
 .anonymous { color:#94a3b8; font-style:italic; }
 .like-btn { cursor:pointer; color:#22c55e; font-weight:bold; margin-left:1rem; }
-input, textarea { border:1px solid #d1d5db; padding:.5rem; border-radius:.375rem; width:100%; }
+input, textarea { border:1px solid #d1d5db; padding:.5rem; border-radius:.375rem; width:100%; margin-top:.5rem; }
 button { background:#22c55e; color:white; padding:.5rem 1rem; border-radius:.375rem; margin-top:.5rem; }
 </style>
 </head>
@@ -41,14 +41,19 @@ button { background:#22c55e; color:white; padding:.5rem 1rem; border-radius:.375
 
 <script>
 document.addEventListener("DOMContentLoaded", async () => {
-  // --- Supabase 초기화 ---
+  // ---------------------------
+  // 1️⃣ Supabase 안전 초기화
+  // ---------------------------
   const SUPABASE_URL = "https://uetjeezjqkvpherrpreb.supabase.co";
   const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVldGplZXpqcWt2cGhlcnJwcmViIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAwNzYyNjAsImV4cCI6MjA3NTY1MjI2MH0.icCYn-V8ekqk9NKadq7Cls_q8IGtKxZHG7NvDAn7r8w"; // 익명 공개 키
   const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  let currentUser = { email: "익명", role: "guest" }; // 임시 게스트
+  // 임시 현재 유저
+  let currentUser = { email:"익명", role:"guest" };
 
-  // --- 글 로드 ---
+  // ---------------------------
+  // 2️⃣ 글/댓글 로드
+  // ---------------------------
   async function loadPosts() {
     const { data: posts, error } = await supabase
       .from("posts")
@@ -58,11 +63,14 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const container = document.getElementById("postsContainer");
     container.innerHTML = "";
+
     posts.forEach(post => {
       const postEl = document.createElement("div");
       postEl.className = "post";
+
       const authorName = post.anonymous ? "익명" : post.author;
       const badge = post.role !== "guest" ? `<span class="badge">${post.role}</span>` : "";
+
       postEl.innerHTML = `
         <h3 class="font-bold">${post.title} ${badge}</h3>
         <p>${post.content}</p>
@@ -80,15 +88,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // --- 댓글 로드 ---
   async function loadComments(postId) {
     const { data: comments } = await supabase
       .from("comments")
       .select("*")
       .eq("post_id", postId)
       .order("created_at", { ascending: true });
+
     const container = document.getElementById(`comments-${postId}`);
     container.innerHTML = "";
+
     comments.forEach(c => {
       const authorName = c.anonymous ? "익명" : c.author;
       const badge = c.role !== "guest" ? `<span class="badge">${c.role}</span>` : "";
@@ -99,12 +108,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // --- 글 작성 ---
+  // ---------------------------
+  // 3️⃣ 글 작성
+  // ---------------------------
   document.getElementById("btnPost").addEventListener("click", async () => {
     const title = document.getElementById("postTitle").value.trim();
     const content = document.getElementById("postContent").value.trim();
     const anonymous = document.getElementById("postAnonymous").checked;
+
     if(!title || !content) return alert("제목과 내용을 입력하세요.");
+
     await supabase.from("posts").insert([{
       title, content,
       author: currentUser.email,
@@ -112,17 +125,22 @@ document.addEventListener("DOMContentLoaded", async () => {
       role: currentUser.role,
       anonymous
     }]);
+
     document.getElementById("postTitle").value = "";
     document.getElementById("postContent").value = "";
     document.getElementById("postAnonymous").checked = false;
+
     loadPosts();
   });
 
-  // --- 댓글 작성 ---
+  // ---------------------------
+  // 4️⃣ 댓글 작성
+  // ---------------------------
   window.addComment = async function(postId){
     const input = document.getElementById(`commentInput-${postId}`);
     const content = input.value.trim();
     if(!content) return alert("댓글 내용을 입력하세요.");
+
     await supabase.from("comments").insert([{
       post_id: postId,
       content,
@@ -131,18 +149,22 @@ document.addEventListener("DOMContentLoaded", async () => {
       role: currentUser.role,
       anonymous:false
     }]);
+
     input.value = "";
     loadComments(postId);
   }
 
-  // --- 좋아요 ---
+  // ---------------------------
+  // 5️⃣ 좋아요
+  // ---------------------------
   window.likePost = async function(postId){
-    const { data, error } = await supabase.rpc('increment_likes', { p_id: postId });
-    if(error) return console.error(error);
+    await supabase.rpc('increment_likes', { p_id: postId });
     loadPosts();
   }
 
-  // 초기 로드
+  // ---------------------------
+  // 초기 실행
+  // ---------------------------
   loadPosts();
 });
 </script>
