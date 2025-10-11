@@ -182,6 +182,50 @@ document.addEventListener("DOMContentLoaded", () => {
   // --- 초기화 ---
   updateUI();
 
+  // Supabase 초기화
+const SUPABASE_URL = "https://uetjeezjqkvpherrpreb.supabase.co";
+const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVldGplZXpqcWt2cGhlcnJwcmViIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAwNzYyNjAsImV4cCI6MjA3NTY1MjI2MH0.icCYn-V8ekqk9NKadq7Cls_q8IGtKxZHG7NvDAn7r8w";
+const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+// 로그인 상태 표시
+const userInfo = document.getElementById("userInfo");
+const btnLogout = document.getElementById("btnLogout");
+
+async function updateUserUI() {
+  const { data } = await supabase.auth.getUser();
+  const user = data.user;
+  if (user) {
+    userInfo.innerHTML = `<p>🌿 ${user.email}님 환영합니다!</p>`;
+    btnLogout.style.display = "inline-block";
+  } else {
+    userInfo.innerHTML = "";
+    btnLogout.style.display = "none";
+  }
+}
+
+// 구글 로그인 버튼 클릭 시
+document.getElementById("btnGoogleLogin").addEventListener("click", async () => {
+  const { data, error } = await supabase.auth.signInWithOAuth({ provider: "google" });
+  if (error) {
+    alert("로그인 실패: " + error.message);
+  }
+});
+
+// 로그아웃
+btnLogout.addEventListener("click", async () => {
+  await supabase.auth.signOut();
+  alert("로그아웃되었습니다!");
+  updateUserUI();
+});
+
+// 로그인 상태 변경 감지
+supabase.auth.onAuthStateChange((_event, _session) => {
+  updateUserUI();
+});
+
+// 초기 실행
+updateUserUI();
+
   // expose some helpers for inline HTML (validateUserId already inline)
   window.validateUserId = validateUserId;
   window.openGameModal = openGameModal;
