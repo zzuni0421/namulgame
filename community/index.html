@@ -3,249 +3,254 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>🌿 나물게임 커뮤니티</title>
+<title>나물게임 커뮤니티</title>
 <style>
-  /* ===== CSS START ===== */
-  body {
-    font-family: 'Noto Sans KR', sans-serif;
-    background: #fdf6e3;
+  body{
+    font-family:'Noto Sans KR', sans-serif;
     margin:0;
     padding:0;
+    background:#f0f2f5;
     color:#333;
   }
-  .container { max-width:800px; margin:0 auto; padding:20px; }
-  header { display:flex; justify-content: space-between; align-items:center; margin-bottom:20px; }
-  .user-info { font-weight:bold; }
-  .write-post { margin-bottom:30px; }
-  .write-post textarea {
-    width:100%; padding:10px; border-radius:8px; border:1px solid #ccc; resize:none; margin-bottom:5px;
+  .container{
+    max-width:800px;
+    margin:auto;
+    padding:15px;
   }
-  .write-post button {
-    background:#4caf50; color:white; border:none; padding:8px 16px; border-radius:5px; cursor:pointer;
+  h1{text-align:center;margin-bottom:20px;}
+
+  /* 게시글 카드 */
+  .post-card, .comment-card{
+    background:#fff;
+    border-radius:10px;
+    padding:12px;
+    margin-bottom:12px;
+    box-shadow:0 2px 6px rgba(0,0,0,0.1);
   }
-  .write-post button:hover { background:#45a049; }
-  .post-card {
-    background:white; border-radius:10px; padding:15px; margin-bottom:15px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+  .post-header, .comment-header{
+    display:flex;
+    justify-content:space-between;
+    font-size:0.85rem;
+    color:#555;
+    margin-bottom:6px;
+    flex-wrap:wrap;
+    gap:5px;
   }
-  .post-header {
-    display:flex; justify-content: space-between; margin-bottom:10px;
-    font-size:0.9rem; color:#555;
+  .post-content{
+    font-size:1rem;
+    margin-bottom:10px;
+    white-space:pre-wrap;
+    word-break:break-word;
   }
-  .role-badge { font-size:0.75rem; padding:2px 6px; border-radius:5px; color:white; margin-left:5px; }
-  .role-admin { background:#e53935; }
-  .role-developer { background:#1e88e5; }
-  .role-user { background:#43a047; }
-  .role-guest { background:#757575; }
-  .comment-card {
-    background:#f0f0f0; border-radius:8px; padding:8px; margin-top:8px; font-size:0.9rem;
+
+  .comment-section{
+    margin-top:8px;
   }
-  .comment-section textarea { width:100%; padding:8px; border-radius:6px; border:1px solid #ccc; margin-top:5px; }
-  .comment-section button { margin-top:5px; background:#ff9800; color:white; border:none; padding:5px 10px; border-radius:5px; cursor:pointer; }
-  .comment-section button:hover { background:#fb8c00; }
-  label { font-size:0.85rem; margin-left:5px; }
-  /* ===== CSS END ===== */
+  .comment-card{
+    margin-left:15px;
+    font-size:0.9rem;
+  }
+
+  textarea{
+    width:100%;
+    border-radius:6px;
+    border:1px solid #ccc;
+    padding:6px;
+    resize:none;
+    box-sizing:border-box;
+  }
+
+  .btn{
+    margin-top:6px;
+    padding:6px 12px;
+    border:none;
+    border-radius:6px;
+    background:#4CAF50;
+    color:#fff;
+    cursor:pointer;
+    transition:0.2s;
+  }
+  .btn:hover{opacity:0.9;}
+
+  .role-badge{
+    padding:2px 6px;
+    border-radius:6px;
+    font-size:0.75rem;
+    color:#fff;
+  }
+  .role-admin{background:#e53935;}
+  .role-developer{background:#1e88e5;}
+  .role-user{background:#43a047;}
+  .role-guest{background:#888;}
+
+  #postForm, #commentForms{
+    display:flex;
+    flex-direction:column;
+    gap:5px;
+  }
+
+  /* 모바일 대응 */
+  @media(max-width:480px){
+    .container{padding:10px;}
+    .post-card, .comment-card{padding:10px;}
+    .btn{padding:5px 8px;}
+  }
 </style>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/supabase.min.js"></script>
 </head>
 <body>
 <div class="container">
-  <header>
-    <h1>🌿 나물게임 커뮤니티</h1>
-    <div id="userInfo" class="user-info">게스트로 참여 중</div>
-    <button id="btnLogout" style="display:none;">로그아웃</button>
-  </header>
-
-  <section class="write-post">
-    <textarea id="postContent" placeholder="글을 작성하세요..." rows="3"></textarea>
+  <h1>🌿 나물게임 커뮤니티</h1>
+  <div id="userInfo"></div>
+  <button id="btnLogout">로그아웃</button>
+  <hr>
+  <div id="postForm">
+    <textarea id="postContent" rows="3" placeholder="글을 작성하세요..."></textarea>
     <label><input type="checkbox" id="postAnonymous"> 익명</label>
-    <button id="btnPostPage">작성</button>
-  </section>
-
-  <section id="postList" class="post-list"></section>
+    <button id="btnPostPage" class="btn">글 작성</button>
+  </div>
+  <hr>
+  <div id="postList"></div>
 </div>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  // ===== JS START =====
-  const SUPABASE_URL = "https://uetjeezjqkvpherrpreb.supabase.co";
-  const SUPABASE_KEY = "YOUR_SUPABASE_KEY"; // 여기에 Supabase anon key 넣기
-  const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const SUPABASE_URL = "https://uetjeezjqkvpherrpreb.supabase.co";
+const SUPABASE_KEY = "YOUR_ANON_KEY"; // 익명키 넣기
+const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  let currentUser = null;
-  let userIP = null;
+let currentUser = null;
+let userIP = null;
 
-  // IP 가져오기 (공용 API 사용)
-  async function fetchUserIP() {
-    try{
-      const res = await fetch('https://api.ipify.org?format=json');
-      const data = await res.json();
-      userIP = data.ip;
-    } catch(e){
-      console.error("IP 가져오기 실패", e);
-      userIP = "unknown";
-    }
+async function fetchUserIP(){
+  try{
+    const res = await fetch('https://api.ipify.org?format=json');
+    const data = await res.json();
+    userIP = data.ip;
+  }catch(e){ console.error(e); userIP="unknown"; }
+}
+
+async function loadUser(){
+  const { data } = await supabase.auth.getUser();
+  currentUser = data.user;
+  const userInfo = document.getElementById("userInfo");
+  const btnLogout = document.getElementById("btnLogout");
+  if(currentUser){
+    userInfo.innerHTML = `🌱 ${currentUser.email}`;
+    btnLogout.style.display="inline-block";
+  } else {
+    userInfo.innerHTML = "게스트로 참여 중";
+    btnLogout.style.display="none";
   }
+}
 
-  async function loadUser() {
-    const { data } = await supabase.auth.getUser();
-    currentUser = data.user;
-    const userInfo = document.getElementById("userInfo");
-    const btnLogout = document.getElementById("btnLogout");
+document.getElementById("btnLogout").addEventListener("click", async ()=>{
+  await supabase.auth.signOut();
+  await loadUser();
+  await loadPosts();
+});
 
-    if(currentUser){
-      userInfo.innerHTML = `🌱 ${currentUser.email}`;
-      btnLogout.style.display="inline-block";
-    } else {
-      userInfo.innerHTML = "게스트로 참여 중";
-      btnLogout.style.display="none";
-    }
-  }
-  fetchUserIP();
-  loadUser();
+document.getElementById("btnPostPage").addEventListener("click", async ()=>{
+  if(!userIP) await fetchUserIP();
+  const { data: banned } = await supabase.from("banned_ips").select("*").eq("ip", userIP).limit(1);
+  if(banned && banned.length>0){ return alert("차단된 IP입니다."); }
 
-  document.getElementById("btnLogout").addEventListener("click", async () => {
-    await supabase.auth.signOut();
-    loadUser();
-    loadPosts();
-  });
+  const content = document.getElementById("postContent").value.trim();
+  if(!content) return alert("글 내용을 입력하세요.");
 
-  // 글쓰기
-  document.getElementById("btnPostPage").addEventListener("click", async () => {
-    if(!userIP) await fetchUserIP();
+  const anonymous = document.getElementById("postAnonymous").checked;
+  const role = currentUser?.app_metadata?.role || "guest";
 
-    // 차단 여부 확인
-    const { data: banned } = await supabase
-      .from("banned_ips")
-      .select("*")
-      .eq("ip", userIP)
-      .limit(1);
-    if(banned && banned.length>0){
-      return alert("차단된 IP입니다. 글을 작성할 수 없습니다.");
-    }
+  const { error } = await supabase.from("posts").insert([
+    { title:"", content, author: currentUser?.email||"익명", role, anonymous, author_id: currentUser?.id, ip: userIP }
+  ]);
+  if(error) return alert("작성 실패: "+error.message);
+  document.getElementById("postContent").value="";
+  loadPosts();
+});
 
-    const content = document.getElementById("postContent").value.trim();
-    const anonymous = document.getElementById("postAnonymous").checked;
-    if(!content) return alert("글 내용을 입력하세요.");
+async function loadPosts(){
+  const { data: posts, error } = await supabase.from("posts").select("*").order("created_at",{ ascending:false });
+  if(error) return console.error(error);
+  const postList = document.getElementById("postList");
+  postList.innerHTML="";
 
-    const role = currentUser?.app_metadata?.role || "guest";
+  for(const post of posts){
+    const postCard = document.createElement("div");
+    postCard.className="post-card";
 
-    const { error } = await supabase.from("posts").insert([
-      { title:"", content, author: currentUser?.email||"익명", role, anonymous, author_id: currentUser?.id, ip: userIP }
-    ]);
+    const author = post.anonymous ? "익명" : post.author;
+    const roleClass = "role-" + post.role;
 
-    if(error) alert("작성 실패: "+error.message);
-    else {
-      document.getElementById("postContent").value="";
-      loadPosts();
-    }
-  });
-
-  async function loadPosts() {
-    const { data: posts } = await supabase
-      .from("posts")
-      .select("*")
-      .order("created_at",{ ascending:false });
-
-    const postList = document.getElementById("postList");
-    postList.innerHTML = "";
-    if(!posts) return;
-
-    for(const post of posts){
-      const postCard = document.createElement("div");
-      postCard.className = "post-card";
-
-      const author = post.anonymous ? "익명" : post.author;
-      const roleClass = "role-" + post.role;
-
-      postCard.innerHTML = `
-        <div class="post-header">
-          <span>${author} <span class="role-badge ${roleClass}">${post.role}</span></span>
-          <span>${new Date(post.created_at).toLocaleString()}</span>
-        </div>
-        <div class="post-content">${post.content}</div>
-        <div class="comment-section">
+    postCard.innerHTML = `
+      <div class="post-header">
+        <span>${author} <span class="role-badge ${roleClass}">${post.role}</span></span>
+        <span>${new Date(post.created_at).toLocaleString()}</span>
+      </div>
+      <div class="post-content">${post.content}</div>
+      <div class="comment-section">
+        <div class="commentForms">
           <textarea class="commentContent" rows="2" placeholder="댓글 작성..."></textarea>
           <label><input type="checkbox" class="commentAnonymous"> 익명</label>
-          <button class="btnComment" data-postid="${post.id}" data-authorip="${post.ip}">댓글 작성</button>
-          <div class="comments" id="comments-${post.id}"></div>
+          <button class="btnComment btn" data-postid="${post.id}" data-authorip="${post.ip}">댓글 작성</button>
         </div>
-      `;
+        <div class="comments" id="comments-${post.id}"></div>
+      </div>
+    `;
 
-      // 관리자 IP 차단 버튼 추가
-      if(currentUser?.app_metadata?.role==="admin" || currentUser?.app_metadata?.role==="developer"){
-        const banBtn = document.createElement("button");
-        banBtn.textContent = "⚠ 차단";
-        banBtn.style.marginLeft="10px";
-        banBtn.onclick = async () => {
-          if(!post.ip) return alert("익명 IP는 차단할 수 없습니다.");
-          await supabase.from("banned_ips").insert([{ ip: post.ip, reason:"관리자 차단" }]);
-          alert("차단 완료: "+post.ip);
-        };
-        postCard.querySelector(".post-header").appendChild(banBtn);
-      }
-
-      postList.appendChild(postCard);
-
-      // 댓글 불러오기
-      const { data: comments } = await supabase
-        .from("comments")
-        .select("*")
-        .eq("post_id", post.id)
-        .order("created_at",{ ascending:true });
-
-      const commentsDiv = document.getElementById(`comments-${post.id}`);
-      commentsDiv.innerHTML = "";
-      if(comments){
-        comments.forEach(c=>{
-          const cAuthor = c.anonymous ? "익명" : c.author;
-          const cRoleClass = "role-" + c.role;
-          const div = document.createElement("div");
-          div.className="comment-card";
-          div.innerHTML = `<strong>${cAuthor} <span class="role-badge ${cRoleClass}">${c.role}</span>:</strong> ${c.content}`;
-          commentsDiv.appendChild(div);
-        });
-      }
+    if(currentUser?.app_metadata?.role==="admin" || currentUser?.app_metadata?.role==="developer"){
+      const banBtn = document.createElement("button");
+      banBtn.textContent="⚠ 차단";
+      banBtn.style.marginLeft="10px";
+      banBtn.onclick=async()=>{
+        if(!post.ip) return alert("익명 IP는 차단 불가");
+        await supabase.from("banned_ips").insert([{ ip: post.ip, reason:"관리자 차단" }]);
+        alert("차단 완료: "+post.ip);
+      };
+      postCard.querySelector(".post-header").appendChild(banBtn);
     }
 
-    // 댓글 작성 이벤트
-    document.querySelectorAll(".btnComment").forEach(btn=>{
-      btn.addEventListener("click", async ()=>{
-        const postId = btn.dataset.postid;
-        const postAuthorIP = btn.dataset.authorip;
+    postList.appendChild(postCard);
 
-        // 차단 여부 확인
-        const { data: banned } = await supabase
-          .from("banned_ips")
-          .select("*")
-          .eq("ip", userIP)
-          .limit(1);
-        if(banned && banned.length>0){
-          return alert("차단된 IP입니다. 댓글을 작성할 수 없습니다.");
-        }
-
-        const textarea = btn.previousElementSibling.previousElementSibling;
-        const anonymous = btn.previousElementSibling.querySelector("input").checked;
-        const content = textarea.value.trim();
-        if(!content) return alert("댓글 내용을 입력하세요.");
-
-        const role = currentUser?.app_metadata?.role || "guest";
-        await supabase.from("comments").insert([
-          { post_id: postId, content, author: currentUser?.email||"익명", role, anonymous, author_id: currentUser?.id, ip: userIP }
-        ]);
-        textarea.value="";
-        loadPosts();
+    // 댓글 로드
+    const { data: comments } = await supabase.from("comments").select("*").eq("post_id", post.id).order("created_at",{ ascending:true });
+    const commentsDiv = document.getElementById(`comments-${post.id}`);
+    commentsDiv.innerHTML="";
+    if(comments){
+      comments.forEach(c=>{
+        const cAuthor = c.anonymous?"익명":c.author;
+        const cRoleClass = "role-" + c.role;
+        const div = document.createElement("div");
+        div.className="comment-card";
+        div.innerHTML=`<strong>${cAuthor} <span class="role-badge ${cRoleClass}">${c.role}</span>:</strong> ${c.content}`;
+        commentsDiv.appendChild(div);
       });
-    });
+    }
   }
 
-  loadPosts();
+  document.querySelectorAll(".btnComment").forEach(btn=>{
+    btn.addEventListener("click", async ()=>{
+      const postId = btn.dataset.postid;
+      const { data: banned } = await supabase.from("banned_ips").select("*").eq("ip", userIP).limit(1);
+      if(banned && banned.length>0) return alert("차단된 IP입니다.");
 
-  // 실시간 구독
-  supabase.channel('public:posts').on('postgres_changes', { event:'INSERT', schema:'public', table:'posts' }, payload=>{
-    loadPosts();
-  }).subscribe();
-  // ===== JS END =====
+      const textarea = btn.previousElementSibling.previousElementSibling;
+      const anonymous = btn.previousElementSibling.querySelector("input").checked;
+      const content = textarea.value.trim();
+      if(!content) return alert("댓글 내용을 입력하세요.");
 
+      const role = currentUser?.app_metadata?.role || "guest";
+      await supabase.from("comments").insert([
+        { post_id: postId, content, author: currentUser?.email||"익명", role, anonymous, author_id: currentUser?.id, ip: userIP }
+      ]);
+      textarea.value="";
+      loadPosts();
+    });
+  });
+}
+
+fetchUserIP();
+loadUser();
+loadPosts();
 </script>
 </body>
 </html>
