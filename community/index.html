@@ -42,9 +42,7 @@ button { background:#22c55e; color:white; padding:.5rem 1rem; border-radius:.375
 <script>
 document.addEventListener("DOMContentLoaded", async () => {
 
-  // ---------------------------
-  // 1️⃣ Supabase 안전 초기화
-  // ---------------------------
+ // ✅ Supabase 초기화
   const SUPABASE_URL = "https://uetjeezjqkvpherrpreb.supabase.co";
   const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVldGplZXpqcWt2cGhlcnJwcmViIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAwNzYyNjAsImV4cCI6MjA3NTY1MjI2MH0.icCYn-V8ekqk9NKadq7Cls_q8IGtKxZHG7NvDAn7r8w";
   const { createClient } = window.supabase;
@@ -53,9 +51,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // 임시 현재 유저
   let currentUser = { email:"익명", role:"guest" };
 
-  // ---------------------------
   // 2️⃣ 글/댓글 로드
-  // ---------------------------
   async function loadPosts() {
     const { data: posts, error } = await supabase
       .from("posts")
@@ -110,9 +106,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // ---------------------------
   // 3️⃣ 글 작성
-  // ---------------------------
   document.getElementById("btnPost").addEventListener("click", async () => {
     const title = document.getElementById("postTitle").value.trim();
     const content = document.getElementById("postContent").value.trim();
@@ -135,9 +129,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     loadPosts();
   });
 
-  // ---------------------------
   // 4️⃣ 댓글 작성
-  // ---------------------------
   window.addComment = async function(postId){
     const input = document.getElementById(`commentInput-${postId}`);
     const content = input.value.trim();
@@ -156,17 +148,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     loadComments(postId);
   }
 
-  // ---------------------------
   // 5️⃣ 좋아요
-  // ---------------------------
   window.likePost = async function(postId){
     await supabase.rpc('increment_likes', { p_id: postId });
     loadPosts();
   }
 
-  // ---------------------------
   // 초기 실행
-  // ---------------------------
   loadPosts();
 });
 </script>
