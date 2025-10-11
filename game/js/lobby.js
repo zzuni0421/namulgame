@@ -6,6 +6,10 @@ document.addEventListener("DOMContentLoaded", async () => {
   const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVldGplZXpqcWt2cGhlcnJwcmViIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAwNzYyNjAsImV4cCI6MjA3NTY1MjI2MH0.icCYn-V8ekqk9NKadq7Cls_q8IGtKxZHG7NvDAn7r8w";
   const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
+  const { data: { user } } = await supabase.auth.getUser();
+const nickname = user.user_metadata.full_name || user.email.split('@')[0];
+document.getElementById("nickname").innerText = nickname;
+
   // 요소
   const btnOpenLogin = document.getElementById("btnOpenLogin");
   const btnOpenRegister = document.getElementById("btnOpenRegister");
