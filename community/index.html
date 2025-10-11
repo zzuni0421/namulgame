@@ -4,20 +4,26 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>나물게임 커뮤니티</title>
-<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.3/dist/tailwind.min.css">
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+<!-- Tailwind CDN -->
+<link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.2/dist/tailwind.min.css" rel="stylesheet">
+
+<!-- Supabase JS -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.34.0/dist/supabase.min.js"></script>
+
 <style>
-body { background: #f0fdf4; font-family: 'Pretendard', sans-serif; }
-.container { max-width: 800px; margin: 2rem auto; }
-.post, .comment { background: white; border-radius: 0.5rem; padding: 1rem; margin-bottom: 1rem; }
-.badge { display:inline-block; background:#22c55e; color:white; font-size:0.75rem; padding:0.1rem 0.4rem; border-radius:0.25rem; margin-left:0.5rem; }
-.anonymous { color: #94a3b8; font-style: italic; }
+body { background:#f0fdf4; font-family:'Pretendard',sans-serif; }
+.container { max-width:800px; margin:2rem auto; }
+.post, .comment { background:white; border-radius:.5rem; padding:1rem; margin-bottom:1rem; }
+.badge { display:inline-block; background:#22c55e; color:white; font-size:.75rem; padding:.1rem .4rem; border-radius:.25rem; margin-left:.5rem; }
+.anonymous { color:#94a3b8; font-style:italic; }
 .like-btn { cursor:pointer; color:#22c55e; font-weight:bold; margin-left:1rem; }
-input, textarea { border:1px solid #d1d5db; padding:0.5rem; border-radius:0.375rem; width:100%; }
-button { background:#22c55e; color:white; padding:0.5rem 1rem; border-radius:0.375rem; margin-top:0.5rem; }
+input, textarea { border:1px solid #d1d5db; padding:.5rem; border-radius:.375rem; width:100%; }
+button { background:#22c55e; color:white; padding:.5rem 1rem; border-radius:.375rem; margin-top:.5rem; }
 </style>
 </head>
 <body>
+
 <div class="container">
   <h1 class="text-2xl font-bold mb-4">🌿 나물게임 커뮤니티</h1>
 
@@ -35,8 +41,9 @@ button { background:#22c55e; color:white; padding:0.5rem 1rem; border-radius:0.3
 
 <script>
 document.addEventListener("DOMContentLoaded", async () => {
+  // --- Supabase 초기화 ---
   const SUPABASE_URL = "https://uetjeezjqkvpherrpreb.supabase.co";
-  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVldGplZXpqcWt2cGhlcnJwcmViIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAwNzYyNjAsImV4cCI6MjA3NTY1MjI2MH0.icCYn-V8ekqk9NKadq7Cls_q8IGtKxZHG7NvDAn7r8wY";
+  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVldGplZXpqcWt2cGhlcnJwcmViIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAwNzYyNjAsImV4cCI6MjA3NTY1MjI2MH0.icCYn-V8ekqk9NKadq7Cls_q8IGtKxZHG7NvDAn7r8w"; // 익명 공개 키
   const supabase = supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
   let currentUser = { email: "익명", role: "guest" }; // 임시 게스트
@@ -59,7 +66,11 @@ document.addEventListener("DOMContentLoaded", async () => {
       postEl.innerHTML = `
         <h3 class="font-bold">${post.title} ${badge}</h3>
         <p>${post.content}</p>
-        <div class="text-sm text-gray-500">작성자: <span class="${post.anonymous?'anonymous':''}">${authorName}</span> | 좋아요: <span id="like-${post.id}">${post.likes}</span> <span class="like-btn" onclick="likePost('${post.id}')">💚</span></div>
+        <div class="text-sm text-gray-500">
+          작성자: <span class="${post.anonymous?'anonymous':''}">${authorName}</span> | 
+          좋아요: <span id="like-${post.id}">${post.likes}</span> 
+          <span class="like-btn" onclick="likePost('${post.id}')">💚</span>
+        </div>
         <div id="comments-${post.id}" class="ml-4 mt-2"></div>
         <textarea id="commentInput-${post.id}" placeholder="댓글 작성"></textarea>
         <button onclick="addComment('${post.id}')">댓글 달기</button>
@@ -94,7 +105,13 @@ document.addEventListener("DOMContentLoaded", async () => {
     const content = document.getElementById("postContent").value.trim();
     const anonymous = document.getElementById("postAnonymous").checked;
     if(!title || !content) return alert("제목과 내용을 입력하세요.");
-    await supabase.from("posts").insert([{ title, content, author: currentUser.email, author_id:null, role:currentUser.role, anonymous }]);
+    await supabase.from("posts").insert([{
+      title, content,
+      author: currentUser.email,
+      author_id:null,
+      role: currentUser.role,
+      anonymous
+    }]);
     document.getElementById("postTitle").value = "";
     document.getElementById("postContent").value = "";
     document.getElementById("postAnonymous").checked = false;
@@ -106,7 +123,14 @@ document.addEventListener("DOMContentLoaded", async () => {
     const input = document.getElementById(`commentInput-${postId}`);
     const content = input.value.trim();
     if(!content) return alert("댓글 내용을 입력하세요.");
-    await supabase.from("comments").insert([{ post_id: postId, content, author: currentUser.email, author_id:null, role:currentUser.role, anonymous:false }]);
+    await supabase.from("comments").insert([{
+      post_id: postId,
+      content,
+      author: currentUser.email,
+      author_id:null,
+      role: currentUser.role,
+      anonymous:false
+    }]);
     input.value = "";
     loadComments(postId);
   }
@@ -114,6 +138,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // --- 좋아요 ---
   window.likePost = async function(postId){
     const { data, error } = await supabase.rpc('increment_likes', { p_id: postId });
+    if(error) return console.error(error);
     loadPosts();
   }
 
