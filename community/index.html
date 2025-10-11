@@ -5,11 +5,8 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>나물게임 커뮤니티</title>
 
-<!-- Tailwind CDN -->
+<!-- Tailwind -->
 <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.2/dist/tailwind.min.css" rel="stylesheet">
-
-<!-- Supabase JS -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.34.0/dist/supabase.min.js"></script>
 
 <style>
 body { background:#f0fdf4; font-family:'Pretendard',sans-serif; }
@@ -39,25 +36,30 @@ button { background:#22c55e; color:white; padding:.5rem 1rem; border-radius:.375
   <div id="postsContainer"></div>
 </div>
 
+<!-- Supabase JS -->
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.34.0/dist/umd/supabase.min.js"></script>
 <script>
-document.addEventListener("DOMContentLoaded", async () => {
+window.addEventListener("load", async () => { // load 이벤트로 변경
+  // Supabase 로드 확인
+  if (!window.supabase) {
+    alert("서버(Supabase) 로드 실패! 인터넷 연결을 확인하세요.");
+    return;
+  }
 
- // ✅ Supabase 초기화
+  // Supabase 초기화
   const SUPABASE_URL = "https://uetjeezjqkvpherrpreb.supabase.co";
-  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVldGplZXpqcWt2cGhlcnJwcmViIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAwNzYyNjAsImV4cCI6MjA3NTY1MjI2MH0.icCYn-V8ekqk9NKadq7Cls_q8IGtKxZHG7NvDAn7r8w";
+  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...";
   const { createClient } = window.supabase;
   const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  // 임시 현재 유저
-  let currentUser = { email:"익명", role:"guest" };
+  let currentUser = { email: "익명", role: "guest" };
 
-  // 2️⃣ 글/댓글 로드
   async function loadPosts() {
     const { data: posts, error } = await supabase
       .from("posts")
       .select("*")
       .order("created_at", { ascending: false });
-    if(error) return console.error(error);
+    if (error) return console.error(error);
 
     const container = document.getElementById("postsContainer");
     container.innerHTML = "";
@@ -73,8 +75,8 @@ document.addEventListener("DOMContentLoaded", async () => {
         <h3 class="font-bold">${post.title} ${badge}</h3>
         <p>${post.content}</p>
         <div class="text-sm text-gray-500">
-          작성자: <span class="${post.anonymous?'anonymous':''}">${authorName}</span> | 
-          좋아요: <span id="like-${post.id}">${post.likes}</span> 
+          작성자: <span class="${post.anonymous ? 'anonymous' : ''}">${authorName}</span> |
+          좋아요: <span id="like-${post.id}">${post.likes ?? 0}</span>
           <span class="like-btn" onclick="likePost('${post.id}')">💚</span>
         </div>
         <div id="comments-${post.id}" class="ml-4 mt-2"></div>
@@ -106,18 +108,16 @@ document.addEventListener("DOMContentLoaded", async () => {
     });
   }
 
-  // 3️⃣ 글 작성
   document.getElementById("btnPost").addEventListener("click", async () => {
     const title = document.getElementById("postTitle").value.trim();
     const content = document.getElementById("postContent").value.trim();
     const anonymous = document.getElementById("postAnonymous").checked;
 
-    if(!title || !content) return alert("제목과 내용을 입력하세요.");
+    if (!title || !content) return alert("제목과 내용을 입력하세요.");
 
     await supabase.from("posts").insert([{
       title, content,
       author: currentUser.email,
-      author_id:null,
       role: currentUser.role,
       anonymous
     }]);
@@ -129,32 +129,28 @@ document.addEventListener("DOMContentLoaded", async () => {
     loadPosts();
   });
 
-  // 4️⃣ 댓글 작성
-  window.addComment = async function(postId){
+  window.addComment = async function (postId) {
     const input = document.getElementById(`commentInput-${postId}`);
     const content = input.value.trim();
-    if(!content) return alert("댓글 내용을 입력하세요.");
+    if (!content) return alert("댓글 내용을 입력하세요.");
 
     await supabase.from("comments").insert([{
       post_id: postId,
       content,
       author: currentUser.email,
-      author_id:null,
       role: currentUser.role,
-      anonymous:false
+      anonymous: false
     }]);
 
     input.value = "";
     loadComments(postId);
   }
 
-  // 5️⃣ 좋아요
-  window.likePost = async function(postId){
+  window.likePost = async function (postId) {
     await supabase.rpc('increment_likes', { p_id: postId });
     loadPosts();
   }
 
-  // 초기 실행
   loadPosts();
 });
 </script>
