@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>🌿 나물게임 커뮤니티</title>
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.34.0/dist/supabase.min.js"></script>
   <style>
     body { font-family: Pretendard, sans-serif; background: #f0fdf4; margin: 0; padding: 1rem; }
     .container { max-width: 700px; margin: auto; }
@@ -39,9 +38,15 @@
     <!-- 글 목록 -->
     <div id="postsContainer"></div>
   </div>
-
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.34.0/dist/supabase.min.js"></script>
   <script>
   document.addEventListener("DOMContentLoaded", async () => {
+    window.addEventListener("load", async () => { // load 이벤트로 변경
+     // Supabase 로드 확인
+      if (!window.supabase) {
+        alert("서버(Supabase) 로드 실패! 인터넷 연결을 확인하세요.");
+        return;
+      }
     const SUPABASE_URL = "https://uetjeezjqkvpherrpreb.supabase.co";
     const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVldGplZXpqcWt2cGhlcnJwcmViIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAwNzYyNjAsImV4cCI6MjA3NTY1MjI2MH0.icCYn-V8ekqk9NKadq7Cls_q8IGtKxZHG7NvDAn7r8w";
     const { createClient } = window.supabase;
