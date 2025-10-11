@@ -1,158 +1,151 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>나물게임 커뮤니티</title>
-
-<!-- Tailwind -->
-<link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.2/dist/tailwind.min.css" rel="stylesheet">
-
-<style>
-body { background:#f0fdf4; font-family:'Pretendard',sans-serif; }
-.container { max-width:800px; margin:2rem auto; }
-.post, .comment { background:white; border-radius:.5rem; padding:1rem; margin-bottom:1rem; }
-.badge { display:inline-block; background:#22c55e; color:white; font-size:.75rem; padding:.1rem .4rem; border-radius:.25rem; margin-left:.5rem; }
-.anonymous { color:#94a3b8; font-style:italic; }
-.like-btn { cursor:pointer; color:#22c55e; font-weight:bold; margin-left:1rem; }
-input, textarea { border:1px solid #d1d5db; padding:.5rem; border-radius:.375rem; width:100%; margin-top:.5rem; }
-button { background:#22c55e; color:white; padding:.5rem 1rem; border-radius:.375rem; margin-top:.5rem; }
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>🌿 나물게임 커뮤니티</title>
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.34.0/dist/supabase.min.js"></script>
+  <style>
+    body { font-family: Pretendard, sans-serif; background: #f0fdf4; margin: 0; padding: 1rem; }
+    .container { max-width: 700px; margin: auto; }
+    .box { background: white; padding: 1rem; border-radius: 10px; margin-bottom: 1rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+    input, textarea { width: 100%; padding: 0.5rem; margin-top: 0.5rem; border: 1px solid #d1d5db; border-radius: 5px; }
+    button { background: #22c55e; color: white; border: none; padding: 0.6rem 1.2rem; border-radius: 6px; cursor: pointer; }
+    .nickname { font-weight: bold; color: #16a34a; }
+    .comment { background: #f9fafb; border-radius: 5px; padding: 0.5rem; margin-top: 0.3rem; }
+  </style>
 </head>
 <body>
+  <div class="container">
+    <h1 class="text-2xl font-bold mb-4">🌿 나물게임 커뮤니티</h1>
 
-<div class="container">
-  <h1 class="text-2xl font-bold mb-4">🌿 나물게임 커뮤니티</h1>
+    <!-- 닉네임 설정 -->
+    <div class="box">
+      <label>닉네임:</label>
+      <input id="nicknameInput" placeholder="닉네임을 입력하세요 (3~12자)">
+      <button id="checkNicknameBtn">중복 확인</button>
+      <button id="saveNicknameBtn">저장</button>
+      <p id="nicknameStatus" style="margin-top:0.5rem; font-weight:bold;"></p>
+      <p id="nicknameDisplay"></p>
+    </div>
 
-  <!-- 글 작성 -->
-  <div class="post mb-6">
-    <input type="text" id="postTitle" placeholder="글 제목">
-    <textarea id="postContent" placeholder="내용"></textarea>
-    <label><input type="checkbox" id="postAnonymous"> 익명으로 작성</label>
-    <button id="btnPost">글 작성</button>
+    <!-- 글 작성 -->
+    <div class="box">
+      <input type="text" id="postTitle" placeholder="글 제목">
+      <textarea id="postContent" placeholder="내용"></textarea>
+      <button id="btnPost">글 작성</button>
+    </div>
+
+    <!-- 글 목록 -->
+    <div id="postsContainer"></div>
   </div>
 
-  <!-- 글 목록 -->
-  <div id="postsContainer"></div>
-</div>
+  <script>
+  document.addEventListener("DOMContentLoaded", async () => {
+    const SUPABASE_URL = "https://uetjeezjqkvpherrpreb.supabase.co";
+    const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVldGplZXpqcWt2cGhlcnJwcmViIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAwNzYyNjAsImV4cCI6MjA3NTY1MjI2MH0.icCYn-V8ekqk9NKadq7Cls_q8IGtKxZHG7NvDAn7r8w";
+    const { createClient } = window.supabase;
+    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
 
-<!-- Supabase JS -->
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.34.0/dist/umd/supabase.min.js"></script>
-<script>
-window.addEventListener("load", async () => { // load 이벤트로 변경
-  // Supabase 로드 확인
-  if (!window.supabase) {
-    alert("서버(Supabase) 로드 실패! 인터넷 연결을 확인하세요.");
-    return;
-  }
+    let nickname = localStorage.getItem("nickname") || "";
+    const nicknameInput = document.getElementById("nicknameInput");
+    const nicknameDisplay = document.getElementById("nicknameDisplay");
+    const nicknameStatus = document.getElementById("nicknameStatus");
 
-  // Supabase 초기화
-  const SUPABASE_URL = "https://uetjeezjqkvpherrpreb.supabase.co";
-  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVldGplZXpqcWt2cGhlcnJwcmViIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAwNzYyNjAsImV4cCI6MjA3NTY1MjI2MH0.icCYn-V8ekqk9NKadq7Cls_q8IGtKxZHG7NvDAn7r8w";
-  const { createClient } = window.supabase;
-  const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+    if (nickname) {
+      nicknameInput.value = nickname;
+      nicknameDisplay.textContent = `현재 닉네임: ${nickname}`;
+    } else {
+      nicknameDisplay.textContent = "닉네임이 설정되지 않았습니다.";
+    }
 
-  let currentUser = { email: "익명", role: "guest" };
+    // ✅ 닉네임 중복 확인
+    document.getElementById("checkNicknameBtn").addEventListener("click", async () => {
+      const newNick = nicknameInput.value.trim();
+      if (!/^[a-zA-Z가-힣0-9]{3,12}$/.test(newNick)) {
+        nicknameStatus.textContent = "닉네임은 3~12자의 영문, 한글, 숫자만 가능합니다.";
+        nicknameStatus.style.color = "red";
+        return;
+      }
 
-  async function loadPosts() {
-    const { data: posts, error } = await supabase
-      .from("posts")
-      .select("*")
-      .order("created_at", { ascending: false });
-    if (error) return console.error(error);
+      const { data, error } = await supabase.from("nicknames").select("*").eq("name", newNick);
+      if (error) {
+        console.error(error);
+        nicknameStatus.textContent = "오류 발생: " + error.message;
+        nicknameStatus.style.color = "red";
+        return;
+      }
 
-    const container = document.getElementById("postsContainer");
-    container.innerHTML = "";
-
-    posts.forEach(post => {
-      const postEl = document.createElement("div");
-      postEl.className = "post";
-
-      const authorName = post.anonymous ? "익명" : post.author;
-      const badge = post.role !== "guest" ? `<span class="badge">${post.role}</span>` : "";
-
-      postEl.innerHTML = `
-        <h3 class="font-bold">${post.title} ${badge}</h3>
-        <p>${post.content}</p>
-        <div class="text-sm text-gray-500">
-          작성자: <span class="${post.anonymous ? 'anonymous' : ''}">${authorName}</span> |
-          좋아요: <span id="like-${post.id}">${post.likes ?? 0}</span>
-          <span class="like-btn" onclick="likePost('${post.id}')">💚</span>
-        </div>
-        <div id="comments-${post.id}" class="ml-4 mt-2"></div>
-        <textarea id="commentInput-${post.id}" placeholder="댓글 작성"></textarea>
-        <button onclick="addComment('${post.id}')">댓글 달기</button>
-      `;
-      container.appendChild(postEl);
-      loadComments(post.id);
+      if (data.length > 0) {
+        nicknameStatus.textContent = "이미 사용 중인 닉네임입니다 ❌";
+        nicknameStatus.style.color = "red";
+      } else {
+        nicknameStatus.textContent = "사용 가능한 닉네임입니다 ✅";
+        nicknameStatus.style.color = "green";
+      }
     });
-  }
 
-  async function loadComments(postId) {
-    const { data: comments } = await supabase
-      .from("comments")
-      .select("*")
-      .eq("post_id", postId)
-      .order("created_at", { ascending: true });
+    // ✅ 닉네임 저장
+    document.getElementById("saveNicknameBtn").addEventListener("click", async () => {
+      const newNick = nicknameInput.value.trim();
+      if (!newNick) return alert("닉네임을 입력하세요!");
+      if (nicknameStatus.textContent.includes("사용 중")) return alert("닉네임이 이미 존재합니다!");
 
-    const container = document.getElementById(`comments-${postId}`);
-    container.innerHTML = "";
+      // DB에 등록
+      const { error } = await supabase.from("nicknames").insert([{ name: newNick }]);
+      if (error) {
+        alert("닉네임 저장 실패: " + error.message);
+        return;
+      }
 
-    comments.forEach(c => {
-      const authorName = c.anonymous ? "익명" : c.author;
-      const badge = c.role !== "guest" ? `<span class="badge">${c.role}</span>` : "";
-      const div = document.createElement("div");
-      div.className = "comment";
-      div.innerHTML = `<strong>${authorName} ${badge}</strong>: ${c.content}`;
-      container.appendChild(div);
+      nickname = newNick;
+      localStorage.setItem("nickname", nickname);
+      nicknameDisplay.textContent = `현재 닉네임: ${nickname}`;
+      nicknameStatus.textContent = "닉네임이 성공적으로 저장되었습니다!";
+      nicknameStatus.style.color = "green";
     });
-  }
 
-  document.getElementById("btnPost").addEventListener("click", async () => {
-    const title = document.getElementById("postTitle").value.trim();
-    const content = document.getElementById("postContent").value.trim();
-    const anonymous = document.getElementById("postAnonymous").checked;
+    // ✅ 글 작성
+    document.getElementById("btnPost").addEventListener("click", async () => {
+      const title = document.getElementById("postTitle").value.trim();
+      const content = document.getElementById("postContent").value.trim();
 
-    if (!title || !content) return alert("제목과 내용을 입력하세요.");
+      if (!nickname) return alert("닉네임을 먼저 설정하세요!");
+      if (!title || !content) return alert("제목과 내용을 입력하세요!");
 
-    await supabase.from("posts").insert([{
-      title, content,
-      author: currentUser.email,
-      role: currentUser.role,
-      anonymous
-    }]);
+      const { error } = await supabase.from("posts").insert([{ title, content, author: nickname }]);
+      if (error) {
+        console.error(error);
+        alert("글 작성 실패: " + error.message);
+      } else {
+        document.getElementById("postTitle").value = "";
+        document.getElementById("postContent").value = "";
+        loadPosts();
+      }
+    });
 
-    document.getElementById("postTitle").value = "";
-    document.getElementById("postContent").value = "";
-    document.getElementById("postAnonymous").checked = false;
+    // ✅ 글 목록 불러오기
+    async function loadPosts() {
+      const { data: posts, error } = await supabase.from("posts").select("*").order("id", { ascending: false });
+      if (error) return console.error(error);
+
+      const container = document.getElementById("postsContainer");
+      container.innerHTML = "";
+
+      posts.forEach((post) => {
+        const div = document.createElement("div");
+        div.className = "box";
+        div.innerHTML = `
+          <h3>${post.title}</h3>
+          <p>${post.content}</p>
+          <p class="nickname">작성자: ${post.author}</p>
+        `;
+        container.appendChild(div);
+      });
+    }
 
     loadPosts();
   });
-
-  window.addComment = async function (postId) {
-    const input = document.getElementById(`commentInput-${postId}`);
-    const content = input.value.trim();
-    if (!content) return alert("댓글 내용을 입력하세요.");
-
-    await supabase.from("comments").insert([{
-      post_id: postId,
-      content,
-      author: currentUser.email,
-      role: currentUser.role,
-      anonymous: false
-    }]);
-
-    input.value = "";
-    loadComments(postId);
-  }
-
-  window.likePost = async function (postId) {
-    await supabase.rpc('increment_likes', { p_id: postId });
-    loadPosts();
-  }
-
-  loadPosts();
-});
-</script>
+  </script>
 </body>
 </html>
