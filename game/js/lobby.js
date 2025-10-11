@@ -1,167 +1,78 @@
 "use strict";
 
-document.addEventListener("DOMContentLoaded", () => {
-  const API_URL = "/api/namul";
+document.addEventListener("DOMContentLoaded", async () => {
+  // Supabase 초기화
+  const SUPABASE_URL = "https://uetjeezjqkvpherrpreb.supabase.co";
+  const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVldGplZXpqcWt2cGhlcnJwcmViIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAwNzYyNjAsImV4cCI6MjA3NTY1MjI2MH0.icCYn-V8ekqk9NKadq7Cls_q8IGtKxZHG7NvDAn7r8w";
+  const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-  // --- 요소 가져오기 ---
+  // 요소
   const btnOpenLogin = document.getElementById("btnOpenLogin");
   const btnOpenRegister = document.getElementById("btnOpenRegister");
-  const loginModal = document.getElementById("loginModal");
-  const registerModal = document.getElementById("registerModal");
-  const closeLogin = document.getElementById("closeLogin");
-  const closeRegister = document.getElementById("closeRegister");
-  const loginUsername = document.getElementById("loginUsername");
-  const loginPassword = document.getElementById("loginPassword");
-  const registerUsername = document.getElementById("registerUsername");
-  const registerPassword = document.getElementById("registerPassword");
-  const btnLogin = document.getElementById("btnLogin");
-  const btnRegister = document.getElementById("btnRegister");
-  const userInfo = document.getElementById("userInfo");
   const btnLogout = document.getElementById("btnLogout");
-  const btnSecret = document.getElementById("btnSecret");
+  const userInfo = document.getElementById("userInfo");
 
+  // 기존 회원가입/로그인 모달은 숨김 (Supabase 로그인만 사용)
+  if (btnOpenRegister) btnOpenRegister.style.display = "none";
+
+  // ✅ 로그인 UI 업데이트
+  async function updateUserUI() {
+    const { data, error } = await supabase.auth.getUser();
+    const user = data.user;
+
+    if (user) {
+      userInfo.innerHTML = `<p>🌿 ${user.email}님 환영합니다!</p>`;
+      btnLogout.style.display = "inline-block";
+      btnOpenLogin.style.display = "none";
+    } else {
+      userInfo.textContent = "로그인되지 않음 🌱";
+      btnLogout.style.display = "none";
+      btnOpenLogin.style.display = "inline-block";
+    }
+  }
+
+  // ✅ 구글 로그인 클릭
+  btnOpenLogin.addEventListener("click", async () => {
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "google",
+      options: {
+        redirectTo: "https://namulgame.pages.dev", // 반드시 Supabase Auth에 등록된 도메인
+      },
+    });
+    if (error) alert("로그인 실패: " + error.message);
+  });
+
+  // ✅ 로그아웃 클릭
+  btnLogout.addEventListener("click", async () => {
+    await supabase.auth.signOut();
+    alert("로그아웃되었습니다 🌿");
+    updateUserUI();
+  });
+
+  // ✅ 로그인 상태 감지
+  supabase.auth.onAuthStateChange((_event, _session) => {
+    updateUserUI();
+  });
+
+  // ✅ 최초 실행
+  updateUserUI();
+
+  // ---- 모달/게임 버튼 로직  ----
+  const extraMenuModal = document.getElementById("extraMenuModal");
+  const extraMenuBtn = document.getElementById("extraMenuBtn");
+  const gameModal = document.getElementById("gameModal");
+  const btnCloseGameModal = document.getElementById("btnCloseGameModal");
+  const gameList = document.getElementById("gameList");
   const btnSimulation = document.getElementById("btnSimulation");
   const btnTest = document.getElementById("btnTest");
   const btnGame = document.getElementById("btnGame");
-  const gameModal = document.getElementById("gameModal");
-  const gameList = document.getElementById("gameList");
-  const btnCloseGameModal = document.getElementById("btnCloseGameModal");
 
-  const extraMenuModal = document.getElementById("extraMenuModal");
-  const extraMenuBtn = document.getElementById("extraMenuBtn");
+  function showModal(modal){ if(modal) modal.style.display = "flex"; }
+  function hideModal(modal){ if(modal) modal.style.display = "none"; }
 
-  // --- 유저 처리 ---
-  function saveUser(username){ localStorage.setItem("namulUser", username); }
-  function getUser(){ return localStorage.getItem("namulUser") || "(게스트)"; }
-  function clearUser(){ localStorage.removeItem("namulUser"); }
-
-  function updateUI(){
-    const user = getUser();
-    if(user && user !== "(게스트)"){
-      btnOpenLogin.style.display="none";
-      btnOpenRegister.style.display="none";
-      userInfo.textContent=`어서와요, ${user}님 🌱`;
-      userInfo.style.display="block";
-      btnLogout.style.display="inline-block";
-      btnSecret.style.display="inline-block";
-    } else {
-      btnOpenLogin.style.display="inline-block";
-      btnOpenRegister.style.display="inline-block";
-      userInfo.textContent=`게스트로 플레이 중 🌱`;
-      userInfo.style.display="block";
-      btnLogout.style.display="none";
-      btnSecret.style.display="none";
-    }
-  }
-
-  // --- 모달 도우미 ---
-  function showModal(modal){
-    if(!modal) return;
-    modal.style.display = "flex";
-    modal.setAttribute("aria-hidden","false");
-  }
-  function hideModal(modal){
-    if(!modal) return;
-    modal.style.display = "none";
-    modal.setAttribute("aria-hidden","true");
-  }
-
-  // --- 각 버튼으로 열기 ---
-  btnOpenLogin && (btnOpenLogin.onclick = () => showModal(loginModal));
-  btnOpenRegister && (btnOpenRegister.onclick = () => showModal(registerModal));
-  btnSimulation && (btnSimulation.onclick = () => openGameModal("simulation"));
-  btnTest && (btnTest.onclick = () => openGameModal("test"));
-  btnGame && (btnGame.onclick = () => openGameModal("game"));
-  btnCloseGameModal && (btnCloseGameModal.onclick = () => hideModal(gameModal));
   extraMenuBtn && (extraMenuBtn.onclick = () => showModal(extraMenuModal));
+  btnCloseGameModal && (btnCloseGameModal.onclick = () => hideModal(gameModal));
 
-  // --- 각 모달 내부의 [×] 버튼들에 이벤트 바인딩 (더 안전하게) ---
-  document.querySelectorAll('.modal').forEach(modalEl => {
-    modalEl.querySelectorAll('.close').forEach(closeEl => {
-      closeEl.addEventListener('click', () => hideModal(modalEl));
-    });
-  });
-
-  // --- 배경 클릭으로 닫기 (클릭 대상이 modal 자체면 닫기) ---
-  window.addEventListener('click', (e) => {
-    document.querySelectorAll('.modal').forEach(modalEl => {
-      if (e.target === modalEl) hideModal(modalEl);
-    });
-  });
-
-  // --- ESC 키로 닫기 ---
-  window.addEventListener('keydown', (e) => {
-    if(e.key === 'Escape') {
-      document.querySelectorAll('.modal').forEach(modalEl => hideModal(modalEl));
-    }
-  });
-
-  // --- API 헬퍼 ---
-  async function apiPost(action,payload){
-    try{
-      const res=await fetch(API_URL,{
-        method:"POST",
-        headers:{"Content-Type":"application/json"},
-        body: JSON.stringify({action,...payload})
-      });
-      return await res.json();
-    }catch(e){ console.error(action,e); return {success:false,msg:"서버 요청 실패"}; }
-  }
-
-  // --- 로그인 처리 ---
-  btnLogin && (btnLogin.onclick = async () => {
-    const u = loginUsername.value.trim();
-    const p = loginPassword.value.trim();
-    if(!u || !p) { alert("아이디와 비밀번호를 입력하세요."); return; }
-    const data = await apiPost("login",{username:u,password:p});
-    if (data.success) { saveUser(data.username || u); hideModal(loginModal); updateUI(); }
-    else alert(data.msg || "로그인 실패");
-  });
-
-  // --- 회원가입 유효성 ---
-  const idFeedback = document.getElementById("idFeedback");
-  function validateUserId() {
-    const val = registerUsername ? registerUsername.value.trim() : "";
-    const regex = /^[a-zA-Z0-9]{3,15}$/;
-    if(!val) { if(idFeedback) idFeedback.textContent = ""; return false; }
-    const ok = regex.test(val);
-    if(idFeedback) idFeedback.textContent = ok ? "사용 가능한 형식입니다." : "영문+숫자 3~15자만 허용됩니다.";
-    return ok;
-  }
-
-  // --- 중복 확인 (인라인 버튼에서 값 전달) ---
-  async function checkDuplicate(username){
-    if(!username) { alert("아이디를 입력하세요."); return false; }
-    if(!/^[a-zA-Z0-9]{3,15}$/.test(username)) { alert("아이디 형식이 올바르지 않습니다."); return false; }
-    const data = await apiPost("checkDuplicate", { username });
-    if(data && data.success){
-      alert("사용 가능한 아이디입니다.");
-      return true;
-    } else {
-      alert(data.msg || "이미 존재하는 아이디입니다.");
-      return false;
-    }
-  }
-  window.checkDuplicate = checkDuplicate; // 인라인 호출 지원
-
-  // --- 회원가입 버튼 처리 ---
-  btnRegister && (btnRegister.onclick = async () => {
-    const u = registerUsername.value.trim();
-    const p = registerPassword.value.trim();
-    if(!u || !p) { alert("아이디와 비밀번호를 입력하세요."); return; }
-    if(!validateUserId()) { alert("아이디 형식을 확인하세요."); return; }
-    const isAvailable = await checkDuplicate(u);
-    if(!isAvailable) return;
-    const data = await apiPost("register",{ username:u, password:p });
-    if(data.success){ alert("회원가입 성공! 로그인하세요."); hideModal(registerModal); }
-    else alert(data.msg || "회원가입 실패");
-  });
-
-  // --- 로그아웃 / 하드모드 이동 ---
-  btnLogout && (btnLogout.onclick = () => { clearUser(); updateUI(); });
-  btnSecret && (btnSecret.onclick = () => { window.location.href = "../../secret.html"; });
-
-  // --- 게임 리스트 모달 생성 ---
   function openGameModal(genre){
     let html = "";
     if(genre==="simulation") html = `
@@ -179,54 +90,7 @@ document.addEventListener("DOMContentLoaded", () => {
     showModal(gameModal);
   }
 
-  // --- 초기화 ---
-  updateUI();
-
-  // Supabase 초기화
-const SUPABASE_URL = "https://uetjeezjqkvpherrpreb.supabase.co";
-const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVldGplZXpqcWt2cGhlcnJwcmViIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAwNzYyNjAsImV4cCI6MjA3NTY1MjI2MH0.icCYn-V8ekqk9NKadq7Cls_q8IGtKxZHG7NvDAn7r8w";
-const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
-
-// 로그인 상태 표시
-const userInfo = document.getElementById("userInfo");
-const btnLogout = document.getElementById("btnLogout");
-
-async function updateUserUI() {
-  const { data } = await supabase.auth.getUser();
-  const user = data.user;
-  if (user) {
-    userInfo.innerHTML = `<p>🌿 ${user.email}님 환영합니다!</p>`;
-    btnLogout.style.display = "inline-block";
-  } else {
-    userInfo.innerHTML = "";
-    btnLogout.style.display = "none";
-  }
-}
-
-// 구글 로그인 버튼 클릭 시
-document.getElementById("btnGoogleLogin").addEventListener("click", async () => {
-  const { data, error } = await supabase.auth.signInWithOAuth({ provider: "google" });
-  if (error) {
-    alert("로그인 실패: " + error.message);
-  }
-});
-
-// 로그아웃
-btnLogout.addEventListener("click", async () => {
-  await supabase.auth.signOut();
-  alert("로그아웃되었습니다!");
-  updateUserUI();
-});
-
-// 로그인 상태 변경 감지
-supabase.auth.onAuthStateChange((_event, _session) => {
-  updateUserUI();
-});
-
-// 초기 실행
-updateUserUI();
-
-  // expose some helpers for inline HTML (validateUserId already inline)
-  window.validateUserId = validateUserId;
-  window.openGameModal = openGameModal;
+  btnSimulation && (btnSimulation.onclick = () => openGameModal("simulation"));
+  btnTest && (btnTest.onclick = () => openGameModal("test"));
+  btnGame && (btnGame.onclick = () => openGameModal("game"));
 });
