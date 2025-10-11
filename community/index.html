@@ -41,10 +41,9 @@
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.34.0/dist/supabase.min.js"></script>
   <script>
   document.addEventListener("DOMContentLoaded", async () => {
-    const SUPABASE_URL = "https://uetjeezjqkvpherrpreb.supabase.co";
+     const SUPABASE_URL = "https://uetjeezjqkvpherrpreb.supabase.co";
     const SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVldGplZXpqcWt2cGhlcnJwcmViIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NjAwNzYyNjAsImV4cCI6MjA3NTY1MjI2MH0.icCYn-V8ekqk9NKadq7Cls_q8IGtKxZHG7NvDAn7r8w";
-    const { createClient } = window.supabase;
-    const supabase = createClient(SUPABASE_URL, SUPABASE_KEY);
+    const supabase = Supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     let nickname = localStorage.getItem("nickname") || "";
     const nicknameInput = document.getElementById("nicknameInput");
