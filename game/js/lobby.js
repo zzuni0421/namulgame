@@ -94,12 +94,3 @@ document.addEventListener("DOMContentLoaded", async () => {
   btnTest && (btnTest.onclick = () => openGameModal("test"));
   btnGame && (btnGame.onclick = () => openGameModal("game"));
 });
-
-  // ✅ 닉네임 수정 기능
-  editBtn.addEventListener("click", () => {
-    const newName = prompt("새 닉네임을 입력하세요!");
-    if (newName && newName.trim() !== "") {
-      nicknameSpan.textContent = newName.trim();
-      localStorage.setItem("customNick", newName.trim());
-    }
-  });
