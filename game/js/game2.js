@@ -31,26 +31,6 @@ function saveGame() {
   alert("게임이 저장되었습니다!");
 }
 
-function loadGame() {
-  const saved = JSON.parse(localStorage.getItem("grownamul"));
-  if (saved) {
-    coins = saved.coins || 0;
-    plants = saved.plants || [];
-    totalPlaytime = saved.totalPlaytime || 0;
-
-    const elapsed = Math.floor((Date.now() - saved.lastSave) / 1000);
-    coins += getTotalCps() * elapsed;
-    if (elapsed > 0) alert(`오프라인 보상으로 ${getTotalCps() * elapsed} 코인을 받았습니다!`);
-
-    startTime = Date.now();
-  } else {
-    plantTypes.forEach((p, i) => {
-      plants.push({ id:i, name:p.name, level:1, count:0, cps:p.baseCps, cost:p.baseCost });
-    });
-    startTime = Date.now();
-  }
-}
-
 // --- CPS 계산 (초반 2분 제한 적용) ---
 function getTotalCps() {
   const elapsed = (Date.now() - startTime) / 60000; // 분 단위
