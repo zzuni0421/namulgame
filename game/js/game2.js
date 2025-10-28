@@ -167,5 +167,4 @@ setInterval(() => {
 document.getElementById("saveBtn").onclick = saveGame;
 
 // --- 시작 ---
-loadGame();
 updateUI();
