@@ -3,7 +3,7 @@ let incomePerSecond = 1;
 const ADS = [
   "forms.gle/bEL2EeMexCVw4MXWA (나물게임 설문조사!)",
   "https://github.com/zzuni0421/namulgame (나물게임 공식 Github! 개발자들과 토론도 ㄱㄴ!)",
-  "https://namulgame.pages.dev/community (나물게임 공식 커뮤니티 (아직 개발중))", "https://youtube.com/@나물게임나물이 (나물게임 개발자 공식 유튜브!)",",
+  "https://namulgame.pages.dev/community (나물게임 공식 커뮤니티 (아직 개발중))", "https://youtube.com/@나물게임나물이 (나물게임 개발자 공식 유튜브!)",
   "https://namulgame.pages.dev (나물게임에 구글 로그인이 생겼다?! 지금 당장 ㄱㄱ!)", "https://youtube.com/@나물게임 (나물게임 공식 계정!)",
   "namulgame.kro.kr (나물게임 개발자 공식 사이트!)",
 ];
