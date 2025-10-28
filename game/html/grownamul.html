@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>나물 키우기 방치형</title>
 <style>
-/* --- 기본 스타일 --- */
 body {
   font-family: 'Comic Sans MS', sans-serif;
   background: linear-gradient(to bottom, #f9f9f9, #e0f7e0);
@@ -25,12 +24,8 @@ h1 {
   color: #2b7a2b;
   text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
 }
-.stats {
-  margin: 15px 0;
-  font-size: 18px;
-  color: #333;
-}
-/* --- 농장 --- */
+.stats { margin: 15px 0; font-size: 18px; color: #333; }
+
 .farm {
   display: flex;
   flex-wrap: wrap;
@@ -38,8 +33,7 @@ h1 {
   margin: 25px 0;
 }
 .plant {
-  width: 100px;
-  height: 100px;
+  width: 100px; height: 100px;
   background: linear-gradient(to bottom, #c6e5b1, #a4d07f);
   margin: 8px;
   border-radius: 15px;
@@ -52,119 +46,45 @@ h1 {
   transition: transform 0.2s, box-shadow 0.2s;
   animation: gentleGrow 2s infinite alternate;
 }
-.plant:hover {
-  transform: scale(1.15);
-  box-shadow: 0 6px 15px rgba(0,0,0,0.3);
-}
-.plant.clicked {
-  animation: clickBounce 0.3s;
-}
-@keyframes gentleGrow {
-  from { transform: scale(0.95); }
-  to { transform: scale(1.05); }
-}
-@keyframes clickBounce {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.25) rotate(-5deg); }
-  100% { transform: scale(1) rotate(0deg); }
-}
-/* --- 버튼 --- */
+.plant:hover { transform: scale(1.15); box-shadow: 0 6px 15px rgba(0,0,0,0.3); }
+.plant.clicked { animation: clickBounce 0.3s; }
+@keyframes gentleGrow { from {transform:scale(0.95);} to {transform:scale(1.05);} }
+@keyframes clickBounce {0%{transform:scale(1);}50%{transform:scale(1.25) rotate(-5deg);}100%{transform:scale(1) rotate(0deg);}}
+
 button {
-  margin: 5px;
-  padding: 12px 15px;
-  border: none;
-  background: linear-gradient(to bottom, #6ab04c, #4cd137);
-  color: white;
-  font-weight: bold;
-  border-radius: 12px;
-  cursor: pointer;
-  box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-  transition: all 0.3s ease;
+  margin:5px; padding:12px 15px; border:none;
+  background: linear-gradient(to bottom,#6ab04c,#4cd137);
+  color:white; font-weight:bold; border-radius:12px; cursor:pointer;
+  box-shadow:0 4px 10px rgba(0,0,0,0.2);
+  transition:all 0.3s ease;
 }
-button:hover {
-  background: linear-gradient(to bottom, #4cd137, #27ae60);
-  transform: translateY(-3px);
-  box-shadow: 0 6px 15px rgba(0,0,0,0.25);
-}
-/* --- 구매 효과 --- */
+button:hover { background:linear-gradient(to bottom,#4cd137,#27ae60); transform:translateY(-3px); box-shadow:0 6px 15px rgba(0,0,0,0.25); }
+
 .purchase-effect {
-  position: absolute;
-  color: #ffdd59;
-  font-weight: bold;
-  font-size: 16px;
-  text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+  position:absolute; color:#ffdd59; font-weight:bold; font-size:16px;
+  text-shadow:1px 1px 2px rgba(0,0,0,0.3);
   animation: floatUp 1s ease-out forwards;
 }
-@keyframes floatUp {
-  0% { opacity: 1; transform: translateY(0px) scale(1); }
-  50% { transform: translateY(-30px) scale(1.2); }
-  100% { opacity: 0; transform: translateY(-50px) scale(1); }
-}
-/* --- 업적 --- */
-#achievements {
-  margin-top: 20px;
-  list-style-type: none;
-  padding: 0;
-  color: #2d3436;
-  font-weight: bold;
-}
-#achievements li {
-  margin: 5px 0;
-  padding: 5px 10px;
-  background: #dff9fb;
-  border-radius: 10px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-  animation: fadeIn 1s;
-}
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
-}
-/* --- 플레이타임 --- */
-#playtime {
-  margin-top: 10px;
-  font-size: 16px;
-  color: #333;
-}
-/* --- 광고 팝업 --- */
-#adPopup {
-  display: none;
-  position: fixed;
-  top: 0; left: 0;
-  width: 100vw; height: 100vh;
-  background: rgba(0,0,0,0.8);
-  justify-content: center;
-  align-items: center;
-  z-index: 9999;
+@keyframes floatUp {0%{opacity:1; transform:translateY(0) scale(1);}50%{transform:translateY(-30px) scale(1.2);}100%{opacity:0; transform:translateY(-50px) scale(1);}}
+
+#achievements {margin-top:20px; list-style:none; padding:0; color:#2d3436; font-weight:bold;}
+#achievements li {margin:5px 0; padding:5px 10px; background:#dff9fb; border-radius:10px; box-shadow:0 2px 5px rgba(0,0,0,0.1); animation:fadeIn 1s;}
+@keyframes fadeIn {from{opacity:0; transform:translateY(-10px);}to{opacity:1; transform:translateY(0);}}
+
+#playtime {margin-top:10px; font-size:16px; color:#333;}
+
+#adPopup, #roulettePopup {
+  display:none; position:fixed; top:0; left:0; width:100vw; height:100vh;
+  justify-content:center; align-items:center; z-index:9999; flex-direction:column;
+  background: rgba(0,0,0,0.85);
 }
 #adPopup iframe {
-  width: 80%;
-  height: 60%;
-  border: 4px solid white;
-  border-radius: 20px;
-  box-shadow: 0 0 15px rgba(255,255,255,0.3);
+  width:80%; height:60%; border:4px solid white; border-radius:20px;
+  box-shadow:0 0 15px rgba(255,255,255,0.3);
 }
-#adTimer {
-  color: white;
-  font-size: 24px;
-  font-weight: bold;
-  margin-top: 15px;
-}
-#roulettePopup {
-  display: none;
-  position: fixed;
-  top: 0; left: 0;
-  width: 100vw; height: 100vh;
-  background: rgba(0,0,0,0.85);
-  justify-content: center;
-  align-items: center;
-  flex-direction: column;
-  z-index: 10000;
-}
-#roulettePopup h2 {
-  color: white;
-  margin-bottom: 10px;
-}
+#adTimer {color:white; font-size:24px; font-weight:bold; margin-top:15px;}
+#roulettePopup h2 {color:white; margin-bottom:10px;}
+#resultMsg {color:white; font-size:20px; margin-top:10px;}
 </style>
 </head>
 <body>
@@ -180,35 +100,31 @@ button:hover {
 
 <!-- 광고 팝업 -->
 <div id="adPopup">
-  <div>
-    <iframe id="adFrame" src="" allow="autoplay"></iframe>
-    <div id="adTimer">광고 시청 중... 15</div>
-  </div>
+  <iframe id="adFrame" src="" allow="autoplay"></iframe>
+  <div id="adDescription" style="color:white; font-size:18px; margin-top:10px;"></div>
+  <div id="adTimer">광고 시청 중... 15</div>
 </div>
 
 <!-- 룰렛 팝업 -->
 <div id="roulettePopup">
   <h2>🎡 룰렛 보상!</h2>
   <button id="spinBtn">돌리기!</button>
-  <div id="resultMsg" style="color:white; font-size:20px; margin-top:10px;"></div>
+  <div id="resultMsg"></div>
 </div>
 
 <script>
-let coins = 0;
-let plants = [];
-let startTime = Date.now();
-let totalPlaytime = 0;
+let coins = 0, plants = [], startTime = Date.now(), totalPlaytime = 0;
 
 const plantTypes = [
-  { name: "콩나물", baseCost: 50, baseCps: 1 },
-  { name: "시금치", baseCost: 200, baseCps: 5 },
-  { name: "고사리", baseCost: 1000, baseCps: 20 },
-  { name: "두릅", baseCost: 5000, baseCps: 100 },
-  { name: "도라지", baseCost: 20000, baseCps: 400 },
-  { name: "취나물", baseCost: 100000, baseCps: 1200 },
-  { name: "냉이", baseCost: 500000, baseCps: 3000 },
-  { name: "달래", baseCost: 2000000, baseCps: 8000 },
-  { name: "명이나물", baseCost: 10000000, baseCps: 20000 }
+  { name:"콩나물", baseCost:50, baseCps:1 },
+  { name:"시금치", baseCost:200, baseCps:5 },
+  { name:"고사리", baseCost:1000, baseCps:20 },
+  { name:"두릅", baseCost:5000, baseCps:100 },
+  { name:"도라지", baseCost:20000, baseCps:400 },
+  { name:"취나물", baseCost:100000, baseCps:1200 },
+  { name:"냉이", baseCost:500000, baseCps:3000 },
+  { name:"달래", baseCost:2000000, baseCps:8000 },
+  { name:"명이나물", baseCost:10000000, baseCps:20000 }
 ];
 
 const coinsEl = document.getElementById("coins");
@@ -217,83 +133,6 @@ const shopEl = document.getElementById("shop");
 const achievementsEl = document.getElementById("achievements");
 const playtimeEl = document.getElementById("playtime");
 
-function saveGame() {
-  const data = { coins, plants, totalPlaytime, lastSave: Date.now() };
-  localStorage.setItem("grownamul", JSON.stringify(data));
-  alert("게임이 저장되었습니다!");
-}
-
-function loadGame() {
-  const saved = JSON.parse(localStorage.getItem("grownamul"));
-  if (saved) {
-    coins = saved.coins || 0;
-    plants = saved.plants || [];
-    totalPlaytime = saved.totalPlaytime || 0;
-    const elapsed = Math.floor((Date.now() - saved.lastSave) / 1000);
-    const offlineIncome = getTotalCps() * elapsed;
-    if (elapsed > 10) showAdPopup(offlineIncome);
-    startTime = Date.now();
-  } else {
-    plantTypes.forEach((p, i) => {
-      plants.push({ id:i, name:p.name, level:1, count:0, cps:p.baseCps, cost:p.baseCost });
-    });
-    startTime = Date.now();
-  }
-}
-
-function getTotalCps() {
-  const elapsed = (Date.now() - startTime) / 60000;
-  let multiplier = elapsed < 2 ? 0.3 : 1;
-  return plants.reduce((sum, p) => sum + (p.cps * p.count * multiplier), 0);
-}
-
-function updateUI() {
-  coinsEl.textContent = Math.floor(coins);
-  farmEl.innerHTML = "";
-  plants.forEach(p => {
-    const div = document.createElement("div");
-    div.className = "plant";
-    div.textContent = `${p.name}\n x${p.count}`;
-    div.onclick = () => {
-      coins += p.count > 0 ? p.cps : 1;
-      div.classList.add("clicked");
-      setTimeout(() => div.classList.remove("clicked"), 300);
-      updateUI();
-    };
-    farmEl.appendChild(div);
-  });
-  shopEl.innerHTML = "";
-  plants.forEach(p => {
-    const btn = document.createElement("button");
-    btn.textContent = `${p.name} (보유:${p.count}) | 가격:${p.cost} | CPS:${p.cps}`;
-    btn.onclick = () => buyPlant(p);
-    shopEl.appendChild(btn);
-  });
-  achievementsEl.innerHTML = "";
-  if (coins>=1000) addAchievement("천 코인 돌파!");
-  if (getTotalCps()>=100) addAchievement("초당 100 CPS 달성!");
-  if (totalPlaytime>=10) addAchievement("10분 이상 플레이!");
-}
-function addAchievement(text){
-  const li = document.createElement("li");
-  li.textContent = text;
-  achievementsEl.appendChild(li);
-}
-function buyPlant(p) {
-  if (coins >= p.cost) {
-    coins -= p.cost;
-    p.count++;
-    p.cost = Math.floor(p.cost * 1.2);
-    updateUI();
-  }
-}
-setInterval(() => { coins += getTotalCps(); updateUI(); }, 1000);
-setInterval(() => { totalPlaytime = Math.floor((Date.now() - startTime) / 60000); playtimeEl.textContent = totalPlaytime; }, 1000);
-document.getElementById("saveBtn").onclick = saveGame;
-loadGame();
-updateUI();
-
-/* ---- 광고 + 룰렛 시스템 ---- */
 const adPopup = document.getElementById("adPopup");
 const adFrame = document.getElementById("adFrame");
 const adTimer = document.getElementById("adTimer");
@@ -302,29 +141,100 @@ const resultMsg = document.getElementById("resultMsg");
 const spinBtn = document.getElementById("spinBtn");
 
 const ADS = [
-  "https://namulgame.kro.kr",
-  "https://x.com/namuldev",
-  "https://namulworld.site",
-  "https://namul.store",
-  "https://namulfriend.me",
-  "https://youtube.com/@namul",
-  "https://namulteam.kro.kr",
-  "https://twitch.tv/namuldev",
-  "https://namulgame.kro.kr/event",
-  "https://namuldev.vercel.app",
-  "https://namulworld.io",
-  "https://namullab.net",
-  "https://namuluniverse.com",
-  "https://namulgame.pages.dev",
-  "https://namulblog.kro.kr"
-];
+  { "url": "https://namulgame.kro.kr", "desc": "나물게임 공식 사이트 방문하기!" },
+  { "url": "https://github.com/zzuni0421/namulgame", "desc": "개발자 공식 GitHub!" },
+  { "url": "https://namulgame.pages.dev/community", "desc": "나물게임 공식 커뮤니티 (개발 중)" },
+  { "url": "https://youtube.com/@나물게임나물이", "desc": "나물게임 개발자 공식 유튜브!" },
+  { "url": "https://namulgame.pages.dev", "desc": "나물게임 구글 로그인 기능 추가! 지금 접속해보세요!" },
+  { "url": "https://youtube.com/@나물게임", "desc": "나물게임 공식 유튜브 계정!" },
+  { "url": "https://forms.gle/bEL2EeMexCVw4MXWA", "desc": "나물게임 관련 구글 폼" }
+]
+
+function saveGame() {
+  localStorage.setItem("grownamul", JSON.stringify({coins, plants, totalPlaytime, lastSave:Date.now()}));
+  alert("게임이 저장되었습니다!");
+}
+
+function loadGame() {
+  const saved = JSON.parse(localStorage.getItem("grownamul"));
+  if(saved){
+    coins = saved.coins || 0;
+    plants = saved.plants || [];
+    totalPlaytime = saved.totalPlaytime || 0;
+    const elapsed = Math.floor((Date.now()-saved.lastSave)/1000);
+    const offlineIncome = getTotalCps()*elapsed;
+    if(elapsed>10) setTimeout(()=>showAdPopup(offlineIncome),500);
+    startTime = Date.now();
+  } else {
+    plantTypes.forEach((p,i)=>plants.push({id:i, name:p.name, level:1, count:0, cps:p.baseCps, cost:p.baseCost}));
+    startTime = Date.now();
+  }
+}
+
+function getTotalCps() {
+  const elapsed=(Date.now()-startTime)/60000;
+  const multiplier = elapsed<2 ? 0.3 : 1;
+  return plants.reduce((sum,p)=>sum+p.cps*p.count*multiplier,0);
+}
+
+function updateUI() {
+  coinsEl.textContent=Math.floor(coins);
+  farmEl.innerHTML="";
+  plants.forEach(p=>{
+    const div=document.createElement("div");
+    div.className="plant";
+    div.textContent=`${p.name}\n x${p.count}`;
+    div.onclick=()=>{
+      coins += p.count>0 ? p.cps : 1;
+      div.classList.add("clicked");
+      setTimeout(()=>div.classList.remove("clicked"),300);
+      updateUI();
+    };
+    farmEl.appendChild(div);
+  });
+  shopEl.innerHTML="";
+  plants.forEach(p=>{
+    const btn=document.createElement("button");
+    btn.textContent=`${p.name} (보유:${p.count}) | 가격:${p.cost} | CPS:${p.cps}`;
+    btn.onclick=()=>buyPlant(p);
+    shopEl.appendChild(btn);
+  });
+  achievementsEl.innerHTML="";
+  if(coins>=1000) addAchievement("천 코인 돌파!");
+  if(getTotalCps()>=100) addAchievement("초당 100 CPS 달성!");
+  if(totalPlaytime>=10) addAchievement("10분 이상 플레이!");
+}
+
+function addAchievement(text){
+  const li=document.createElement("li");
+  li.textContent=text;
+  achievementsEl.appendChild(li);
+}
+
+function buyPlant(p){
+  if(coins>=p.cost){
+    coins-=p.cost;
+    p.count++;
+    p.cost=Math.floor(p.cost*1.2);
+    updateUI();
+  }
+}
+
+setInterval(()=>{coins+=getTotalCps(); updateUI();},1000);
+setInterval(()=>{totalPlaytime=Math.floor((Date.now()-startTime)/60000); playtimeEl.textContent=totalPlaytime;},1000);
+document.getElementById("saveBtn").onclick=saveGame;
+loadGame();
+updateUI();
 
 function showAdPopup(reward) {
-  const randomAd = ADS[Math.floor(Math.random() * ADS.length)];
-  adFrame.src = randomAd;
+  const ad = ADS[Math.floor(Math.random() * ADS.length)];
+  adFrame.src = ad.url;
+  document.getElementById("adDescription").textContent = ad.desc;
+
   adPopup.style.display = "flex";
   let timeLeft = 15;
   adTimer.textContent = `광고 시청 중... ${timeLeft}`;
+
   const interval = setInterval(() => {
     timeLeft--;
     adTimer.textContent = `광고 시청 중... ${timeLeft}`;
@@ -336,22 +246,24 @@ function showAdPopup(reward) {
   }, 1000);
 }
 
-function showRoulette(baseReward) {
-  roulettePopup.style.display = "flex";
-  spinBtn.onclick = () => {
-    const roll = Math.random() * 100;
+function showRoulette(baseReward){
+  roulettePopup.style.display="flex";
+  spinBtn.disabled=false;
+  spinBtn.onclick=()=>{
+    spinBtn.disabled=true;
+    const roll=Math.random()*100;
     let multiplier;
-    if (roll < 0.01) multiplier = 3.0;
-    else if (roll < 1) multiplier = 2.0;
-    else if (roll < 5) multiplier = 1.8;
-    else if (roll < 15) multiplier = 1.5;
-    else if (roll < 30) multiplier = 1.4;
-    else multiplier = 1.2;
-    const reward = Math.floor(baseReward * multiplier);
-    coins += reward;
-    resultMsg.textContent = `🎉 ${multiplier}배 당첨! ${reward} 코인 획득!`;
-    setTimeout(()=>roulettePopup.style.display="none", 3000);
+    if(roll<0.01) multiplier=3.0;
+    else if(roll<1) multiplier=2.0;
+    else if(roll<5) multiplier=1.8;
+    else if(roll<15) multiplier=1.5;
+    else if(roll<30) multiplier=1.4;
+    else multiplier=1.2;
+    const reward=Math.floor(baseReward*multiplier);
+    coins+=reward;
+    resultMsg.textContent=`🎉 ${multiplier}배 당첨! ${reward} 코인 획득!`;
     updateUI();
+    setTimeout(()=>roulettePopup.style.display="none",3000);
   };
 }
 </script>
