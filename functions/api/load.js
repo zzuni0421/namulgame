@@ -1,13 +1,11 @@
-export async function onRequestGet({ env }) {
-  const list = await env.TRAINING_DATA.list();
-  const data = [];
-
-  for (const item of list.keys) {
-    const value = await env.TRAINING_DATA.get(item.name);
-    if (value) data.push(JSON.parse(value));
-  }
-
-  return new Response(JSON.stringify(data), {
-    headers: { "Content-Type": "application/json" },
-  });
+// load.js
+export async function loadDataAPI(key) {
+    try {
+        const res = await fetch(`/api/load?key=${encodeURIComponent(key)}`);
+        const json = await res.json();
+        return json.data || [];
+    } catch (e) {
+        console.error('Load API failed', e);
+        return [];
+    }
 }
