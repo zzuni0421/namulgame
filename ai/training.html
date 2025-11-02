@@ -1,0 +1,617 @@
+<!doctype html>
+<html lang="ko">
+ <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🤖 AI 챗봇 트레이닝 시뮬레이터</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script src="/_sdk/data_sdk.js"></script>
+  <script src="/_sdk/element_sdk.js"></script>
+  <style>
+        body {
+            box-sizing: border-box;
+        }
+        
+        .message-bubble {
+            animation: slideIn 0.3s ease-out;
+        }
+        
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        .typing-indicator {
+            animation: pulse 1.5s ease-in-out infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 1; }
+        }
+        
+        .training-card {
+            transition: all 0.3s ease;
+        }
+        
+        .training-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+        }
+        
+        .progress-bar {
+            transition: width 0.5s ease;
+        }
+        
+        .quality-meter {
+            background: linear-gradient(90deg, #ef4444 0%, #f59e0b 50%, #10b981 100%);
+        }
+    </style>
+  <style>@view-transition { navigation: auto; }</style>
+ </head>
+ <body class="bg-gradient-to-br from-indigo-900 via-purple-900 to-pink-900 min-h-full text-white"><!-- 헤더 -->
+  <div class="bg-black/20 backdrop-blur-lg border-b border-white/10 p-4">
+   <div class="max-w-7xl mx-auto">
+    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center space-y-3 sm:space-y-0">
+     <div class="flex items-center space-x-3">
+      <h1 class="text-2xl font-bold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">🤖 AI 챗봇 트레이닝</h1>
+      <div class="text-sm text-gray-300">
+       시뮬레이터
+      </div>
+     </div>
+     <div class="flex items-center space-x-4">
+      <div class="text-center">
+       <div class="text-xs text-gray-400">
+        훈련 데이터
+       </div>
+       <div class="text-lg font-bold text-cyan-400" id="trainingCount">
+        0
+       </div>
+      </div>
+      <div class="text-center">
+       <div class="text-xs text-gray-400">
+        평균 품질
+       </div>
+       <div class="text-lg font-bold text-green-400" id="avgQuality">
+        0%
+       </div>
+      </div><button onclick="saveTraining()" id="saveBtn" class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg text-sm font-medium transition-colors"> 💾 저장 </button>
+     </div>
+    </div>
+   </div>
+  </div>
+  <div class="max-w-7xl mx-auto p-6 grid grid-cols-1 lg:grid-cols-3 gap-6"><!-- 챗봇 대화 영역 -->
+   <div class="lg:col-span-2 space-y-6"><!-- 챗봇 정보 -->
+    <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
+     <div class="flex items-center space-x-4 mb-4">
+      <div class="w-16 h-16 bg-gradient-to-br from-cyan-400 to-blue-500 rounded-full flex items-center justify-center text-2xl">
+       🤖
+      </div>
+      <div>
+       <h2 class="text-xl font-bold" id="botName">AI 어시스턴트</h2>
+       <p class="text-gray-300" id="botPersonality">친근하고 도움이 되는 AI입니다</p>
+      </div>
+     </div><!-- 성능 지표 -->
+     <div class="grid grid-cols-3 gap-4 mb-4">
+      <div class="text-center p-3 bg-white/5 rounded-lg">
+       <div class="text-2xl font-bold text-blue-400" id="intelligenceLevel">
+        1
+       </div>
+       <div class="text-xs text-gray-400">
+        지능 레벨
+       </div>
+      </div>
+      <div class="text-center p-3 bg-white/5 rounded-lg">
+       <div class="text-2xl font-bold text-green-400" id="responseAccuracy">
+        0%
+       </div>
+       <div class="text-xs text-gray-400">
+        응답 정확도
+       </div>
+      </div>
+      <div class="text-center p-3 bg-white/5 rounded-lg">
+       <div class="text-2xl font-bold text-purple-400" id="learningProgress">
+        0%
+       </div>
+       <div class="text-xs text-gray-400">
+        학습 진도
+       </div>
+      </div>
+     </div><!-- 진행률 바 -->
+     <div class="mb-4">
+      <div class="flex justify-between text-sm mb-2"><span>훈련 진행률</span> <span id="progressPercent">0%</span>
+      </div>
+      <div class="w-full bg-gray-700 rounded-full h-3">
+       <div class="progress-bar bg-gradient-to-r from-cyan-400 to-blue-500 h-3 rounded-full" id="progressBar" style="width: 0%"></div>
+      </div>
+     </div>
+    </div><!-- 대화 창 -->
+    <div class="bg-white/10 backdrop-blur-lg rounded-2xl border border-white/20 h-96 flex flex-col">
+     <div class="p-4 border-b border-white/10">
+      <h3 class="font-bold flex items-center">💬 챗봇과 대화하기 <span class="ml-2 text-xs bg-green-500/20 text-green-400 px-2 py-1 rounded-full">온라인</span></h3>
+     </div>
+     <div class="flex-1 p-4 overflow-y-auto" id="chatMessages">
+      <div class="message-bubble bg-blue-600/20 rounded-lg p-3 mb-3 max-w-xs">
+       <div class="text-sm" id="welcomeMessage">
+        안녕하세요! 무엇을 도와드릴까요?
+       </div>
+      </div>
+     </div>
+     <div class="p-4 border-t border-white/10">
+      <div class="flex space-x-2"><input type="text" id="userInput" placeholder="메시지를 입력하세요..." class="flex-1 bg-white/10 border border-white/20 rounded-lg px-4 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-cyan-400"> <button onclick="sendMessage()" class="bg-cyan-600 hover:bg-cyan-700 px-4 py-2 rounded-lg font-medium transition-colors"> 전송 </button>
+      </div>
+     </div>
+    </div>
+   </div><!-- 훈련 패널 -->
+   <div class="space-y-6"><!-- 훈련 데이터 추가 -->
+    <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
+     <h3 class="text-lg font-bold mb-4 flex items-center">📚 훈련 데이터 추가</h3>
+     <div class="space-y-4">
+      <div><label class="block text-sm font-medium mb-2">사용자 질문</label> <input type="text" id="trainingInput" placeholder="예: 날씨가 어때?" class="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-cyan-400">
+      </div>
+      <div><label class="block text-sm font-medium mb-2">AI 응답</label> <textarea id="trainingResponse" placeholder="예: 오늘 날씨는 맑고 기온은 22도입니다." class="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white placeholder-gray-400 focus:outline-none focus:border-cyan-400 h-20 resize-none"></textarea>
+      </div>
+      <div><label class="block text-sm font-medium mb-2">카테고리</label> <select id="trainingCategory" class="w-full bg-white/10 border border-white/20 rounded-lg px-3 py-2 text-white focus:outline-none focus:border-cyan-400"> <option value="일반">일반</option> <option value="날씨">날씨</option> <option value="음식">음식</option> <option value="여행">여행</option> <option value="기술">기술</option> <option value="건강">건강</option> <option value="교육">교육</option> <option value="엔터테인먼트">엔터테인먼트</option> </select>
+      </div>
+      <div><label class="block text-sm font-medium mb-2">품질 점수</label>
+       <div class="flex items-center space-x-2"><input type="range" id="qualityScore" min="1" max="10" value="5" class="flex-1 h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer quality-meter"> <span id="qualityValue" class="text-sm font-bold w-8">5</span>
+       </div>
+       <div class="text-xs text-gray-400 mt-1">
+        1: 매우 나쁨 ~ 10: 매우 좋음
+       </div>
+      </div><button onclick="addTrainingData()" class="w-full bg-green-600 hover:bg-green-700 py-2 rounded-lg font-medium transition-colors"> 📝 훈련 데이터 추가 </button>
+     </div>
+    </div><!-- 훈련 통계 -->
+    <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
+     <h3 class="text-lg font-bold mb-4">📊 훈련 통계</h3>
+     <div class="space-y-3" id="categoryStats">
+      <div class="text-center text-gray-400 py-4">
+       아직 훈련 데이터가 없습니다
+      </div>
+     </div>
+    </div><!-- 최근 훈련 데이터 -->
+    <div class="bg-white/10 backdrop-blur-lg rounded-2xl p-6 border border-white/20">
+     <h3 class="text-lg font-bold mb-4">🕒 최근 훈련 데이터</h3>
+     <div class="space-y-2 max-h-60 overflow-y-auto" id="recentTraining">
+      <div class="text-center text-gray-400 py-4 text-sm">
+       훈련 데이터를 추가해보세요
+      </div>
+     </div>
+    </div>
+   </div>
+  </div>
+  <script>
+        // 게임 상태
+        let gameState = {
+            trainingData: [],
+            chatHistory: [],
+            botStats: {
+                level: 1,
+                accuracy: 0,
+                progress: 0
+            },
+            config: {
+                bot_name: "AI 어시스턴트",
+                bot_personality: "친근하고 도움이 되는",
+                welcome_message: "안녕하세요! 무엇을 도와드릴까요?"
+            }
+        };
+
+        // 기본 설정
+        const defaultConfig = {
+            bot_name: "AI 어시스턴트",
+            bot_personality: "친근하고 도움이 되는",
+            welcome_message: "안녕하세요! 무엇을 도와드릴까요?"
+        };
+
+        // 데이터 SDK 핸들러
+        const dataHandler = {
+            onDataChanged(data) {
+                if (data.length > 0) {
+                    gameState.trainingData = data;
+                    updateUI();
+                    updateStats();
+                    showNotification('훈련 데이터를 불러왔습니다! 🤖', 'success');
+                }
+            }
+        };
+
+        // Element SDK 설정
+        async function onConfigChange(config) {
+            gameState.config = { ...defaultConfig, ...config };
+            
+            // UI 업데이트
+            document.getElementById('botName').textContent = gameState.config.bot_name;
+            document.getElementById('botPersonality').textContent = gameState.config.bot_personality;
+            document.getElementById('welcomeMessage').textContent = gameState.config.welcome_message;
+        }
+
+        function mapToCapabilities(config) {
+            return {
+                recolorables: [
+                    {
+                        get: () => config.primary_color || "#06b6d4",
+                        set: (value) => {
+                            config.primary_color = value;
+                            window.elementSdk?.setConfig({ primary_color: value });
+                        }
+                    },
+                    {
+                        get: () => config.secondary_color || "#8b5cf6",
+                        set: (value) => {
+                            config.secondary_color = value;
+                            window.elementSdk?.setConfig({ secondary_color: value });
+                        }
+                    },
+                    {
+                        get: () => config.background_color || "#1e1b4b",
+                        set: (value) => {
+                            config.background_color = value;
+                            window.elementSdk?.setConfig({ background_color: value });
+                        }
+                    }
+                ],
+                borderables: [],
+                fontEditable: {
+                    get: () => config.font_family || "system-ui",
+                    set: (value) => {
+                        config.font_family = value;
+                        window.elementSdk?.setConfig({ font_family: value });
+                    }
+                },
+                fontSizeable: {
+                    get: () => config.font_size || 16,
+                    set: (value) => {
+                        config.font_size = value;
+                        window.elementSdk?.setConfig({ font_size: value });
+                    }
+                }
+            };
+        }
+
+        function mapToEditPanelValues(config) {
+            return new Map([
+                ["bot_name", config.bot_name || defaultConfig.bot_name],
+                ["bot_personality", config.bot_personality || defaultConfig.bot_personality],
+                ["welcome_message", config.welcome_message || defaultConfig.welcome_message]
+            ]);
+        }
+
+        // 훈련 데이터 저장
+        async function saveTraining() {
+            if (!window.dataSdk) {
+                showNotification('저장 기능을 사용할 수 없습니다', 'error');
+                return;
+            }
+
+            const saveBtn = document.getElementById('saveBtn');
+            saveBtn.textContent = '💾 저장중...';
+            saveBtn.disabled = true;
+
+            try {
+                showNotification('훈련 데이터가 저장되었습니다! 💾', 'success');
+            } catch (error) {
+                showNotification('저장 중 오류가 발생했습니다', 'error');
+            } finally {
+                saveBtn.textContent = '💾 저장';
+                saveBtn.disabled = false;
+            }
+        }
+
+        // 훈련 데이터 추가
+        async function addTrainingData() {
+            const input = document.getElementById('trainingInput').value.trim();
+            const response = document.getElementById('trainingResponse').value.trim();
+            const category = document.getElementById('trainingCategory').value;
+            const quality = parseInt(document.getElementById('qualityScore').value);
+
+            if (!input || !response) {
+                showNotification('질문과 응답을 모두 입력해주세요', 'error');
+                return;
+            }
+
+            if (gameState.trainingData.length >= 999) {
+                showNotification('최대 999개의 훈련 데이터만 저장할 수 있습니다', 'error');
+                return;
+            }
+
+            const trainingData = {
+                training_id: `training_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+                user_input: input,
+                bot_response: response,
+                category: category,
+                quality_score: quality,
+                created_at: new Date().toISOString()
+            };
+
+            try {
+                const result = await window.dataSdk.create(trainingData);
+                
+                if (result.isOk) {
+                    // 입력 필드 초기화
+                    document.getElementById('trainingInput').value = '';
+                    document.getElementById('trainingResponse').value = '';
+                    document.getElementById('qualityScore').value = '5';
+                    document.getElementById('qualityValue').textContent = '5';
+                    
+                    showNotification('훈련 데이터가 추가되었습니다! 🎯', 'success');
+                } else {
+                    showNotification('훈련 데이터 추가에 실패했습니다', 'error');
+                }
+            } catch (error) {
+                showNotification('오류가 발생했습니다', 'error');
+            }
+        }
+
+        // 메시지 전송
+        function sendMessage() {
+            const input = document.getElementById('userInput');
+            const message = input.value.trim();
+            
+            if (!message) return;
+            
+            // 사용자 메시지 추가
+            addChatMessage(message, 'user');
+            input.value = '';
+            
+            // 타이핑 인디케이터 표시
+            showTypingIndicator();
+            
+            // AI 응답 생성 (1-2초 후)
+            setTimeout(() => {
+                hideTypingIndicator();
+                const response = generateBotResponse(message);
+                addChatMessage(response, 'bot');
+            }, 1000 + Math.random() * 1000);
+        }
+
+        // 챗 메시지 추가
+        function addChatMessage(message, sender) {
+            const chatMessages = document.getElementById('chatMessages');
+            const messageDiv = document.createElement('div');
+            
+            if (sender === 'user') {
+                messageDiv.className = 'message-bubble bg-cyan-600/20 rounded-lg p-3 mb-3 max-w-xs ml-auto';
+                messageDiv.innerHTML = `<div class="text-sm text-right">${message}</div>`;
+            } else {
+                messageDiv.className = 'message-bubble bg-blue-600/20 rounded-lg p-3 mb-3 max-w-xs';
+                messageDiv.innerHTML = `<div class="text-sm">${message}</div>`;
+            }
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        // 타이핑 인디케이터
+        function showTypingIndicator() {
+            const chatMessages = document.getElementById('chatMessages');
+            const typingDiv = document.createElement('div');
+            typingDiv.id = 'typingIndicator';
+            typingDiv.className = 'typing-indicator bg-gray-600/20 rounded-lg p-3 mb-3 max-w-xs';
+            typingDiv.innerHTML = '<div class="text-sm text-gray-400">AI가 입력 중...</div>';
+            chatMessages.appendChild(typingDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+
+        function hideTypingIndicator() {
+            const indicator = document.getElementById('typingIndicator');
+            if (indicator) {
+                indicator.remove();
+            }
+        }
+
+        // AI 응답 생성
+        function generateBotResponse(userMessage) {
+            // 훈련 데이터에서 유사한 질문 찾기
+            const trainingData = gameState.trainingData;
+            
+            for (let data of trainingData) {
+                if (userMessage.toLowerCase().includes(data.user_input.toLowerCase()) || 
+                    data.user_input.toLowerCase().includes(userMessage.toLowerCase())) {
+                    return data.bot_response;
+                }
+            }
+            
+            // 기본 응답들
+            const defaultResponses = [
+                "흥미로운 질문이네요! 더 많은 훈련 데이터가 필요해요.",
+                "죄송해요, 아직 그에 대해 잘 모르겠어요. 훈련을 더 받아야겠네요!",
+                "좋은 질문입니다! 관련 훈련 데이터를 추가해주시면 더 나은 답변을 드릴 수 있어요.",
+                "아직 학습 중이에요. 더 많은 예시를 통해 배우고 싶어요!",
+                "그 주제에 대해 더 알고 싶어요. 훈련 데이터로 가르쳐주세요!"
+            ];
+            
+            return defaultResponses[Math.floor(Math.random() * defaultResponses.length)];
+        }
+
+        // UI 업데이트
+        function updateUI() {
+            const trainingCount = gameState.trainingData.length;
+            document.getElementById('trainingCount').textContent = trainingCount;
+            
+            // 최근 훈련 데이터 표시
+            updateRecentTraining();
+            
+            // 카테고리 통계 업데이트
+            updateCategoryStats();
+        }
+
+        // 통계 업데이트
+        function updateStats() {
+            const trainingData = gameState.trainingData;
+            const totalData = trainingData.length;
+            
+            if (totalData === 0) {
+                document.getElementById('avgQuality').textContent = '0%';
+                document.getElementById('intelligenceLevel').textContent = '1';
+                document.getElementById('responseAccuracy').textContent = '0%';
+                document.getElementById('learningProgress').textContent = '0%';
+                document.getElementById('progressPercent').textContent = '0%';
+                document.getElementById('progressBar').style.width = '0%';
+                return;
+            }
+            
+            // 평균 품질 계산
+            const avgQuality = Math.round(trainingData.reduce((sum, data) => sum + data.quality_score, 0) / totalData * 10);
+            document.getElementById('avgQuality').textContent = `${avgQuality}%`;
+            
+            // 지능 레벨 (훈련 데이터 10개당 1레벨)
+            const level = Math.floor(totalData / 10) + 1;
+            document.getElementById('intelligenceLevel').textContent = level;
+            
+            // 응답 정확도 (품질 점수 기반)
+            const accuracy = Math.min(avgQuality, 100);
+            document.getElementById('responseAccuracy').textContent = `${accuracy}%`;
+            
+            // 학습 진도 (최대 100개 기준)
+            const progress = Math.min(Math.round((totalData / 100) * 100), 100);
+            document.getElementById('learningProgress').textContent = `${progress}%`;
+            document.getElementById('progressPercent').textContent = `${progress}%`;
+            document.getElementById('progressBar').style.width = `${progress}%`;
+        }
+
+        // 최근 훈련 데이터 업데이트
+        function updateRecentTraining() {
+            const recentTraining = document.getElementById('recentTraining');
+            const trainingData = gameState.trainingData.slice(-10).reverse();
+            
+            if (trainingData.length === 0) {
+                recentTraining.innerHTML = '<div class="text-center text-gray-400 py-4 text-sm">훈련 데이터를 추가해보세요</div>';
+                return;
+            }
+            
+            recentTraining.innerHTML = trainingData.map(data => {
+                const qualityColor = data.quality_score >= 7 ? 'text-green-400' : 
+                                   data.quality_score >= 4 ? 'text-yellow-400' : 'text-red-400';
+                
+                return `
+                    <div class="training-card bg-white/5 rounded-lg p-3 border border-white/10">
+                        <div class="flex justify-between items-start mb-2">
+                            <span class="text-xs bg-blue-500/20 text-blue-400 px-2 py-1 rounded">${data.category}</span>
+                            <span class="text-xs ${qualityColor} font-bold">${data.quality_score}/10</span>
+                        </div>
+                        <div class="text-sm font-medium mb-1 truncate">${data.user_input}</div>
+                        <div class="text-xs text-gray-400 truncate">${data.bot_response}</div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // 카테고리 통계 업데이트
+        function updateCategoryStats() {
+            const categoryStats = document.getElementById('categoryStats');
+            const trainingData = gameState.trainingData;
+            
+            if (trainingData.length === 0) {
+                categoryStats.innerHTML = '<div class="text-center text-gray-400 py-4">아직 훈련 데이터가 없습니다</div>';
+                return;
+            }
+            
+            // 카테고리별 통계 계산
+            const stats = {};
+            trainingData.forEach(data => {
+                if (!stats[data.category]) {
+                    stats[data.category] = { count: 0, totalQuality: 0 };
+                }
+                stats[data.category].count++;
+                stats[data.category].totalQuality += data.quality_score;
+            });
+            
+            const sortedStats = Object.entries(stats)
+                .map(([category, data]) => ({
+                    category,
+                    count: data.count,
+                    avgQuality: Math.round((data.totalQuality / data.count) * 10)
+                }))
+                .sort((a, b) => b.count - a.count);
+            
+            categoryStats.innerHTML = sortedStats.map(stat => {
+                const percentage = Math.round((stat.count / trainingData.length) * 100);
+                const qualityColor = stat.avgQuality >= 70 ? 'text-green-400' : 
+                                   stat.avgQuality >= 40 ? 'text-yellow-400' : 'text-red-400';
+                
+                return `
+                    <div class="flex justify-between items-center p-2 bg-white/5 rounded-lg">
+                        <div>
+                            <div class="text-sm font-medium">${stat.category}</div>
+                            <div class="text-xs text-gray-400">${stat.count}개 데이터</div>
+                        </div>
+                        <div class="text-right">
+                            <div class="text-sm font-bold">${percentage}%</div>
+                            <div class="text-xs ${qualityColor}">품질 ${stat.avgQuality}%</div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        // 알림 표시
+        function showNotification(message, type) {
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 p-4 rounded-xl font-bold text-white z-50 transform transition-all duration-300 ${
+                type === 'success' ? 'bg-green-600' : 'bg-red-600'
+            }`;
+            notification.textContent = message;
+            
+            document.body.appendChild(notification);
+            
+            setTimeout(() => {
+                notification.style.transform = 'translateX(100%)';
+                setTimeout(() => notification.remove(), 300);
+            }, 3000);
+        }
+
+        // 이벤트 리스너
+        document.getElementById('userInput').addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        document.getElementById('qualityScore').addEventListener('input', function(e) {
+            document.getElementById('qualityValue').textContent = e.target.value;
+        });
+
+        // 초기화
+        async function initApp() {
+            // Element SDK 초기화
+            if (window.elementSdk) {
+                try {
+                    await window.elementSdk.init({
+                        defaultConfig,
+                        onConfigChange,
+                        mapToCapabilities,
+                        mapToEditPanelValues
+                    });
+                } catch (error) {
+                    console.error('Element SDK 초기화 오류:', error);
+                }
+            }
+
+            // Data SDK 초기화
+            if (window.dataSdk) {
+                try {
+                    const initResult = await window.dataSdk.init(dataHandler);
+                    if (!initResult.isOk) {
+                        console.error('Data SDK 초기화 실패');
+                    }
+                } catch (error) {
+                    console.error('Data SDK 초기화 오류:', error);
+                }
+            }
+
+            updateUI();
+            updateStats();
+        }
+
+        // 앱 시작
+        initApp();
+    </script>
+ <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'998047f602733079',t:'MTc2MjA1MTM3Mi4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
+</html>
