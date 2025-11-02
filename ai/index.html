@@ -3,19 +3,11 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>AI 질문 시뮬레이터 (오타 허용)</title>
+<title>AI 질문 시뮬레이터</title>
 <script src="https://cdn.tailwindcss.com"></script>
 <style>
-body {
-    background: radial-gradient(circle at 20% 20%, #0f172a, #020617);
-    color: white;
-    font-family: 'Pretendard', sans-serif;
-}
-.glass {
-    background: rgba(255,255,255,0.05);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.1);
-}
+body { background: radial-gradient(circle at 20% 20%, #0f172a, #020617); color: white; font-family: 'Pretendard', sans-serif; }
+.glass { background: rgba(255,255,255,0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); }
 .scrollbar::-webkit-scrollbar { height:6px; }
 .scrollbar::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.3); border-radius:3px; }
 </style>
@@ -26,7 +18,7 @@ body {
 <h1 class="text-4xl font-extrabold bg-gradient-to-r from-cyan-400 to-blue-500 bg-clip-text text-transparent">
 AI 질문 시뮬레이터
 </h1>
-<p class="text-gray-400 mt-2">저장된 데이터를 기반으로 AI가 답합니다! (카테고리 + 오타 허용)</p>
+<p class="text-gray-400 mt-2">저장된 트레이닝 데이터를 기반으로 AI에게 질문할 수 있습니다.</p>
 </header>
 
 <main class="w-full max-w-4xl glass rounded-2xl p-6 space-y-8">
@@ -34,96 +26,55 @@ AI 질문 시뮬레이터
 <section class="space-y-3">
 <h2 class="text-2xl font-bold mb-2">질문 입력</h2>
 <div class="flex flex-col md:flex-row gap-3">
-<input id="questionInput" type="text" placeholder="AI에게 질문하기..." 
-class="flex-1 p-3 rounded-lg bg-white/10 border border-white/20 focus:outline-none focus:ring-2 focus:ring-cyan-400" />
-<select id="categoryFilter" 
-class="p-3 rounded-lg bg-white/10 border border-white/20 focus:outline-none">
+<input id="questionInput" type="text" placeholder="질문 입력..." class="flex-1 p-3 rounded-lg bg-white/10 border border-white/20 focus:outline-none focus:ring-2 focus:ring-cyan-400" />
+<select id="categoryFilter" class="p-3 rounded-lg bg-white/10 border border-white/20 focus:outline-none">
 <option value="모두">모두</option>
 <option value="일반">일반</option>
 <option value="감정">감정</option>
 <option value="지식">지식</option>
 <option value="대화">대화</option>
 </select>
-<button id="askBtn" 
-class="bg-gradient-to-r from-cyan-500 to-blue-500 px-5 py-3 rounded-lg font-semibold hover:opacity-90 transition">
-질문
-</button>
+<button id="askBtn" class="bg-gradient-to-r from-cyan-500 to-blue-500 px-5 py-3 rounded-lg font-semibold hover:opacity-90 transition">질문</button>
 </div>
-</section>
-
-<section>
-<h2 class="text-2xl font-bold mb-2">AI 답변</h2>
-<div id="answerList" class="max-h-60 overflow-y-auto scrollbar space-y-2"></div>
+<div id="answerList" class="max-h-60 overflow-y-auto scrollbar space-y-2 mt-3"></div>
 </section>
 
 </main>
 
 <script type="module">
-// save.js (API load)
 async function loadDataAPI(key){
-    try{
-        const res = await fetch(`/api/load?key=${encodeURIComponent(key)}`);
-        const json = await res.json();
-        return json.data || [];
-    }catch(e){ console.error('Load API failed', e); return []; }
-}
-
-// ai.js
-function levenshtein(a,b){
-    const dp=Array.from({length:a.length+1},()=>Array(b.length+1).fill(0));
-    for(let i=0;i<=a.length;i++) dp[i][0]=i;
-    for(let j=0;j<=b.length;j++) dp[0][j]=j;
-    for(let i=1;i<=a.length;i++){
-        for(let j=1;j<=b.length;j++){
-            if(a[i-1]===b[j-1]) dp[i][j]=dp[i-1][j-1];
-            else dp[i][j]=1+Math.min(dp[i-1][j],dp[i][j-1],dp[i-1][j-1]);
-        }
-    }
-    return dp[a.length][b.length];
+    try{ const res = await fetch(`/api/load?key=${encodeURIComponent(key)}`); const json=await res.json(); return json.data||[]; }
+    catch(e){ console.error('Load API failed', e); return []; }
 }
 
 class AITrainer{
-    constructor(storageKey='aiTrainingData'){
-        this.storageKey = storageKey;
-        this.data = [];
-    }
-    async init(){ this.data = await loadDataAPI(this.storageKey); }
-    getData(){ return this.data; }
-
-    _similarityScore(qText,dataText){
-        qText=qText.toLowerCase();
-        dataText=dataText.toLowerCase();
-        const dist = levenshtein(qText,dataText);
-        return -dist; // 거리 작을수록 점수 높음
-    }
-
-    answer(question,category='모두'){
+    constructor(storageKey='aiTrainingData'){ this.storageKey=storageKey; this.data=[]; }
+    async init(){ this.data=await loadDataAPI(this.storageKey); }
+    answer(question, category='모두'){
         if(!this.data.length) return "AI: 아직 학습된 데이터가 없습니다.";
         let candidates=this.data;
         if(category!=='모두') candidates=candidates.filter(d=>d.category===category);
-        candidates.sort((a,b)=>this._similarityScore(question,b.text)-this._similarityScore(question,a.text));
-        const top=candidates.slice(0,3).map(d=>`[${d.category}] ${d.text}`);
-        return top.length ? `AI 예측: ${top.join(' | ')} (질문: "${question}")` : "AI: 관련 데이터가 없습니다.";
+        const match=candidates.find(d=>question.includes(d.keyword));
+        return match ? match.answer : "AI: 관련 데이터가 없습니다.";
     }
 }
 
 const trainer=new AITrainer();
-await trainer.init();
-
 const questionInput=document.getElementById('questionInput');
 const askBtn=document.getElementById('askBtn');
 const answerList=document.getElementById('answerList');
 const categoryFilter=document.getElementById('categoryFilter');
 
+await trainer.init();
+
 askBtn.addEventListener('click',()=>{
     const q=questionInput.value.trim();
-    if(!q) return alert("질문을 입력하세요!");
-    const cat=categoryFilter.value;
-    const ans=trainer.answer(q,cat);
+    if(!q) return alert('질문을 입력하세요!');
+    const ans=trainer.answer(q,categoryFilter.value);
     const div=document.createElement('div');
     div.className='p-3 rounded-lg bg-white/10 border border-white/20';
-    div.textContent=ans;
-    answerList.appendChild(div);
+    div.textContent=`Q: ${q} → A: ${ans}`;
+    answerList.prepend(div);
     questionInput.value='';
 });
 </script>
