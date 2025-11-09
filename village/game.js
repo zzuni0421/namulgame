@@ -160,13 +160,15 @@ function sellPlot(plotId){
 }
 
 function getPlotProduction(plot){
-  if(!plot.plantId) return 0;
-  const plant=DATA.plants.find(p=>p.id===plot.plantId);
-  let base=plant.base;
-  base*=plot.level*Game.state.labLevel;
-  Game.state.residents.forEach(rid=>{
-    const r=DATA.residents.find(x=>x.id===rid);
-    if(r?.bonus?.prodMul) base*=r.bonus.prodMul;
+  if(!plot.plantId) return 0; // 빈 밭
+  const plant = DATA.plants.find(p => p.id === plot.plantId);
+  if(!plant) return 0; // plant가 없으면 0 반환
+
+  let base = plant.base;
+  base *= plot.level * Game.state.labLevel;
+  Game.state.residents.forEach(rid => {
+    const r = DATA.residents.find(x => x.id === rid);
+    if(r?.bonus?.prodMul) base *= r.bonus.prodMul;
   });
   return Math.floor(base);
 }
