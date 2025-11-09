@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI 글쓰기 챌린지 (오프라인 버전)</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="bg-gray-100 min-h-screen flex flex-col items-center justify-center p-4">
+  <div class="bg-white shadow-xl rounded-2xl p-6 w-full max-w-md">
+    <h1 class="text-2xl font-bold text-center mb-2">📝 오늘의 글쓰기 챌린지</h1>
+    <p id="topic" class="text-center text-gray-600 mb-4"></p>
+
+    <textarea id="userText" class="w-full h-40 border rounded-lg p-3 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-400" placeholder="100자 이상 작성해 보세요"></textarea>
+
+    <div class="flex justify-between items-center mt-3 text-sm text-gray-500">
+      <span id="charCount">0 / 200자</span>
+      <button id="submitBtn" class="bg-blue-500 text-white px-4 py-2 rounded-lg hover:bg-blue-600">제출</button>
+    </div>
+
+    <div id="feedback" class="mt-4 hidden text-center">
+      <p class="font-semibold mb-2">🌟 오늘의 평가 결과 🌟</p>
+      <p id="score" class="text-lg font-bold text-yellow-500"></p>
+      <p id="comment" class="text-gray-600 mt-1"></p>
+    </div>
+
+    <div id="stats" class="mt-6 text-center text-sm text-gray-600 border-t pt-3">
+      <p>🔥 연속 기록: <span id="streak">0</span>일</p>
+      <p>⭐ 총 XP: <span id="xp">0</span></p>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>
