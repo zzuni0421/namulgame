@@ -1,59 +1,60 @@
-// controls
-function movePlayer(dir){
-const col = playerPos % COLS;
-let newCol = col + dir;
-if(newCol < 0) newCol = 0;
-if(newCol > COLS-1) newCol = COLS-1;
-const row = Math.floor(playerPos / COLS);
-playerPos = row*COLS + newCol;
+/* K-Meme Rhythm Survival
+간단 버전: 5x5 그리드, 리듬 타이밍에 따라 경고->드롭
+플레이어 이동: 모바일 터치(좌/우) or 키보드 ← → / A D
+*/
+
+
+const COLS = 5;
+const ROWS = 5;
+const GRID_SIZE = COLS * ROWS;
+
+
+const gridEl = document.getElementById('grid');
+const playerEl = document.getElementById('player');
+const scoreEl = document.getElementById('score');
+const timeEl = document.getElementById('time');
+const startBtn = document.getElementById('startBtn');
+const bpmInput = document.getElementById('bpm');
+const volInput = document.getElementById('vol');
+
+
+const sfxWarn = document.getElementById('sfx-warn');
+const sfxDrop = document.getElementById('sfx-drop');
+const sfxHit = document.getElementById('sfx-hit');
+
+
+let tiles = [];
+let playerPos = 12; // center index (0..24)
+let playing = false;
+let score = 0;
+let startTime = 0;
+let tickInterval = null;
+let stepCount = 0;
+
+
+// basic patterns for rhythm (arrays of indices to drop)
+const basePatterns = [
+[12], // center
+[7,17], // up-down
+[0,4,20,24], // corners
+[10,11,12,13,14], // row
+[2,7,12,17,22] // column-like
+];
+
+
+function createGrid(){
+gridEl.innerHTML = '';
+tiles = [];
+for(let r=0;r<ROWS;r++){
+for(let c=0;c<COLS;c++){
+const idx = r*COLS + c;
+const t = document.createElement('div');
+t.className = 'tile';
+t.dataset.index = idx;
+t.innerHTML = '';
+gridEl.appendChild(t);
+tiles.push(t);
+}
+}
 placePlayer(playerPos);
 }
-
-
-// keyboard
-window.addEventListener('keydown', e=>{
-if(e.key === 'ArrowLeft' || e.key.toLowerCase() === 'a') movePlayer(-1);
-if(e.key === 'ArrowRight' || e.key.toLowerCase() === 'd') movePlayer(1);
-});
-
-
-// mobile touch: tap left/right half
-document.getElementById('stage').addEventListener('touchstart', e=>{
-const t = e.touches[0];
-const rect = gridEl.getBoundingClientRect();
-const x = t.clientX - rect.left;
-if(x < rect.width/2) movePlayer(-1); else movePlayer(1);
-});
-
-
-startBtn.addEventListener('click', startGame);
-
-
-// init
-createGrid();
-
-
-// handle window resize to reposition player
-window.addEventListener('resize', ()=>placePlayer(playerPos));
-
-
-// helper: simple autoset audio volume
-volInput.addEventListener('input', ()=>{
-const v = volInput.value;
-[sfxWarn, sfxDrop, sfxHit].forEach(a=>a.volume = v);
-});
-
-
-// optional: developer helper to quickly set sfx via drag & drop onto audio elements
-['sfx-warn','sfx-drop','sfx-hit'].forEach(id=>{
-const el = document.getElementById(id);
-el.addEventListener('dragover', e=>e.preventDefault());
-el.addEventListener('drop', e=>{
-e.preventDefault();
-const file = e.dataTransfer.files[0];
-if(file){
-el.src = URL.createObjectURL(file);
-el.load();
-}
-});
-});
