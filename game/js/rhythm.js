@@ -1,6 +1,3 @@
-/* K-Meme Rhythm Survival
-
-
 // controls
 function movePlayer(dir){
 const col = playerPos % COLS;
