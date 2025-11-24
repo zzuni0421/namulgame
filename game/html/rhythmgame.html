@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>K-Meme Rhythm Survival</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main id="game-root">
+<header>
+<h1>K-Meme Rhythm Survival</h1>
+<div class="hud">
+<div id="score">Score: 0</div>
+<div id="time">Time: 0s</div>
+</div>
+</header>
+
+
+<section id="stage">
+<div id="grid" class="grid"></div>
+<div id="player" class="player"></div>
+</section>
+
+
+<footer>
+<div class="controls">
+<button id="startBtn">Start</button>
+<label>BPM <input id="bpm" type="number" value="100" min="60" max="240"></label>
+<label>Volume <input id="vol" type="range" min="0" max="1" step="0.01" value="0.8"></label>
+</div>
+<p class="credit">Sound slots are placeholders — replace with short meme clips you have rights to.</p>
+</footer>
+
+
+<!-- Audio slots (replace src with your clips) -->
+<audio id="sfx-warn" preload="auto" src=""></audio>
+<audio id="sfx-drop" preload="auto" src=""></audio>
+<audio id="sfx-hit" preload="auto" src=""></audio>
+
+
+</main>
+
+
+<script src="game.js"></script>
+</body>
+</html>
