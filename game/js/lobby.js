@@ -78,6 +78,7 @@ document.addEventListener("DOMContentLoaded", async () => {
     if(genre==="simulation") html = `
       <button onclick="location.href='/game/html/grownamul.html'">나물 키우기 방치형</button>
       <button onclick="location.href='/game/html/stock.html'">주식왕 도전</button>
+      <button onclick="location.href='/solar'">우주 탐험</button>
       <button onclick="location.href='/game/html/interview.html'">인터뷰 시뮬레이션</button>`;
     else if(genre==="test") html = `
       <button onclick="location.href='/game/html/likecelab.html'">내가 연예인이라면?</button>
