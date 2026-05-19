@@ -56,7 +56,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   // ✅ 최초 실행
   updateUserUI();
-
+  
   // ---- 모달/게임 버튼 로직  ----
   const extraMenuModal = document.getElementById("extraMenuModal");
   const extraMenuBtn = document.getElementById("extraMenuBtn");
