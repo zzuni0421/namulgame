@@ -1,83 +1,109 @@
 <!DOCTYPE html>
 <html lang="ko">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>🌱 나물게임 점검중</title>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-  <style>
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: "Pretendard", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
-    }
+  <title>나물게임 | 공식 사이트</title>
+  <meta name="description" content="나물게임 공식 사이트 🌿 나물 키우기, 나물 줍기, 친구 테스트 등 다양한 미니게임을 즐겨보세요. 모바일 버전 준비중!">
+  <meta name="keywords" content="나물게임, namulgame, 나물, 게임, 웹게임, 브라우저게임, 심리테스트, 방치형게임, 점프게임, 미니게임, 나물이, 말랑모, 심심풀이게임, 심심풀이">
+  <meta name="author" content="팀 나물게임">
+  <meta name="robots" content="index, follow">
 
-    body {
-      height: 100vh;
-      background: linear-gradient(135deg, #eafff1, #f5fff9);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      color: #1f2937;
-    }
+  <!-- 오픈그래프 (SNS 미리보기용) -->
+  <meta property="og:title" content="나물게임 | 공식 사이트">
+  <meta property="og:description" content="나물 키우기, 나물 줍기, 나물 유형 테스트 등 다양한 미니게임이 있는 나물게임 공식 사이트입니다.">
+  <meta property="og:image" content="https://namulgame.pages.dev/assets/thumbnail.png">
+  <meta property="og:url" content="https://namulgame.pages.dev">
+  <meta property="og:type" content="website">
+  <meta property="og:locale" content="ko_KR">
 
-    .wrap {
-      text-align: center;
-      padding: 40px;
-      background: white;
-      border-radius: 20px;
-      box-shadow: 0 20px 50px rgba(0,0,0,0.08);
-      max-width: 420px;
-      width: 90%;
-    }
+  <!-- 파비콘 -->
+  <link rel="icon" type="image/png" href="/favicon.ico">
 
-    .emoji {
-      font-size: 64px;
-      margin-bottom: 10px;
-    }
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="나물게임 | 공식 사이트">
+  <meta name="twitter:description" content="나물 키우기, 나물 줍기, 친구 테스트 등 다양한 미니게임을 즐겨보세요.">
+  <meta name="twitter:image" content="https://namulgame.pages.dev/assets/thumbnail.png">
 
-    h1 {
-      font-size: 28px;
-      margin-bottom: 12px;
-    }
-
-    p {
-      font-size: 15px;
-      line-height: 1.6;
-      color: #4b5563;
-      margin-bottom: 20px;
-    }
-
-    .status {
-      display: inline-block;
-      padding: 8px 16px;
-      border-radius: 999px;
-      background: #dcfce7;
-      color: #15803d;
-      font-size: 14px;
-      font-weight: 600;
-    }
-
-    footer {
-      margin-top: 24px;
-      font-size: 12px;
-      color: #9ca3af;
-    }
-  </style>
+  <!-- 기타 -->
+  <link rel="canonical" href="https://namulgame.pages.dev">
+  <link rel="stylesheet" href="assets/style/lobbystyle.css">
+  <meta name="google-site-verification" content="-4GlzbRKQFhV5TFzHCWldt3ReJQbNXwnIy33LTIPKMw" />
+  <script src="https://unpkg.com/@supabase/supabase-js"></script>
+</head>
 </head>
 <body>
-  <div class="wrap">
-    <div class="emoji">🌱</div>
-    <h1>나물게임 점검중</h1>
-    <p>
-      서버 오류로 인한 점검 중이에요..<br>
-      7월 10일에 다시 방문해 주세요!
-    </p>
-    <div class="status">🔧점검중 😯</div>
-    <footer>
-      © 2026 namulgame
-    </footer>
+<div class="container">
+  <div class="auth-buttons">
+    <button id="btnOpenLogin" class="btn">로그인</button>
+    <button id="btnOpenRegister" class="btn">회원가입</button>
   </div>
+
+  <div id="userInfo" class="user-info"></div>
+  <button id="btnLogout" class="btn">로그아웃</button>
+
+  <div class="genre-buttons">
+    <button id="btnSimulation" class="btn genre-btn">시뮬레이션</button>
+    <button id="btnTest" class="btn genre-btn">테스트</button>
+    <button id="btnGame" class="btn genre-btn">게임</button>
+  </div>
+</div>
+
+<div id="loginModal" class="modal">
+  <div class="modal-content">
+    <span class="close" id="closeLogin">&times;</span>
+    <h2>로그인</h2>
+    <input type="text" id="loginUsername" placeholder="아이디">
+    <input type="password" id="loginPassword" placeholder="비밀번호">
+    <button id="btnLogin" class="btn">로그인</button>
+    <button id="btnGoogleLogin" class="btn google">Google 로그인</button>
+  </div>
+</div>
+
+<div id="registerModal" class="modal">
+  <div class="modal-content"
+    <span class="close" id="closeRegister">&times;</span>
+    <h2>회원가입</h2>
+    <input type="text" id="registerUsername" placeholder="아이디 (영문+숫자 3~15자)" oninput="validateUserId()">
+    <button type="button" onclick="checkDuplicate(registerUsername.value)">중복 확인</button>
+    <div id="idFeedback" style="font-size: 0.9rem; margin-top: 4px;"></div>
+    <input type="password" id="registerPassword" placeholder="비밀번호">
+    <button id="btnRegister" class="btn">회원가입</button>
+  </div>
+</div>
+
+<!-- GAME LIST MODAL -->
+<div id="gameModal" class="modal">
+  <div class="modal-content">
+    <span class="close" id="btnCloseGameModal">&times;</span>
+    <div id="gameList" class="game-list"></div>
+  </div>
+</div>
+
+<!-- EXTRA MENU BUTTON (항상 로비에 보이도록 모달 밖에 둠) -->
+<button id="extraMenuBtn" class="btn">📌 추가 메뉴</button>
+
+<!-- EXTRA MENU MODAL -->
+<div id="extraMenuModal" class="modal">
+  <div class="modal-content">
+    <span class="close" id="closeExtraMenu">&times;</span>
+    <h2>📋 추가 메뉴</h2>
+    <div class="popup-buttons">
+      <button onclick="window.open('https://mobile-namulgame.pages.dev','_blank')">모바일 버전 나물게임(준비중)</button>
+      <button onclick="location.href='board/qna.html'">❓QnA</button>
+      <button onclick="location.href='license.html'">📜 라이선스 보기</button>
+      <button onclick="window.open('https://www.youtube.com/@나물게임','_blank')">▶️ 나물게임 유튜브</button>
+      <button onclick="window.open('https://www.youtube.com/@나물게임나물이','_blank')">▶️ 나물이 유튜브</button>
+      <button onclick="location.href='mailto:zzuni0421@naver.com'">📧 네이버 메일</button>
+      <button onclick="location.href='mailto:zzuni0421@gmail.com'">📧 구글 메일</button>
+      <button onclick="window.open('https://forms.gle/bEL2EeMexCVw4MXWA','_blank')">📝 설문조사</button>
+    </div>
+  </div>
+</div>
+
+<script src="game/js/lobby.js"></script>
+<script src="game/js/github.js"></script>
+<script type="module" src="game/js/github.js"></script>
 </body>
 </html>
