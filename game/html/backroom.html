@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Backrooms: The Glitch Escape</title>
+    <style>
+        * { box-sizing: border-box; user-select: none; margin: 0; padding: 0; }
+        body, html { width: 100%; height: 100%; overflow: hidden; background-color: #050505; font-family: 'Pretendard', sans-serif; color: #fff; }
+
+        /* ================= 2D 고급 로비 스타일 ================= */
+        #lobby-ui {
+            position: absolute; width: 100%; height: 100%; z-index: 100;
+            background: radial-gradient(circle at center, #1a1810 0%, #050503 100%);
+            display: flex; flex-direction: column; justify-content: space-between; padding: 40px;
+            box-shadow: inset 0 0 100px rgba(0,0,0,0.9);
+        }
+        .lobby-header { display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #332d18; padding-bottom: 20px; }
+        .lobby-title { font-size: 36px; font-weight: 900; letter-spacing: 4px; color: #f3e5ab; text-shadow: 0 0 15px rgba(243, 229, 171, 0.4); }
+        .currency-box { background: rgba(255,255,255,0.05); border: 1px solid #d4af37; padding: 10px 25px; border-radius: 30px; font-size: 20px; color: #ffd700; font-weight: bold; }
+        
+        .shop-container { display: flex; gap: 20px; justify-content: center; align-items: center; height: 60%; }
+        .class-card {
+            width: 240px; height: 340px; background: rgba(20, 20, 20, 0.8); border: 1px solid #444; border-radius: 16px;
+            padding: 20px; display: flex; flex-direction: column; justify-content: space-between; transition: all 0.3s ease;
+            cursor: pointer; position: relative; overflow: hidden; backdrop-filter: blur(10px);
+        }
+        .class-card:hover { transform: translateY(-10px); border-color: #ffd700; box-shadow: 0 10px 30px rgba(255, 215, 0, 0.2); }
+        .class-card.selected { border: 2px solid #00ff88; box-shadow: 0 0 25px rgba(0, 255, 136, 0.3); }
+        .class-name { font-size: 22px; font-weight: bold; color: #fff; margin-bottom: 8px; }
+        .class-desc { font-size: 13px; color: #aaa; line-height: 1.4; }
+        .class-price { font-size: 18px; color: #ffd700; font-weight: bold; margin-top: 10px; }
+        .btn-buy {
+            width: 100%; padding: 12px; border: none; border-radius: 8px; font-weight: bold; cursor: pointer;
+            background: linear-gradient(135deg, #ffd700, #b8860b); color: #000; transition: 0.2s;
+        }
+        .btn-buy:disabled { background: #333; color: #666; cursor: not-allowed; }
+
+        .lobby-footer { display: flex; justify-content: space-between; align-items: center; border-top: 1px solid #332d18; padding-top: 20px; }
+        .btn-start {
+            padding: 18px 60px; font-size: 24px; font-weight: 900; background: linear-gradient(135deg, #e52d27, #b31217);
+            color: white; border: none; border-radius: 40px; cursor: pointer; box-shadow: 0 0 20px rgba(229, 45, 39, 0.5);
+            letter-spacing: 2px; transition: 0.3s;
+        }
+        .btn-start:hover { transform: scale(1.05); box-shadow: 0 0 30px rgba(229, 45, 39, 0.8); }
+
+        /* ================= 3D 게임 UI & 효과 ================= */
+        #game-hud { position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; display: none; z-index: 10; }
+        .top-right-stats { position: absolute; top: 20px; right: 20px; text-align: right; font-family: monospace; }
+        .stat-item { font-size: 20px; font-weight: bold; color: #fff; text-shadow: 2px 2px 4px #000; margin-bottom: 5px; }
+
+        /* 노이즈 & 호러 레이어 */
+        #glitch-overlay {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none;
+            opacity: 0; transition: opacity 0.1s ease; z-index: 5;
+            background: repeating-linear-gradient(0deg, rgba(0,0,0,0.15), rgba(0,0,0,0.15) 1px, transparent 1px, transparent 2px);
+        }
+        #vignette {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 4;
+            background: radial-gradient(circle, transparent 50%, rgba(0,0,0,0.8) 100%);
+        }
+
+        /* 컨트롤 및 미니맵 */
+        #minimap-container { position: absolute; top: 20px; left: 20px; width: 120px; height: 120px; border: 2px solid rgba(255,255,255,0.3); background: rgba(0,0,0,0.5); border-radius: 8px; }
+        #mobile-controls { position: absolute; bottom: 30px; left: 30px; right: 30px; display: none; justify-content: space-between; align-items: flex-end; pointer-events: auto; }
+        #joystick-area { width: 120px; height: 120px; background: rgba(255,255,255,0.15); border-radius: 50%; position: relative; touch-action: none; border: 1px solid rgba(255,255,255,0.3); }
+        #joystick-stick { width: 50px; height: 50px; background: rgba(255,255,255,0.5); border-radius: 50%; position: absolute; top: 35px; left: 35px; }
+        #mobile-skill-btn { width: 80px; height: 80px; background: rgba(230, 57, 70, 0.8); border-radius: 50%; color: white; border: 2px solid #fff; font-weight: bold; font-size: 16px; margin-bottom: 10px; }
+
+        #crosshair { position: absolute; top: 50%; left: 50%; width: 6px; height: 6px; background: rgba(255,255,255,0.7); border-radius: 50%; transform: translate(-50%, -50%); }
+    </style>
+</head>
+<body>
+
+    <div id="lobby-ui">
+        <div class="lobby-header">
+            <div class="lobby-title">BACKROOMS</div>
+            <div class="currency-box">🪙 <span id="lobby-coins">0</span> 코인</div>
+        </div>
+
+        <div class="shop-container" id="shop-list">
+            </div>
+
+        <div class="lobby-footer">
+            <div>
+                <div style="font-size: 14px; color: #888;">최고 생존 기록</div>
+                <div style="font-size: 24px; color: #ffd700; font-weight: bold;" id="lobby-best">00:00</div>
+            </div>
+            <button class="btn-start" onclick="startGame()">게 임 시 작</button>
+        </div>
+    </div>
+
+    <div id="vignette"></div>
+    <div id="glitch-overlay"></div>
+    
+    <div id="game-hud">
+        <div id="crosshair"></div>
+        <div id="minimap-container"><canvas id="minimap" width="120" height="120"></canvas></div>
+        
+        <div class="top-right-stats">
+            <div class="stat-item">⏱️ <span id="game-timer">00:00</span></div>
+            <div class="stat-item" style="color: #888; font-size: 14px;">🏆 BEST: <span id="game-best">00:00</span></div>
+            <div class="stat-item" style="color: #ffd700;">🪙 <span id="game-coins">0</span></div>
+            <div class="stat-item" style="color: #00ff88; font-size: 14px; margin-top: 10px;">스킬 쿨타임: <span id="skill-cd">READY</span></div>
+        </div>
+
+        <div id="mobile-controls">
+            <div id="joystick-area"><div id="joystick-stick"></div></div>
+            <button id="mobile-skill-btn" onclick="useSkill()">스킬</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        /* ================= 1. 데이터 및 클래스 정의 ================= */
+        const CLASSES = [
+            { id: 'runner', name: '스프린터', price: 0, desc: '우클릭/버튼 클릭 시 4초간 이동 속도가 80% 증가합니다.', cd: 8 },
+            { id: 'stunner', name: '플래시', price: 30, desc: '괴물을 3.5초 동안 제자리에 마비시킵니다.', cd: 12 },
+            { id: 'teleport', name: '차원 이동자', price: 60, desc: '바라보는 안전한 방향으로 순간이동합니다.', cd: 15 }
+        ];
+
+        let coins = parseInt(localStorage.getItem('br_coins') || '0');
+        let bestTime = parseInt(localStorage.getItem('br_best') || '0');
+        let unlockedClasses = JSON.parse(localStorage.getItem('br_classes') || '["runner"]');
+        let selectedClass = localStorage.getItem('br_selected') || 'runner';
+
+        /* ================= 2. 2D 로비 및 상점 시스템 ================= */
+        function updateLobbyUI() {
+            document.getElementById('lobby-coins').innerText = coins;
+            document.getElementById('lobby-best').innerText = formatTime(bestTime);
+            
+            const shopContainer = document.getElementById('shop-list');
+            shopContainer.innerHTML = '';
+
+            CLASSES.forEach(c => {
+                const isUnlocked = unlockedClasses.includes(c.id);
+                const isSelected = selectedClass === c.id;
+                
+                const card = document.createElement('div');
+                card.className = `class-card ${isSelected ? 'selected' : ''}`;
+                card.onclick = () => selectClass(c.id);
+
+                card.innerHTML = `
+                    <div>
+                        <div class="class-name">${c.name}</div>
+                        <div class="class-desc">${c.desc}</div>
+                    </div>
+                    <div>
+                        <div class="class-price">${isUnlocked ? (isSelected ? '선택됨' : '보유중') : '🪙 ' + c.price}</div>
+                        ${!isUnlocked ? `<button class="btn-buy" onclick="buyClass(event, '${c.id}', ${c.price})" ${coins < c.price ? 'disabled' : ''}>구매하기</button>` : ''}
+                    </div>
+                `;
+                shopContainer.appendChild(card);
+            });
+        }
+
+        function buyClass(e, classId, price) {
+            e.stopPropagation();
+            if (coins >= price && !unlockedClasses.includes(classId)) {
+                coins -= price;
+                unlockedClasses.push(classId);
+                selectedClass = classId;
+                saveData();
+                updateLobbyUI();
+            }
+        }
+
+        function selectClass(classId) {
+            if (unlockedClasses.includes(classId)) {
+                selectedClass = classId;
+                saveData();
+                updateLobbyUI();
+            }
+        }
+
+        function saveData() {
+            localStorage.setItem('br_coins', coins);
+            localStorage.setItem('br_classes', JSON.stringify(unlockedClasses));
+            localStorage.setItem('br_selected', selectedClass);
+        }
+
+        function formatTime(s) {
+            const m = Math.floor(s / 60).toString().padStart(2, '0');
+            const sec = (s % 60).toString().padStart(2, '0');
+            return `${m}:${sec}`;
+        }
+
+        updateLobbyUI();
+
+        /* ================= 3. 3D 게임 엔진 및 호러 시스템 ================= */
+        let scene, camera, renderer, monster;
+        let isPlaying = false, gameTime = 0, gameTimerInterval = null;
+        let moveForward = false, moveBackward = false, moveLeft = false, moveRight = false;
+        let skillCooldown = false, monsterStunned = false, speedMultiplier = 1;
+
+        // 웹 오디오 API를 이용한 사운드 및 공포 심장소리 연출
+        const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+        let heartRateOsc = null;
+
+        function startGame() {
+            document.getElementById('lobby-ui').style.display = 'none';
+            document.getElementById('game-hud').style.display = 'block';
+            if ('ontouchstart' in window) document.getElementById('mobile-controls').style.display = 'flex';
+
+            init3D();
+            isPlaying = true;
+            gameTime = 0;
+            
+            // 타이머 및 코인 수급 (10초당 1코인)
+            gameTimerInterval = setInterval(() => {
+                gameTime++;
+                document.getElementById('game-timer').innerText = formatTime(gameTime);
+                if (gameTime % 10 === 0) {
+                    coins++;
+                    document.getElementById('game-coins').innerText = coins;
+                    saveData();
+                }
+            }, 1000);
+
+            animate();
+        }
+
+        function init3D() {
+            scene = new THREE.Scene();
+            scene.fog = new THREE.FogExp2(0x111108, 0.12); // 백룸의 짙은 노란 안개
+
+            camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+            camera.position.set(0, 1.6, 0);
+
+            renderer = new THREE.WebGLRenderer({ antialias: true });
+            renderer.setSize(window.innerWidth, window.innerHeight);
+            renderer.setClearColor(0x0a0a05);
+            document.body.appendChild(renderer.domElement);
+
+            // 조명 (손전등 느낌)
+            const flashLight = new THREE.SpotLight(0xfffaed, 2, 15, Math.PI / 6, 0.5);
+            camera.add(flashLight);
+            flashLight.position.set(0, 0, 1);
+            flashLight.target = camera;
+            scene.add(camera);
+
+            const ambientLight = new THREE.AmbientLight(0x222211);
+            scene.add(ambientLight);
+
+            // 몬스터 생성 (유저 전달 이미지 사용)
+            const textureLoader = new THREE.TextureLoader();
+            // 업로드하신 선글라스 캐릭터 이미지 데이터
+            const monsterTex = textureLoader.load('https://lh3.googleusercontent.com/d/1_IMAGE_DATA_URL'); 
+            const monsterMat = new THREE.SpriteMaterial({ map: monsterTex });
+            monster = new THREE.Sprite(monsterMat);
+            monster.scale.set(2.5, 2.5, 1);
+            monster.position.set(0, 1.25, -20);
+            scene.add(monster);
+
+            // 맵 벽면 생성 (간단한 백룸 구조)
+            createMap();
+
+            // 입력 이벤트 등록
+            window.addEventListener('keydown', onKeyDown);
+            window.addEventListener('keyup', onKeyUp);
+            window.addEventListener('contextmenu', e => { e.preventDefault(); useSkill(); });
+            setupMobileControls();
+        }
+
+        function createMap() {
+            const wallMat = new THREE.MeshBasicMaterial({ color: 0x554c24 });
+            const floorMat = new THREE.MeshBasicMaterial({ color: 0x222015 });
+
+            const floor = new THREE.Mesh(new THREE.PlaneGeometry(100, 100), floorMat);
+            floor.rotation.x = -Math.PI / 2;
+            scene.add(floor);
+
+            // 무작위 벽 기둥 생성
+            for(let i=0; i<30; i++) {
+                const wall = new THREE.Mesh(new THREE.BoxGeometry(4, 4, 4), wallMat);
+                wall.position.set((Math.random()-0.5)*60, 2, (Math.random()-0.5)*60);
+                scene.add(wall);
+            }
+        }
+
+        /* ================= 4. 실시간 게임 루프 및 호러 효과 ================= */
+        function animate() {
+            if (!isPlaying) return;
+            requestAnimationFrame(animate);
+
+            // 플레이어 이동
+            const moveSpeed = 0.08 * speedMultiplier;
+            if (moveForward) camera.translateZ(-moveSpeed);
+            if (moveBackward) camera.translateZ(moveSpeed);
+            if (moveLeft) camera.translateX(-moveSpeed);
+            if (moveRight) camera.translateX(moveSpeed);
+
+            // 몬스터 추적 AI
+            if (!monsterStunned) {
+                monster.position.lerp(camera.position, 0.007);
+            }
+
+            // 거리 계산 및 공포 효과 연출
+            const dist = camera.position.distanceTo(monster.position);
+            
+            // 1) 괴물이 접근할수록 화면 노이즈 & 암전 심화
+            const glitchOverlay = document.getElementById('glitch-overlay');
+            if (dist < 12) {
+                const intensity = (1 - dist / 12);
+                glitchOverlay.style.opacity = intensity;
+                // 미세한 카메라 흔들림 효과
+                camera.position.x += (Math.random() - 0.5) * intensity * 0.05;
+                camera.position.y = 1.6 + (Math.random() - 0.5) * intensity * 0.05;
+            } else {
+                glitchOverlay.style.opacity = 0;
+            }
+
+            // 2) 충돌 처리 (잡혔을 때)
+            if (dist < 1.2) {
+                gameOver();
+            }
+
+            // 미니맵 그리기
+            drawMinimap();
+
+            renderer.render(scene, camera);
+        }
+
+        /* ================= 5. 스킬 시스템 ================= */
+        function useSkill() {
+            if (skillCooldown || !isPlaying) return;
+
+            const cdText = document.getElementById('skill-cd');
+
+            if (selectedClass === 'runner') {
+                speedMultiplier = 1.8;
+                setTimeout(() => speedMultiplier = 1, 4000);
+            } else if (selectedClass === 'stunner') {
+                monsterStunned = true;
+                setTimeout(() => monsterStunned = false, 3500);
+            } else if (selectedClass === 'teleport') {
+                const dir = new THREE.Vector3();
+                camera.getWorldDirection(dir);
+                camera.position.addScaledVector(dir, 10);
+            }
+
+            // 쿨타임 처리
+            const currentClassObj = CLASSES.find(c => c.id === selectedClass);
+            let remaining = currentClassObj.cd;
+            skillCooldown = true;
+
+            const timer = setInterval(() => {
+                remaining--;
+                cdText.innerText = `${remaining}초`;
+                if (remaining <= 0) {
+                    clearInterval(timer);
+                    skillCooldown = false;
+                    cdText.innerText = "READY";
+                }
+            }, 1000);
+        }
+
+        /* ================= 6. 입력 처리 및 미니맵 ================= */
+        function onKeyDown(e) {
+            if (e.key === 'w' || e.key === 'W') moveForward = true;
+            if (e.key === 's' || e.key === 'S') moveBackward = true;
+            if (e.key === 'a' || e.key === 'A') moveLeft = true;
+            if (e.key === 'd' || e.key === 'D') moveRight = true;
+        }
+
+        function onKeyUp(e) {
+            if (e.key === 'w' || e.key === 'W') moveForward = false;
+            if (e.key === 's' || e.key === 'S') moveBackward = false;
+            if (e.key === 'a' || e.key === 'A') moveLeft = false;
+            if (e.key === 'd' || e.key === 'D') moveRight = false;
+        }
+
+        function drawMinimap() {
+            const canvas = document.getElementById('minimap');
+            const ctx = canvas.getContext('2d');
+            ctx.clearRect(0, 0, 120, 120);
+
+            // 중앙: 플레이어
+            ctx.fillStyle = '#00ff88';
+            ctx.beginPath(); ctx.arc(60, 60, 4, 0, Math.PI*2); ctx.fill();
+
+            // 괴물 위치 상대 좌표 표시
+            const relX = (monster.position.x - camera.position.x) * 2;
+            const relZ = (monster.position.z - camera.position.z) * 2;
+
+            ctx.fillStyle = '#ff0055';
+            ctx.beginPath(); ctx.arc(60 + relX, 60 + relZ, 5, 0, Math.PI*2); ctx.fill();
+        }
+
+        function gameOver() {
+            isPlaying = false;
+            clearInterval(gameTimerInterval);
+
+            if (gameTime > bestTime) {
+                bestTime = gameTime;
+                localStorage.setItem('br_best', bestTime);
+            }
+
+            alert(`☠️ 잡혔습니다!\n생존 시간: ${formatTime(gameTime)}\n획득 코인: ${Math.floor(gameTime/10)}🪙`);
+            location.reload();
+        }
+
+        function setupMobileControls() {
+            // 터치 조이스틱 구현 생략 가능 (필요 시 Touch Event 등록)
+        }
+    </script>
+</body>
+</html>
